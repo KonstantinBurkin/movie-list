@@ -1,4 +1,4 @@
-# movies list
+# movie list
 
 - I want to keep detailed log of movies I watched 
 - Analyze what genres or directors I prefer
