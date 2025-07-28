@@ -11,7 +11,9 @@ dependencies = [
     "polars (>=1.31.0,<2.0.0)",
     "fastexcel (>=0.14.0,<0.15.0)",
     "requests (>=2.32.4,<3.0.0)",
-    "python-dotenv (>=1.1.1,<2.0.0)"
+    "python-dotenv (>=1.1.1,<2.0.0)",
+    "tqdm (>=4.67.1,<5.0.0)",
+    "xlsxwriter (>=3.2.5,<4.0.0)"
 ]
 
 
