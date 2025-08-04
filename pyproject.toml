@@ -1,0 +1,25 @@
+[project]
+name = "movies-hobby"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Konstantin Burkin",email = "burkin-kost@yandex.ru"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "polars (>=1.31.0,<2.0.0)",
+    "fastexcel (>=0.14.0,<0.15.0)",
+    "requests (>=2.32.4,<3.0.0)",
+    "python-dotenv (>=1.1.1,<2.0.0)",
+    "tqdm (>=4.67.1,<5.0.0)",
+    "xlsxwriter (>=3.2.5,<4.0.0)",
+    "matplotlib (>=3.10.5,<4.0.0)",
+    "seaborn (>=0.13.2,<0.14.0)",
+    "plotly (>=6.2.0,<7.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
