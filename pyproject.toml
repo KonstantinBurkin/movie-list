@@ -5,7 +5,8 @@ description = ""
 authors = [
     {name = "Konstantin Burkin",email = "burkin-kost@yandex.ru"}
 ]
-package-mode = false
+packages = [{ include = "movies_hobby" }]
+
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
