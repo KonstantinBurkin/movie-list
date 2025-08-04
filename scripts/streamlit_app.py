@@ -5,25 +5,31 @@ import plotly.express as px
 
 # Load your movie data
 df = pd.read_parquet("./data/movies_df.parquet")
+df = df.loc[df["omdb_id"] != "Not found"]
 
 st.title("🎬 My Movie Dashboard")
 
 # Filters
 viewed_filter = st.selectbox("liked?", options=["All", True, False])
 if viewed_filter != "All":
-    df = df[df["liked"] == viewed_filter]
+    df = df.loc[df["liked"] == viewed_filter]
 
 st.dataframe(
-    df.sort_values("index", ascending=False)[
+    df.reset_index(drop=True).sort_values("index", ascending=False)[
         [
             "title",
+            # "omdb_id",
             "year",
             "director",
             "liked",
+            "genre",
+            # "actors",
+            # "writer",
         ]
     ]
 )
 
+st.subheader("📊 Movie Analytics")
 # Extract director column, split by comma, and count occurrences
 director_list = df["director"].dropna().tolist()
 all_directors = []
@@ -56,6 +62,36 @@ fig.update_traces(
 
 st.plotly_chart(fig, use_container_width=True)
 
+# Extract actor column, split by comma, and count occurrences
+actor_list = df["actors"].dropna().tolist()
+all_actors = []
+for a in actor_list:
+    all_actors.extend([x.strip() for x in a.split(",") if x.strip()])
+
+top_actors = collections.Counter(all_actors).most_common(15)
+actors, actor_counts = zip(*top_actors)
+
+# Get list of movies for each actor
+actor_movies = {
+    actor: df[df["actors"].str.contains(actor, na=False)]["title"].tolist()
+    for actor in actors
+}
+actor_hover_text = ["<br>".join(actor_movies[actor]) for actor in actors]
+
+fig_actors = px.bar(
+    x=actor_counts,
+    y=actors,
+    orientation="h",
+    labels={"x": "Number of Movies", "y": "Actor"},
+    title="Top 15 Most Popular Actors",
+    hover_name=actors,
+    hover_data={"Movies": actor_hover_text},
+)
+fig_actors.update_traces(
+    hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
+)
+
+st.plotly_chart(fig_actors, use_container_width=True)
 
 # Extract genre column, split by comma, and count occurrences
 genre_list = df["genre"].dropna().tolist()
@@ -71,7 +107,7 @@ fig_genre = px.bar(
     y=genres,
     orientation="h",
     labels={"x": "Number of Movies", "y": "Genre"},
-    title="Top 15 Most Common Genres",
+    title="Top 15 Favorite Genres",
 )
 st.plotly_chart(fig_genre, use_container_width=True)
 
@@ -87,3 +123,34 @@ fig_years = px.histogram(
 fig_years.update_traces(marker_color="green", opacity=0.6)
 fig_years.update_layout(yaxis_title="Density", xaxis_title="Year", bargap=0.05)
 st.plotly_chart(fig_years, use_container_width=True)
+
+
+# Most expensive movies
+expensive_movies = (
+    df[~df["box_office"].isna()].sort_values("box_office", ascending=False).head(15)
+)
+
+fig_expensive = px.bar(
+    expensive_movies,
+    x="box_office",
+    y="title",
+    orientation="h",
+    labels={"box_office": "Box Office ($)", "title": "Movie"},
+    title="Top 15 Most Grossing Movies (Box Office)",
+)
+st.plotly_chart(fig_expensive, use_container_width=True)
+
+# Least expensive movies
+cheap_movies = (
+    df[~df["box_office"].isna()].sort_values("box_office", ascending=True).head(15)
+)
+
+fig_cheap = px.bar(
+    cheap_movies,
+    x="box_office",
+    y="title",
+    orientation="h",
+    labels={"box_office": "Box Office ($)", "title": "Movie"},
+    title="Top 15 Least Grossing Movies (Box Office)",
+)
+st.plotly_chart(fig_cheap, use_container_width=True)
