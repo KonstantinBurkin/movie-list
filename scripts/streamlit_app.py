@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import polars as pl
 
 # Load your movie data
 df = pd.read_parquet("./data/movies_df.parquet")
