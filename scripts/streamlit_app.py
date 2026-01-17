@@ -49,7 +49,6 @@ hover_text = ["<br>".join(director_movies[director]) for director in directors]
 fig = px.bar(
     x=counts,
     y=directors,
-    # height=200,
     orientation="h",
     labels={"x": "Number of Movies", "y": "Director"},
     title="Top 25 Most Common Directors",
@@ -61,7 +60,7 @@ fig.update_traces(
     hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
 )
 
-st.plotly_chart(fig, use_container_width=True, height=200)
+st.plotly_chart(fig, width="stretch", height=200)
 
 # Extract actor column, split by comma, and count occurrences
 actor_list = df["actors"].dropna().tolist()
@@ -92,7 +91,7 @@ fig_actors.update_traces(
     hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
 )
 
-st.plotly_chart(fig_actors, use_container_width=True)
+st.plotly_chart(fig_actors, width="stretch")
 
 # Extract genre column, split by comma, and count occurrences
 genre_list = df["genre"].dropna().tolist()
@@ -110,7 +109,7 @@ fig_genre = px.bar(
     labels={"x": "Number of Movies", "y": "Genre"},
     title="Top 15 Favorite Genres",
 )
-st.plotly_chart(fig_genre, use_container_width=True)
+st.plotly_chart(fig_genre, width="stretch")
 
 
 years = df["year"].dropna().tolist()
@@ -123,7 +122,7 @@ fig_years = px.histogram(
 )
 fig_years.update_traces(marker_color="green", opacity=0.6)
 fig_years.update_layout(yaxis_title="Density", xaxis_title="Year", bargap=0.05)
-st.plotly_chart(fig_years, use_container_width=True)
+st.plotly_chart(fig_years, width="stretch")
 
 
 # Most expensive movies
@@ -139,7 +138,7 @@ fig_expensive = px.bar(
     labels={"box_office": "Box Office ($)", "title": "Movie"},
     title="Top 15 Most Grossing Movies (Box Office)",
 )
-st.plotly_chart(fig_expensive, use_container_width=True)
+st.plotly_chart(fig_expensive, width="stretch")
 
 # Least expensive movies
 cheap_movies = (
@@ -154,4 +153,4 @@ fig_cheap = px.bar(
     labels={"box_office": "Box Office ($)", "title": "Movie"},
     title="Top 15 Least Grossing Movies (Box Office)",
 )
-st.plotly_chart(fig_cheap, use_container_width=True)
+st.plotly_chart(fig_cheap, width="stretch")
