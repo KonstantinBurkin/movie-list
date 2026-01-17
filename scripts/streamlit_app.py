@@ -49,6 +49,7 @@ hover_text = ["<br>".join(director_movies[director]) for director in directors]
 fig = px.bar(
     x=counts,
     y=directors,
+    height=2000,
     orientation="h",
     labels={"x": "Number of Movies", "y": "Director"},
     title="Top 20 Most Common Directors",
@@ -59,8 +60,6 @@ fig = px.bar(
 fig.update_traces(
     hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
 )
-
-fig.update_layout(yaxis_title_font_size=10)
 
 st.plotly_chart(fig, width="stretch")
 
