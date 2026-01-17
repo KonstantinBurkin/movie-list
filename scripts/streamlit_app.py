@@ -36,7 +36,7 @@ all_directors = []
 for d in director_list:
     all_directors.extend([x.strip() for x in d.split(",") if x.strip()])
 
-top_directors = collections.Counter(all_directors).most_common(20)
+top_directors = collections.Counter(all_directors).most_common(25)
 directors, counts = zip(*top_directors)
 
 # Get list of movies for each director
@@ -52,7 +52,7 @@ fig = px.bar(
     height=600,
     orientation="h",
     labels={"x": "Number of Movies", "y": "Director"},
-    title="Top 20 Most Common Directors",
+    title="Top 25 Most Common Directors",
     hover_name=directors,
     hover_data={"Movies": hover_text},
 )
