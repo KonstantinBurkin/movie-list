@@ -49,6 +49,7 @@ hover_text = ["<br>".join(director_movies[director]) for director in directors]
 fig = px.bar(
     x=counts,
     y=directors,
+    height=0.5,
     orientation="h",
     labels={"x": "Number of Movies", "y": "Director"},
     title="Top 25 Most Common Directors",
