@@ -36,7 +36,7 @@ all_directors = []
 for d in director_list:
     all_directors.extend([x.strip() for x in d.split(",") if x.strip()])
 
-top_directors = collections.Counter(all_directors).most_common(25)
+top_directors = collections.Counter(all_directors).most_common(20)
 directors, counts = zip(*top_directors)
 
 # Get list of movies for each director
@@ -49,10 +49,9 @@ hover_text = ["<br>".join(director_movies[director]) for director in directors]
 fig = px.bar(
     x=counts,
     y=directors,
-    height=0.5,
     orientation="h",
     labels={"x": "Number of Movies", "y": "Director"},
-    title="Top 25 Most Common Directors",
+    title="Top 20 Most Common Directors",
     hover_name=directors,
     hover_data={"Movies": hover_text},
 )
@@ -61,7 +60,7 @@ fig.update_traces(
     hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
 )
 
-st.plotly_chart(fig, width="stretch", height=200)
+st.plotly_chart(fig, width="stretch")
 
 # Extract actor column, split by comma, and count occurrences
 actor_list = df["actors"].dropna().tolist()
