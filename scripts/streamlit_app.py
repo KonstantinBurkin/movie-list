@@ -60,7 +60,7 @@ fig.update_traces(
     hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
 )
 
-st.plotly_chart(fig, use_container_width=True, height="stretch")
+st.plotly_chart(fig, use_container_width=True, height="content")
 
 # Extract actor column, split by comma, and count occurrences
 actor_list = df["actors"].dropna().tolist()
