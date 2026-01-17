@@ -60,7 +60,7 @@ fig.update_traces(
     hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
 )
 
-fig.update_layout(yaxis_title_font_size=14)
+fig.update_layout(yaxis_title_font_size=10)
 
 st.plotly_chart(fig, width="stretch")
 
