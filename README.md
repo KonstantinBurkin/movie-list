@@ -1,6 +1,6 @@
-# movie list
+# Pet project: Movies dashboard
 
-Live [dashboard](https://kburkin-movie-list.streamlit.app/) with table movies that have seen and liked.  
+Live [dashboard](https://kburkin-movie-list.streamlit.app/) with table movies that I have seen and liked.  
 Below the table you can find curious statistics about them.
 
 ## Motivation for this project
