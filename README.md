@@ -1,5 +1,8 @@
 # movie list
 
+live [dashboard](https://kburkin-movie-list.streamlit.app/) with table movies that have seen and liked. 
+Below the table you can find curious statistics about them.
+
 ## Motivation for this project
 - I want to keep detailed log of movies I watched 
 - Analyze what genres or directors I prefer
