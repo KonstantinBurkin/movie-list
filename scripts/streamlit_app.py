@@ -12,6 +12,7 @@ df = pd.read_parquet("./data/movies_df.parquet")
 df = df.loc[df["omdb_id"] != "Not found"]
 
 st.title("🎬 My Movie Dashboard")
+# st.header("📚 My Movies")
 
 # Filters
 viewed_filter = st.selectbox("liked?", options=["All", True, False])
@@ -33,6 +34,121 @@ st.dataframe(
     ]
 )
 
+
+# ============================================================================
+# ADD NEW MOVIE SECTION
+# ============================================================================
+st.header("➕ Add New Movie")
+
+with st.form("add_movie_form"):
+    col1, col2 = st.columns([3, 1])
+
+    with col1:
+        omdb_id_input = st.text_input(
+            "OMDB ID (e.g., tt0111161 for The Shawshank Redemption)",
+            placeholder="tt0111161",
+        )
+
+    with col2:
+        liked_input = st.checkbox("Liked", value=True)
+
+    submit_button = st.form_submit_button("Add Movie")
+
+    if submit_button and omdb_id_input:
+        try:
+            import sys
+
+            sys.path.append(str(Path(__file__).parent))
+            from tmdb_client import TMDBClient  # noqa: E402
+
+            # Initialize TMDB client
+            client = TMDBClient()
+
+            # Extract IMDb ID from input (handle both "tt1234567" and "1234567")
+            imdb_id = omdb_id_input.strip()
+            if not imdb_id.startswith("tt"):
+                imdb_id = f"tt{imdb_id}"
+
+            # Get TMDB ID from IMDb ID first
+            with st.spinner("Fetching movie details..."):
+                external_result = client.movie.external(
+                    external_id=imdb_id, external_source="imdb_id"
+                )
+
+                if not external_result.movie_results:
+                    st.error(f"❌ Movie with OMDB ID '{imdb_id}' not found")
+                else:
+                    # Get TMDB ID and fetch full details
+                    tmdb_id = external_result.movie_results[0].id
+                    movie_data = client.movie.details(tmdb_id)
+                    credits = client.movie.credits(tmdb_id)
+
+                    # Load existing data
+                    existing_df = pd.read_parquet("./data/movies_df.parquet")
+
+                    # Check if movie already exists
+                    if imdb_id in existing_df["omdb_id"].values:
+                        st.warning(
+                            f"⚠️ Movie '{movie_data.title}' already exists in your database!"
+                        )
+                    else:
+                        # Extract cast and crew
+                        cast_list = (
+                            list(credits.cast) if hasattr(credits, "cast") else []
+                        )
+                        crew_list = (
+                            list(credits.crew) if hasattr(credits, "crew") else []
+                        )
+
+                        actors = ", ".join([c.name for c in cast_list[:5]])
+                        directors = ", ".join(
+                            [c.name for c in crew_list if c.job == "Director"]
+                        )
+
+                        # Create new row
+                        new_row = {
+                            "title": movie_data.title,
+                            "omdb_id": imdb_id,
+                            "year": int(movie_data.release_date.split("-")[0])
+                            if hasattr(movie_data, "release_date")
+                            and movie_data.release_date
+                            else None,
+                            "director": directors or "Unknown",
+                            "liked": liked_input,
+                            "genre": ", ".join([g["name"] for g in movie_data.genres])
+                            if hasattr(movie_data, "genres")
+                            else "",
+                            "actors": actors,
+                            "writer": "Unknown",
+                            "box_office": None,
+                            "index": existing_df["index"].max() + 1
+                            if "index" in existing_df.columns
+                            else 0,
+                        }
+
+                        # Append new row
+                        new_df = pd.concat(
+                            [existing_df, pd.DataFrame([new_row])], ignore_index=True
+                        )
+
+                        # Save to parquet
+                        new_df.to_parquet("./data/movies_df.parquet", index=False)
+
+                        st.success(
+                            f"✅ Successfully added '{movie_data.title}' ({new_row['year']})!"
+                        )
+                        st.info("🔄 Refreshing page...")
+                        st.rerun()
+
+        except Exception as e:
+            st.error(f"❌ Error adding movie: {e}")
+            st.info("Make sure TMDB_API_KEY is configured in your environment.")
+
+st.divider()
+
+# ============================================================================
+# WATCHED MOVIES TABLE
+# ============================================================================
 # ============================================================================
 # RECOMMENDATIONS SECTION
 # ============================================================================
