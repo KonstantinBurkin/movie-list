@@ -222,15 +222,19 @@ class CollaborativeFilteringModel:
 
         recommendations = []
         for movie, score in scored_movies[:top_n]:
+            genre_ids = movie.get('genre_ids', [])
+            if genre_ids and not isinstance(genre_ids, list):
+                genre_ids = list(genre_ids)
+
             recommendations.append({
-                'title': movie['title'],
-                'year': movie['year'],
-                'tmdb_id': movie['tmdb_id'],
-                'rating': movie.get('rating'),
-                'genres': movie.get('genre_ids', []),
-                'overview': movie.get('overview', ''),
-                'score': round(score, 2),
-                'poster_path': movie.get('poster_path')
+                'title': str(movie['title']),
+                'year': int(movie['year']) if movie['year'] else None,
+                'tmdb_id': int(movie['tmdb_id']),
+                'rating': float(movie.get('rating')) if movie.get('rating') else None,
+                'genres': genre_ids,
+                'overview': str(movie.get('overview', '')),
+                'score': round(float(score), 2),
+                'poster_path': str(movie.get('poster_path')) if movie.get('poster_path') else None
             })
 
         return recommendations
