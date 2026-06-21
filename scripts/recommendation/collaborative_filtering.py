@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Dict, Tuple
 import pickle
-from sklearn.metrics.pairwise import cosine_similarity
 from collections import defaultdict
 import sys
 
