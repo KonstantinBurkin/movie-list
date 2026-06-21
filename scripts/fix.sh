@@ -10,17 +10,12 @@ echo "🔧 Auto-Fixing Code Quality Issues"
 echo "════════════════════════════════════════════"
 
 echo ""
-echo "✨ Formatting with black..."
-black scripts --line-length=120
+echo "📦 Sorting imports with isort..."
+isort scripts
 
 echo ""
-echo "📦 Sorting imports..."
-if command -v isort &> /dev/null; then
-    isort scripts
-else
-    echo "⚠️  isort not installed (optional)"
-    echo "   Install: pip install isort"
-fi
+echo "✨ Formatting with black..."
+black scripts --line-length=120
 
 echo ""
 echo "════════════════════════════════════════════"

@@ -6,8 +6,9 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent))
 
-from datetime import datetime  # noqa: E402
 import json  # noqa: E402
+from datetime import datetime  # noqa: E402
+
 import polars as pl  # noqa: E402
 from recommendation.collaborative_filtering import CollaborativeFilteringModel  # noqa: E402
 

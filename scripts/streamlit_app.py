@@ -1,10 +1,11 @@
-import streamlit as st
-import pandas as pd
 import collections
-import plotly.express as px
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+import pandas as pd
+import plotly.express as px
+import streamlit as st
 
 # Load your movie data
 df = pd.read_parquet("./data/movies_df.parquet")
@@ -112,9 +113,7 @@ if recommendations_path.exists():
                     with col2:
                         # Display poster if available
                         if rec.get("poster_path"):
-                            poster_url = (
-                                f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
-                            )
+                            poster_url = f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
                             st.image(poster_url, use_container_width=True)
                         else:
                             st.info("No poster available")
@@ -181,8 +180,7 @@ directors, counts = zip(*top_directors)
 
 # Get list of movies for each director
 director_movies = {
-    director: df[df["director"].str.contains(director, na=False)]["title"].tolist()
-    for director in directors
+    director: df[df["director"].str.contains(director, na=False)]["title"].tolist() for director in directors
 }
 hover_text = ["<br>".join(director_movies[director]) for director in directors]
 
@@ -197,9 +195,7 @@ fig = px.bar(
     hover_data={"Movies": hover_text},
 )
 # Optionally, set custom hovertemplate for better formatting
-fig.update_traces(
-    hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
-)
+fig.update_traces(hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}")
 
 st.plotly_chart(fig, width="stretch")
 
@@ -213,10 +209,7 @@ top_actors = collections.Counter(all_actors).most_common(15)
 actors, actor_counts = zip(*top_actors)
 
 # Get list of movies for each actor
-actor_movies = {
-    actor: df[df["actors"].str.contains(actor, na=False)]["title"].tolist()
-    for actor in actors
-}
+actor_movies = {actor: df[df["actors"].str.contains(actor, na=False)]["title"].tolist() for actor in actors}
 actor_hover_text = ["<br>".join(actor_movies[actor]) for actor in actors]
 
 fig_actors = px.bar(
@@ -228,9 +221,7 @@ fig_actors = px.bar(
     hover_name=actors,
     hover_data={"Movies": actor_hover_text},
 )
-fig_actors.update_traces(
-    hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
-)
+fig_actors.update_traces(hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}")
 
 st.plotly_chart(fig_actors, width="stretch")
 
@@ -267,9 +258,7 @@ st.plotly_chart(fig_years, width="stretch")
 
 
 # Most expensive movies
-expensive_movies = (
-    df[~df["box_office"].isna()].sort_values("box_office", ascending=False).head(15)
-)
+expensive_movies = df[~df["box_office"].isna()].sort_values("box_office", ascending=False).head(15)
 
 fig_expensive = px.bar(
     expensive_movies,
@@ -282,9 +271,7 @@ fig_expensive = px.bar(
 st.plotly_chart(fig_expensive, width="stretch")
 
 # Least expensive movies
-cheap_movies = (
-    df[~df["box_office"].isna()].sort_values("box_office", ascending=True).head(15)
-)
+cheap_movies = df[~df["box_office"].isna()].sort_values("box_office", ascending=True).head(15)
 
 fig_cheap = px.bar(
     cheap_movies,
