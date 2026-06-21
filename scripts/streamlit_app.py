@@ -131,8 +131,8 @@ if is_authenticated:
         if st.button("Logout"):
             st.session_state.authenticated = False
             st.rerun()
-else:
-    st.info("ℹ️ Login to enable automatic GitHub sync")
+# else:
+#     st.info("ℹ️ Login to enable automatic GitHub sync")
 # st.header("📚 My Movies")
 
 # Filters
@@ -241,8 +241,8 @@ with st.form("add_movie_form"):
                                 "title": movie_data.get("Title", "Unknown"),
                                 "year": year,
                                 "viewed": datetime.today().date(),
-                                "omdb_id": imdb_id,
                                 "liked": liked_input,
+                                "omdb_id": imdb_id,
                                 "genre": movie_data.get("Genre", "N/A"),
                                 "director": movie_data.get("Director", "Unknown"),
                                 "country": movie_data.get("Country", "N/A"),
@@ -251,6 +251,7 @@ with st.form("add_movie_form"):
                                 "writer": movie_data.get("Writer", "Unknown"),
                                 "language": movie_data.get("Language", "N/A"),
                                 "imdb_rating": imdb_rating,
+                                "comment": None,
                             }
 
                             # Create single-row DataFrame and cast to match schema
