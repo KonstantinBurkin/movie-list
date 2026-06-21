@@ -5,7 +5,6 @@ from typing import List, Dict, Optional
 from tmdbv3api import TMDb, Movie, Discover
 from dotenv import load_dotenv
 import polars as pl
-from pathlib import Path
 
 load_dotenv()
 

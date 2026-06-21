@@ -2,13 +2,14 @@
 
 import sys
 from pathlib import Path
-from datetime import datetime
-import json
-import polars as pl
 
+# Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent))
 
-from recommendation.collaborative_filtering import CollaborativeFilteringModel
+from datetime import datetime  # noqa: E402
+import json  # noqa: E402
+import polars as pl  # noqa: E402
+from recommendation.collaborative_filtering import CollaborativeFilteringModel  # noqa: E402
 
 
 def generate_recommendations(retrain: bool = True, top_n: int = 5, months_back: int = 6):
@@ -84,7 +85,7 @@ def generate_recommendations(retrain: bool = True, top_n: int = 5, months_back: 
             print(f"   Poster: https://image.tmdb.org/t/p/w500{rec['poster_path']}")
 
     print("\n" + "=" * 60)
-    print(f"Recommendations saved to:")
+    print("Recommendations saved to:")
     print(f"  - {json_path}")
     print(f"  - {latest_path}")
     print(f"  - {parquet_path}")
