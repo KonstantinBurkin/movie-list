@@ -41,6 +41,24 @@ st.header("🎯 Recommended Movies for You")
 # Load latest recommendations
 recommendations_path = Path("./data/recommendations/recommendations_latest.json")
 
+# Auto-generate recommendations if they don't exist (for Streamlit Cloud)
+if not recommendations_path.exists():
+    st.info("🔄 Generating recommendations for the first time... This may take 30-60 seconds.")
+    try:
+        import sys
+
+        sys.path.append(str(Path(__file__).parent))
+        from generate_recommendations import generate_recommendations  # noqa: E402
+
+        with st.spinner("Analyzing your movie preferences..."):
+            recommendations_list = generate_recommendations(retrain=True, top_n=5, months_back=6)
+            if recommendations_list:
+                st.success("✅ Recommendations generated successfully!")
+                st.rerun()
+    except Exception as e:
+        st.error(f"Failed to generate recommendations: {e}")
+        st.info("Please check that TMDB_API_KEY is configured in Streamlit secrets.")
+
 if recommendations_path.exists():
     try:
         with open(recommendations_path, "r") as f:
