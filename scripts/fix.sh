@@ -15,7 +15,7 @@ isort scripts
 
 echo ""
 echo "✨ Formatting with black..."
-black scripts --line-length=120
+black scripts
 
 echo ""
 echo "════════════════════════════════════════════"
