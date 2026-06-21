@@ -24,11 +24,7 @@ echo "3️⃣  Checking import sorting..."
 isort scripts --check-only --diff
 
 echo ""
-echo "4️⃣  Checking formatting..."
-black --check scripts
-
-echo ""
-echo "5️⃣  Running tests..."
+echo "4️⃣  Running tests..."
 pytest tests/ -v --tb=short
 
 echo ""

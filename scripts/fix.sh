@@ -14,10 +14,6 @@ echo "📦 Sorting imports with isort..."
 isort scripts
 
 echo ""
-echo "✨ Formatting with black..."
-black scripts
-
-echo ""
 echo "════════════════════════════════════════════"
 echo "✅ Auto-fixes applied!"
 echo "════════════════════════════════════════════"
