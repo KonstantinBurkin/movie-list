@@ -27,7 +27,7 @@ Below the table you can find curious statistics about them.
 - Generates 5 personalized movie recommendations
 - **Automatic weekly retraining** every Monday at 9:17 AM
 
-[View Recommendation System Documentation →](RECOMMENDATION_SYSTEM.md)
+[View Recommendation System Documentation →](docs/RECOMMENDATION_SYSTEM.md)
 
 ## Future work
 - to make movies table interactive (sorting, filtering)
