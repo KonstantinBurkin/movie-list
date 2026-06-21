@@ -1,5 +1,6 @@
 import collections
 import json
+import subprocess
 from datetime import datetime
 from pathlib import Path
 
@@ -7,11 +8,131 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
+
+# ============================================================================
+# AUTHENTICATION
+# ============================================================================
+def check_authentication():
+    """Check if user is authenticated."""
+    if "authenticated" not in st.session_state:
+        st.session_state.authenticated = False
+
+    if not st.session_state.authenticated:
+        with st.sidebar:
+            st.header("🔐 Authentication")
+            password = st.text_input("Enter password:", type="password")
+            if st.button("Login"):
+                # Get password from secrets or environment
+                correct_password = st.secrets.get("APP_PASSWORD", "changeme")
+                if password == correct_password:
+                    st.session_state.authenticated = True
+                    st.success("✅ Authenticated!")
+                    st.rerun()
+                else:
+                    st.error("❌ Incorrect password")
+
+    return st.session_state.authenticated
+
+
+# ============================================================================
+# GIT OPERATIONS
+# ============================================================================
+def create_and_push_movie_branch(movie_title, movie_year):
+    """Create a new branch, commit movie data, push to GitHub, and create PR."""
+    try:
+        # Generate branch name
+        safe_title = "".join(c if c.isalnum() else "-" for c in movie_title.lower())
+        branch_name = f"add-movie-{safe_title}-{movie_year}"
+
+        # Create and checkout new branch
+        subprocess.run(
+            ["git", "checkout", "-b", branch_name],
+            check=True,
+            capture_output=True,
+        )
+
+        # Add the parquet file
+        subprocess.run(
+            ["git", "add", "data/movies_df.parquet"],
+            check=True,
+            capture_output=True,
+        )
+
+        # Commit
+        commit_msg = f"Add movie: {movie_title} ({movie_year})"
+        subprocess.run(
+            ["git", "commit", "-m", commit_msg],
+            check=True,
+            capture_output=True,
+        )
+
+        # Push to remote
+        subprocess.run(
+            ["git", "push", "-u", "origin", branch_name],
+            check=True,
+            capture_output=True,
+        )
+
+        # Create PR using GitHub CLI
+        pr_title = f"Add movie: {movie_title} ({movie_year})"
+        pr_body = (
+            f"Automatically adding movie via Streamlit app.\n\n**Movie:** {movie_title}"
+        )
+
+        result = subprocess.run(
+            [
+                "gh",
+                "pr",
+                "create",
+                "--title",
+                pr_title,
+                "--body",
+                pr_body,
+                "--base",
+                "main",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        pr_url = result.stdout.strip()
+
+        # Auto-merge the PR
+        subprocess.run(
+            ["gh", "pr", "merge", pr_url, "--merge", "--auto"],
+            check=True,
+            capture_output=True,
+        )
+
+        # Switch back to main
+        subprocess.run(["git", "checkout", "main"], check=True, capture_output=True)
+
+        return True, pr_url
+    except subprocess.CalledProcessError as e:
+        # Switch back to main on error
+        subprocess.run(["git", "checkout", "main"], capture_output=True)
+        return False, str(e)
+
+
 # Load your movie data
 df = pd.read_parquet("./data/movies_df.parquet")
 df = df.loc[df["omdb_id"] != "Not found"]
 
+# Check authentication
+is_authenticated = check_authentication()
+
 st.title("🎬 My Movie Dashboard")
+
+# Show authentication status
+if is_authenticated:
+    with st.sidebar:
+        st.success("✅ Authenticated")
+        st.caption("Movies will be auto-pushed to GitHub")
+        if st.button("Logout"):
+            st.session_state.authenticated = False
+            st.rerun()
+else:
+    st.info("ℹ️ Login to enable automatic GitHub sync")
 # st.header("📚 My Movies")
 
 # Filters
@@ -131,12 +252,29 @@ with st.form("add_movie_form"):
                             [existing_df, pd.DataFrame([new_row])], ignore_index=True
                         )
 
-                        # Save to parquet
-                        new_df.to_parquet("./data/movies_df.parquet", index=False)
+                        # If authenticated, push to GitHub
+                        if is_authenticated:
+                            st.info("📤 Pushing to GitHub...")
+                            # Save to parquet
+                            new_df.to_parquet("./data/movies_df.parquet", index=False)
+                            success, result = create_and_push_movie_branch(
+                                movie_data.title, new_row["year"]
+                            )
+                            if success:
+                                st.success(
+                                    f"✅ Successfully added '{movie_data.title}' ({new_row['year']})!"
+                                )
+                                st.success(f"🔗 PR created and auto-merged: {result}")
+                            else:
+                                st.warning(
+                                    f"✅ Movie added locally, but GitHub push failed: {result}"
+                                )
+                        else:
+                            st.success(
+                                f"✅ Successfully added '{movie_data.title}' ({new_row['year']})!"
+                            )
+                            st.info("💡 Login to automatically sync with GitHub")
 
-                        st.success(
-                            f"✅ Successfully added '{movie_data.title}' ({new_row['year']})!"
-                        )
                         st.info("🔄 Refreshing page...")
                         st.rerun()
 
