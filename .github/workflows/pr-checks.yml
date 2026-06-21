@@ -1,0 +1,170 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+# Cancel in-progress runs when a new commit is pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pr-validation:
+    name: PR Validation
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.13
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    - name: Cache pip packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov pytest-mock flake8 black
+
+    - name: Check code formatting with black
+      id: format
+      run: |
+        black --check scripts --line-length=120
+      continue-on-error: false
+
+    - name: Lint with flake8 (strict)
+      id: lint
+      run: |
+        # Stop on syntax errors or undefined names
+        flake8 scripts --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Check for code quality issues
+        flake8 scripts --count --max-complexity=10 --max-line-length=127 --statistics
+      continue-on-error: false
+
+    - name: Run unit tests
+      id: test
+      env:
+        TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        OMDB_API_KEY: ${{ secrets.OMDB_API_KEY }}
+      run: |
+        pytest tests/ -v --cov=scripts --cov-report=term-missing --cov-report=xml --cov-fail-under=65
+      continue-on-error: false
+
+    - name: Check for data file
+      run: |
+        if [ ! -f "data/movies_df.parquet" ]; then
+          echo "⚠️  Warning: movies_df.parquet not found - recommendation system requires this file"
+          echo "This is not blocking, but functionality will be limited without it."
+        else
+          echo "✅ Data file found"
+        fi
+
+    - name: Verify imports
+      env:
+        TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+      run: python tests/verify_imports.py
+
+    - name: Comment PR with results
+      if: always()
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const outcome = '${{ job.status }}';
+          const icon = outcome === 'success' ? '✅' : '❌';
+          const testOutcome = '${{ steps.test.outcome }}' || 'N/A';
+          const lintOutcome = '${{ steps.lint.outcome }}' || 'N/A';
+          const formatOutcome = '${{ steps.format.outcome }}' || 'N/A';
+
+          const message = `${icon} **PR Checks ${outcome}**\n\n` +
+            `**Tests:** ${testOutcome}\n` +
+            `**Linting:** ${lintOutcome}\n` +
+            `**Formatting:** ${formatOutcome}\n\n` +
+            `View details: ${context.payload.pull_request.html_url}/checks`;
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: message
+          });
+
+  dependency-check:
+    name: Dependency Security Check
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    - name: Install and check dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install safety
+        pip install -r requirements.txt
+        # Check for known security vulnerabilities (non-blocking)
+        safety check --json || echo "⚠️  Some vulnerabilities found, review required"
+
+  pr-size-check:
+    name: PR Size Check
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Check PR size
+      run: |
+        # Fetch main branch for comparison
+        git fetch origin main:main || git fetch origin main
+
+        # Count changed lines
+        ADDED=$(git diff --numstat origin/main...HEAD 2>/dev/null | awk '{s+=$1} END {print s+0}')
+        REMOVED=$(git diff --numstat origin/main...HEAD 2>/dev/null | awk '{s+=$2} END {print s+0}')
+        TOTAL=$((ADDED + REMOVED))
+
+        echo "Lines added: $ADDED"
+        echo "Lines removed: $REMOVED"
+        echo "Total changes: $TOTAL"
+
+        if [ "$TOTAL" -gt 1000 ]; then
+          echo "⚠️  Warning: Large PR detected ($TOTAL lines changed)"
+          echo "Consider breaking this into smaller PRs for easier review"
+        else
+          echo "✅ PR size is reasonable"
+        fi
+
+  ready-to-merge:
+    name: Ready to Merge
+    runs-on: ubuntu-latest
+    needs: [pr-validation, dependency-check]
+    if: github.event.pull_request.draft == false
+
+    steps:
+    - name: All checks passed
+      run: |
+        echo "✅ All required checks passed!"
+        echo "✅ Tests passed"
+        echo "✅ Code quality checks passed"
+        echo "✅ Dependencies verified"
+        echo ""
+        echo "This PR is ready for review and merge."

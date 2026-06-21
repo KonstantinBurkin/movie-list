@@ -89,14 +89,8 @@ jobs:
       env:
         TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
       run: |
-        # Only run if API key is available
         if [ -n "$TMDB_API_KEY" ]; then
-          python -c "
-import sys
-sys.path.append('scripts')
-from recommendation.collaborative_filtering import CollaborativeFilteringModel
-print('✓ Import successful')
-          "
+          python tests/verify_imports.py
         else
           echo "Skipping integration test - no API key"
         fi
