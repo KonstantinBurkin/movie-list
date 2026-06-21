@@ -1,16 +1,18 @@
 """Collaborative filtering recommendation model using matrix factorization."""
 
-import polars as pl
-import numpy as np
-from datetime import datetime, timedelta
-from pathlib import Path
-from typing import List, Dict, Tuple
-import pickle
-from collections import defaultdict
 import sys
+from pathlib import Path
 
+# Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent.parent))
-from tmdb_client import TMDBClient
+
+import polars as pl  # noqa: E402
+import numpy as np  # noqa: E402
+from datetime import datetime, timedelta  # noqa: E402
+from typing import List, Dict, Tuple  # noqa: E402
+import pickle  # noqa: E402
+from collections import defaultdict  # noqa: E402
+from tmdb_client import TMDBClient  # noqa: E402
 
 
 class CollaborativeFilteringModel:
@@ -33,7 +35,7 @@ class CollaborativeFilteringModel:
         cutoff_date = datetime.now().date() - timedelta(days=months_back * 30)
 
         self.recent_movies = self.movies_df.filter(
-            (pl.col("viewed").is_not_null()) & (pl.col("viewed") >= cutoff_date) & (pl.col("liked") == True)
+            (pl.col("viewed").is_not_null()) & (pl.col("viewed") >= cutoff_date) & (pl.col("liked"))
         )
 
         print(f"Loaded {len(self.movies_df)} total movies")
