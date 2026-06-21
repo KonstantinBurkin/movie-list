@@ -11,6 +11,39 @@ Complete guide for setting up Continuous Integration and Deployment for the movi
 - ✅ Code formatting with black
 - ✅ Test fixtures and mocks
 
+## 🔒 Branch Protection (PR Checks Before Merge)
+
+The CI/CD system runs automatically on **every pull request** before allowing merge.
+
+### Enable Branch Protection
+
+**Option 1: GitHub UI** (Recommended)
+
+1. Go to your repository → **Settings** → **Branches**
+2. Click **Add rule** under "Branch protection rules"
+3. Branch name: `main`
+4. Enable these settings:
+   - ✅ Require a pull request before merging
+   - ✅ Require status checks to pass before merging
+     - Select: `PR Validation`, `Ready to Merge`, `test (3.12)`, `test (3.13)`
+   - ✅ Require conversation resolution before merging
+   - ✅ Do not allow bypassing the above settings
+5. Click **Create**
+
+**Option 2: GitHub CLI**
+
+```bash
+gh api repos/:owner/:repo/branches/main/protection \
+  --method PUT \
+  -f required_status_checks[strict]=true \
+  -f required_status_checks[contexts][]=PR Validation \
+  -f required_status_checks[contexts][]=Ready to Merge \
+  -f required_pull_request_reviews[required_approving_review_count]=1 \
+  -f enforce_admins=true
+```
+
+See detailed guide: [.github/BRANCH_PROTECTION.md](.github/BRANCH_PROTECTION.md)
+
 ## 🚀 Quick Setup (GitHub Actions)
 
 ### Step 1: Add GitHub Secrets
