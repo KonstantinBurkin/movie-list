@@ -41,12 +41,14 @@ class TMDBClient:
     def get_similar_movies(self, tmdb_id: int, limit: int = 20) -> List[Dict]:
         """Get similar movies based on TMDB's recommendation algorithm."""
         similar = self.movie.similar(tmdb_id)
-        return [self._format_movie_details(m) for m in similar[:limit]]
+        similar_list = list(similar) if similar else []
+        return [self._format_movie_details(m) for m in similar_list[:limit]]
 
     def get_recommendations(self, tmdb_id: int, limit: int = 20) -> List[Dict]:
         """Get movie recommendations based on TMDB's algorithm."""
         recommendations = self.movie.recommendations(tmdb_id)
-        return [self._format_movie_details(m) for m in recommendations[:limit]]
+        recommendations_list = list(recommendations) if recommendations else []
+        return [self._format_movie_details(m) for m in recommendations_list[:limit]]
 
     def discover_by_genres(self, genre_ids: List[int], min_rating: float = 7.0, limit: int = 20) -> List[Dict]:
         """Discover movies by genre IDs with minimum rating."""
@@ -56,7 +58,9 @@ class TMDBClient:
             'vote_count.gte': 100,
             'sort_by': 'vote_average.desc'
         })
-        return [self._format_movie_details(m) for m in movies[:limit]]
+        # Convert to list to handle TMDB API object properly
+        movies_list = list(movies) if movies else []
+        return [self._format_movie_details(m) for m in movies_list[:limit]]
 
     def discover_popular_recent(self, min_year: int = 2020, limit: int = 50) -> List[Dict]:
         """Discover popular recent movies."""
@@ -66,7 +70,9 @@ class TMDBClient:
             'vote_count.gte': 200,
             'sort_by': 'popularity.desc'
         })
-        return [self._format_movie_details(m) for m in movies[:limit]]
+        # Convert to list to handle TMDB API object properly
+        movies_list = list(movies) if movies else []
+        return [self._format_movie_details(m) for m in movies_list[:limit]]
 
     def _format_movie_details(self, movie) -> Dict:
         """Format movie data into a consistent dictionary."""
