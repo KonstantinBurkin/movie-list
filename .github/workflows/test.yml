@@ -48,6 +48,10 @@ jobs:
         # Exit-zero treats all errors as warnings
         flake8 scripts --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
+    - name: Check import sorting with isort
+      run: |
+        isort scripts --check-only --diff
+
     - name: Check code formatting with black
       run: |
         black --check scripts --line-length=120

@@ -1,10 +1,11 @@
 """TMDB API client for fetching movie data and building collaborative filtering dataset."""
 
 import os
-from typing import List, Dict, Optional
-from tmdbv3api import TMDb, Movie, Discover
-from dotenv import load_dotenv
+from typing import Dict, List, Optional
+
 import polars as pl
+from dotenv import load_dotenv
+from tmdbv3api import Discover, Movie, TMDb
 
 load_dotenv()
 

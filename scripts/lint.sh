@@ -20,11 +20,15 @@ echo "2️⃣  Checking code quality..."
 flake8 scripts --count --max-complexity=10 --max-line-length=127 --statistics
 
 echo ""
-echo "3️⃣  Checking formatting..."
+echo "3️⃣  Checking import sorting..."
+isort scripts --check-only --diff
+
+echo ""
+echo "4️⃣  Checking formatting..."
 black --check scripts --line-length=120
 
 echo ""
-echo "4️⃣  Running tests..."
+echo "5️⃣  Running tests..."
 pytest tests/ -v --tb=short
 
 echo ""
