@@ -202,4 +202,21 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-data
+# Data (keep base parquet)
+data/recommendations/*.json
+data/recommendations/*.parquet
+
+# Models
+models/*.pkl
+
+# Logs
+logs/
+*.log
+
+# Claude Code
+.claude/
+
+# Keep structure
+!data/recommendations/.gitkeep
+!models/.gitkeep
+!logs/.gitkeep
