@@ -263,11 +263,10 @@ with st.form("add_movie_form"):
                                 [existing_df, new_row_df], how="vertical"
                             )
 
-                            # Save to parquet
-                            new_df.write_parquet("./data/movies_df.parquet")
-
                             # If authenticated, push to GitHub
                             if is_authenticated:
+                                # Save to parquet
+                                new_df.write_parquet("./data/movies_df.parquet")
                                 st.info("📤 Pushing to GitHub...")
                                 success, result = create_and_push_movie_branch(
                                     movie_data["Title"], new_row["year"]
