@@ -16,8 +16,8 @@ class TMDBClient:
     def __init__(self):
         """Initialize TMDB API client."""
         self.tmdb = TMDb()
-        self.tmdb.api_key = os.getenv('TMDB_API_KEY')
-        self.tmdb.language = 'en'
+        self.tmdb.api_key = os.getenv("TMDB_API_KEY")
+        self.tmdb.language = "en"
         self.movie = Movie()
         self.discover = Discover()
 
@@ -29,8 +29,8 @@ class TMDBClient:
             return None
 
         for result in search:
-            if year and hasattr(result, 'release_date') and result.release_date:
-                release_year = int(result.release_date.split('-')[0])
+            if year and hasattr(result, "release_date") and result.release_date:
+                release_year = int(result.release_date.split("-")[0])
                 if release_year == year:
                     return self._format_movie_details(result)
             elif not year:
@@ -52,24 +52,28 @@ class TMDBClient:
 
     def discover_by_genres(self, genre_ids: List[int], min_rating: float = 7.0, limit: int = 20) -> List[Dict]:
         """Discover movies by genre IDs with minimum rating."""
-        movies = self.discover.discover_movies({
-            'with_genres': ','.join(map(str, genre_ids)),
-            'vote_average.gte': min_rating,
-            'vote_count.gte': 100,
-            'sort_by': 'vote_average.desc'
-        })
+        movies = self.discover.discover_movies(
+            {
+                "with_genres": ",".join(map(str, genre_ids)),
+                "vote_average.gte": min_rating,
+                "vote_count.gte": 100,
+                "sort_by": "vote_average.desc",
+            }
+        )
         # Convert to list to handle TMDB API object properly
         movies_list = list(movies) if movies else []
         return [self._format_movie_details(m) for m in movies_list[:limit]]
 
     def discover_popular_recent(self, min_year: int = 2020, limit: int = 50) -> List[Dict]:
         """Discover popular recent movies."""
-        movies = self.discover.discover_movies({
-            'primary_release_date.gte': f'{min_year}-01-01',
-            'vote_average.gte': 7.0,
-            'vote_count.gte': 200,
-            'sort_by': 'popularity.desc'
-        })
+        movies = self.discover.discover_movies(
+            {
+                "primary_release_date.gte": f"{min_year}-01-01",
+                "vote_average.gte": 7.0,
+                "vote_count.gte": 200,
+                "sort_by": "popularity.desc",
+            }
+        )
         # Convert to list to handle TMDB API object properly
         movies_list = list(movies) if movies else []
         return [self._format_movie_details(m) for m in movies_list[:limit]]
@@ -77,14 +81,16 @@ class TMDBClient:
     def _format_movie_details(self, movie) -> Dict:
         """Format movie data into a consistent dictionary."""
         return {
-            'tmdb_id': movie.id,
-            'title': movie.title,
-            'year': int(movie.release_date.split('-')[0]) if hasattr(movie, 'release_date') and movie.release_date else None,
-            'genre_ids': movie.genre_ids if hasattr(movie, 'genre_ids') else [],
-            'rating': movie.vote_average if hasattr(movie, 'vote_average') else None,
-            'popularity': movie.popularity if hasattr(movie, 'popularity') else None,
-            'overview': movie.overview if hasattr(movie, 'overview') else '',
-            'poster_path': movie.poster_path if hasattr(movie, 'poster_path') else None,
+            "tmdb_id": movie.id,
+            "title": movie.title,
+            "year": (
+                int(movie.release_date.split("-")[0]) if hasattr(movie, "release_date") and movie.release_date else None
+            ),
+            "genre_ids": movie.genre_ids if hasattr(movie, "genre_ids") else [],
+            "rating": movie.vote_average if hasattr(movie, "vote_average") else None,
+            "popularity": movie.popularity if hasattr(movie, "popularity") else None,
+            "overview": movie.overview if hasattr(movie, "overview") else "",
+            "poster_path": movie.poster_path if hasattr(movie, "poster_path") else None,
         }
 
     def enrich_watched_movies_with_tmdb_ids(self, movies_df: pl.DataFrame) -> pl.DataFrame:
@@ -92,33 +98,31 @@ class TMDBClient:
         tmdb_ids = []
 
         for row in movies_df.iter_rows(named=True):
-            movie_data = self.get_movie_by_title(row['title'], row.get('year'))
-            tmdb_ids.append(movie_data['tmdb_id'] if movie_data else None)
+            movie_data = self.get_movie_by_title(row["title"], row.get("year"))
+            tmdb_ids.append(movie_data["tmdb_id"] if movie_data else None)
 
-        return movies_df.with_columns(
-            pl.Series('tmdb_id', tmdb_ids)
-        )
+        return movies_df.with_columns(pl.Series("tmdb_id", tmdb_ids))
 
 
 # TMDB Genre IDs mapping
 GENRE_MAP = {
-    'Action': 28,
-    'Adventure': 12,
-    'Animation': 16,
-    'Comedy': 35,
-    'Crime': 80,
-    'Documentary': 99,
-    'Drama': 18,
-    'Family': 10751,
-    'Fantasy': 14,
-    'History': 36,
-    'Horror': 27,
-    'Music': 10402,
-    'Mystery': 9648,
-    'Romance': 10749,
-    'Science Fiction': 878,
-    'TV Movie': 10770,
-    'Thriller': 53,
-    'War': 10752,
-    'Western': 37
+    "Action": 28,
+    "Adventure": 12,
+    "Animation": 16,
+    "Comedy": 35,
+    "Crime": 80,
+    "Documentary": 99,
+    "Drama": 18,
+    "Family": 10751,
+    "Fantasy": 14,
+    "History": 36,
+    "Horror": 27,
+    "Music": 10402,
+    "Mystery": 9648,
+    "Romance": 10749,
+    "Science Fiction": 878,
+    "TV Movie": 10770,
+    "Thriller": 53,
+    "War": 10752,
+    "Western": 37,
 }

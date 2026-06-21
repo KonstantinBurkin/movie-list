@@ -77,3 +77,8 @@ scikit-learn==1.6.1
 scipy==1.15.2
 scikit-surprise==1.1.4
 tmdbv3api==1.9.0
+pytest==8.3.4
+pytest-cov==6.0.0
+pytest-mock==3.14.0
+flake8==7.1.1
+black==24.10.0
