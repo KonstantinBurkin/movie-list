@@ -73,3 +73,7 @@ tzdata==2025.2
 urllib3==2.5.0
 wcwidth==0.2.13
 xlsxwriter==3.2.5
+scikit-learn==1.6.1
+scipy==1.15.2
+scikit-surprise==1.1.4
+tmdbv3api==1.9.0
