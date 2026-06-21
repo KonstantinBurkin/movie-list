@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import collections
 import plotly.express as px
+import json
+from pathlib import Path
+from datetime import datetime
 
 # Load your movie data
 df = pd.read_parquet("./data/movies_df.parquet")
@@ -29,7 +32,120 @@ st.dataframe(
     ]
 )
 
-st.subheader("📊 Movie Analytics")
+# ============================================================================
+# RECOMMENDATIONS SECTION
+# ============================================================================
+st.divider()
+st.header("🎯 Recommended Movies for You")
+
+# Load latest recommendations
+recommendations_path = Path("./data/recommendations/recommendations_latest.json")
+
+if recommendations_path.exists():
+    try:
+        with open(recommendations_path, "r") as f:
+            rec_data = json.load(f)
+
+        recommendations = rec_data.get("recommendations", [])
+        generated_at = rec_data.get("generated_at", "Unknown")
+
+        if recommendations:
+            # Parse timestamp
+            try:
+                gen_time = datetime.fromisoformat(generated_at.replace("Z", "+00:00"))
+                time_str = gen_time.strftime("%B %d, %Y at %I:%M %p")
+            except Exception:
+                time_str = generated_at
+
+            st.caption(f"Generated on {time_str} • Based on your last 6 months of viewing history")
+
+            # Display recommendations in a nice format
+            for i, rec in enumerate(recommendations, 1):
+                with st.container():
+                    col1, col2 = st.columns([3, 1])
+
+                    with col1:
+                        st.subheader(f"{i}. {rec['title']} ({rec['year']})")
+
+                        # Create columns for metadata
+                        meta_col1, meta_col2, meta_col3 = st.columns(3)
+
+                        with meta_col1:
+                            if rec.get("rating"):
+                                st.metric("Rating", f"{rec['rating']:.1f}/10")
+                            else:
+                                st.metric("Rating", "N/A")
+
+                        with meta_col2:
+                            st.metric("Match Score", f"{rec['score']:.1f}")
+
+                        with meta_col3:
+                            st.metric("Year", rec["year"])
+
+                        # Description
+                        if rec.get("overview"):
+                            with st.expander("📝 Description", expanded=(i == 1)):
+                                st.write(rec["overview"])
+
+                    with col2:
+                        # Display poster if available
+                        if rec.get("poster_path"):
+                            poster_url = f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
+                            st.image(poster_url, use_container_width=True)
+                        else:
+                            st.info("No poster available")
+
+                    st.divider()
+
+            # Show generation info
+            with st.expander("ℹ️ How recommendations work"):
+                st.markdown("""
+                **Collaborative Filtering Model**
+
+                Our recommendation system analyzes your viewing history to suggest movies you'll enjoy:
+
+                - **Genre Preferences** (40%): Matches your favorite genres
+                - **Rating Similarity** (30%): Finds movies with ratings similar to what you like
+                - **Year Preference** (20%): Considers your typical movie era
+                - **Popularity** (10%): Includes trending and well-received films
+
+                The model retrains every Monday at 9:17 AM to incorporate your latest viewing habits.
+
+                [Learn more →](https://github.com/YOUR_USERNAME/movie-list/blob/main/docs/RECOMMENDATION_SYSTEM.md)
+                """)
+        else:
+            st.info("No recommendations available yet. Run the recommendation system to generate suggestions!")
+            with st.expander("🚀 How to generate recommendations"):
+                st.code(
+                    """
+# Generate recommendations
+python scripts/generate_recommendations.py
+
+# Or generate more recommendations
+python scripts/generate_recommendations.py --top-n 10
+                """,
+                    language="bash",
+                )
+
+    except Exception as e:
+        st.error(f"Error loading recommendations: {e}")
+        st.info("Please ensure the recommendation system has been run at least once.")
+else:
+    st.warning("⚠️ No recommendations found")
+    st.info("""
+    Recommendations will appear here once generated. To create recommendations:
+
+    1. Ensure your TMDB API key is configured in `.env`
+    2. Run: `python scripts/generate_recommendations.py`
+    3. Reload this page
+    """)
+
+st.divider()
+
+# ============================================================================
+# ANALYTICS SECTION
+# ============================================================================
+st.header("📊 Movie Analytics")
 # Extract director column, split by comma, and count occurrences
 director_list = df["director"].dropna().tolist()
 all_directors = []
