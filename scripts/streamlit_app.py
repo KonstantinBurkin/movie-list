@@ -1,10 +1,11 @@
-import streamlit as st
-import pandas as pd
 import collections
-import plotly.express as px
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+import pandas as pd
+import plotly.express as px
+import streamlit as st
 
 # Load your movie data
 df = pd.read_parquet("./data/movies_df.parquet")
@@ -36,10 +37,32 @@ st.dataframe(
 # RECOMMENDATIONS SECTION
 # ============================================================================
 st.divider()
-st.header("🎯 Recommended Movies for You")
+st.header("🎯 Recommended Movies")
 
 # Load latest recommendations
 recommendations_path = Path("./data/recommendations/recommendations_latest.json")
+
+# Auto-generate recommendations if they don't exist (for Streamlit Cloud)
+if not recommendations_path.exists():
+    st.info("🔄 Generating recommendations for the first time...")
+    try:
+        import sys
+
+        sys.path.append(str(Path(__file__).parent))
+        from generate_recommendations import generate_recommendations  # noqa: E402
+
+        with st.spinner("Analyzing your movie preferences..."):
+            recommendations_list = generate_recommendations(
+                retrain=True,
+                top_n=5,
+                months_back=6,
+            )
+            if recommendations_list:
+                st.success("✅ Recommendations generated successfully!")
+                st.rerun()
+    except Exception as e:
+        st.error(f"Failed to generate recommendations: {e}")
+        st.info("Please check that TMDB_API_KEY is configured in Streamlit secrets.")
 
 if recommendations_path.exists():
     try:
@@ -57,7 +80,7 @@ if recommendations_path.exists():
             except Exception:
                 time_str = generated_at
 
-            st.caption(f"Generated on {time_str} • Based on your last 6 months of viewing history")
+            st.caption(f"Generated on {time_str}")
 
             # Display recommendations in a nice format
             for i, rec in enumerate(recommendations, 1):
@@ -90,31 +113,17 @@ if recommendations_path.exists():
                     with col2:
                         # Display poster if available
                         if rec.get("poster_path"):
-                            poster_url = f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
+                            poster_url = (
+                                f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
+                            )
                             st.image(poster_url, use_container_width=True)
                         else:
                             st.info("No poster available")
 
                     st.divider()
 
-            # Show generation info
-            with st.expander("ℹ️ How recommendations work"):
-                st.markdown("""
-                **Collaborative Filtering Model**
-
-                Our recommendation system analyzes your viewing history to suggest movies you'll enjoy:
-
-                - **Genre Preferences** (40%): Matches your favorite genres
-                - **Rating Similarity** (30%): Finds movies with ratings similar to what you like
-                - **Year Preference** (20%): Considers your typical movie era
-                - **Popularity** (10%): Includes trending and well-received films
-
-                The model retrains every Monday at 9:17 AM to incorporate your latest viewing habits.
-
-                [Learn more →](https://github.com/YOUR_USERNAME/movie-list/blob/main/docs/RECOMMENDATION_SYSTEM.md)
-                """)
         else:
-            st.info("No recommendations available yet. Run the recommendation system to generate suggestions!")
+            st.info("No recommendations available yet. Run the recommendation system!")
             with st.expander("🚀 How to generate recommendations"):
                 st.code(
                     """
@@ -157,7 +166,8 @@ directors, counts = zip(*top_directors)
 
 # Get list of movies for each director
 director_movies = {
-    director: df[df["director"].str.contains(director, na=False)]["title"].tolist() for director in directors
+    director: df[df["director"].str.contains(director, na=False)]["title"].tolist()
+    for director in directors
 }
 hover_text = ["<br>".join(director_movies[director]) for director in directors]
 
@@ -172,7 +182,9 @@ fig = px.bar(
     hover_data={"Movies": hover_text},
 )
 # Optionally, set custom hovertemplate for better formatting
-fig.update_traces(hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}")
+fig.update_traces(
+    hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
+)
 
 st.plotly_chart(fig, width="stretch")
 
@@ -186,7 +198,10 @@ top_actors = collections.Counter(all_actors).most_common(15)
 actors, actor_counts = zip(*top_actors)
 
 # Get list of movies for each actor
-actor_movies = {actor: df[df["actors"].str.contains(actor, na=False)]["title"].tolist() for actor in actors}
+actor_movies = {
+    actor: df[df["actors"].str.contains(actor, na=False)]["title"].tolist()
+    for actor in actors
+}
 actor_hover_text = ["<br>".join(actor_movies[actor]) for actor in actors]
 
 fig_actors = px.bar(
@@ -198,7 +213,9 @@ fig_actors = px.bar(
     hover_name=actors,
     hover_data={"Movies": actor_hover_text},
 )
-fig_actors.update_traces(hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}")
+fig_actors.update_traces(
+    hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
+)
 
 st.plotly_chart(fig_actors, width="stretch")
 
@@ -235,7 +252,9 @@ st.plotly_chart(fig_years, width="stretch")
 
 
 # Most expensive movies
-expensive_movies = df[~df["box_office"].isna()].sort_values("box_office", ascending=False).head(15)
+expensive_movies = (
+    df[~df["box_office"].isna()].sort_values("box_office", ascending=False).head(15)
+)
 
 fig_expensive = px.bar(
     expensive_movies,
@@ -248,7 +267,9 @@ fig_expensive = px.bar(
 st.plotly_chart(fig_expensive, width="stretch")
 
 # Least expensive movies
-cheap_movies = df[~df["box_office"].isna()].sort_values("box_office", ascending=True).head(15)
+cheap_movies = (
+    df[~df["box_office"].isna()].sort_values("box_office", ascending=True).head(15)
+)
 
 fig_cheap = px.bar(
     cheap_movies,

@@ -6,12 +6,13 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent.parent))
 
-import polars as pl  # noqa: E402
-import numpy as np  # noqa: E402
-from datetime import datetime, timedelta  # noqa: E402
-from typing import List, Dict, Tuple  # noqa: E402
 import pickle  # noqa: E402
 from collections import defaultdict  # noqa: E402
+from datetime import datetime, timedelta  # noqa: E402
+from typing import Dict, List, Tuple  # noqa: E402
+
+import numpy as np  # noqa: E402
+import polars as pl  # noqa: E402
 from tmdb_client import TMDBClient  # noqa: E402
 
 

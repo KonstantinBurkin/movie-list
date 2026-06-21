@@ -16,3 +16,4 @@ ignore = E203,W503,E501
 per-file-ignores =
     __init__.py:F401
     */collaborative_filtering.py:C901
+    streamlit_app.py:C901

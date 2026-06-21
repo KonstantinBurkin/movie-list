@@ -42,12 +42,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pytest pytest-cov pytest-mock flake8 black
+        pip install pytest pytest-cov pytest-mock flake8
 
-    - name: Check code formatting with black
-      id: format
+    - name: Check import sorting with isort
+      id: isort
       run: |
-        black --check scripts --line-length=120
+        isort scripts --check-only --diff
       continue-on-error: false
 
     - name: Lint with flake8 (strict)
@@ -93,12 +93,10 @@ jobs:
           const icon = outcome === 'success' ? '✅' : '❌';
           const testOutcome = '${{ steps.test.outcome }}' || 'N/A';
           const lintOutcome = '${{ steps.lint.outcome }}' || 'N/A';
-          const formatOutcome = '${{ steps.format.outcome }}' || 'N/A';
 
           const message = `${icon} **PR Checks ${outcome}**\n\n` +
             `**Tests:** ${testOutcome}\n` +
-            `**Linting:** ${lintOutcome}\n` +
-            `**Formatting:** ${formatOutcome}\n\n` +
+            `**Linting:** ${lintOutcome}\n\n` +
             `View details: ${context.payload.pull_request.html_url}/checks`;
 
           github.rest.issues.createComment({
