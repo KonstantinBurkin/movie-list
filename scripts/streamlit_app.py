@@ -177,110 +177,123 @@ with st.form("add_movie_form"):
 
     if submit_button and omdb_id_input:
         try:
-            import sys
+            import re
 
-            sys.path.append(str(Path(__file__).parent))
-            from tmdb_client import TMDBClient  # noqa: E402
-
-            # Initialize TMDB client
-            client = TMDBClient()
+            import polars as pl
+            import requests
 
             # Extract IMDb ID from input (handle both "tt1234567" and "1234567")
             imdb_id = omdb_id_input.strip()
             if not imdb_id.startswith("tt"):
                 imdb_id = f"tt{imdb_id}"
 
-            # Get TMDB ID from IMDb ID first
-            with st.spinner("Fetching movie details..."):
-                external_result = client.movie.external(
-                    external_id=imdb_id, external_source="imdb_id"
-                )
-
-                if not external_result.movie_results:
-                    st.error(f"❌ Movie with OMDB ID '{imdb_id}' not found")
+            # Fetch movie details from OMDB API
+            with st.spinner("Fetching movie details from OMDB..."):
+                omdb_api_key = st.secrets.get("OMDB_API_KEY")
+                if not omdb_api_key:
+                    st.error("❌ OMDB_API_KEY not found in secrets")
                 else:
-                    # Get TMDB ID and fetch full details
-                    tmdb_id = external_result.movie_results[0].id
-                    movie_data = client.movie.details(tmdb_id)
-                    credits = client.movie.credits(tmdb_id)
+                    url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&i={requests.utils.quote(imdb_id)}"
+                    response = requests.get(url)
+                    movie_data = response.json()
 
-                    # Load existing data
-                    existing_df = pd.read_parquet("./data/movies_df.parquet")
-
-                    # Check if movie already exists
-                    if imdb_id in existing_df["omdb_id"].values:
-                        st.warning(
-                            f"⚠️ Movie '{movie_data.title}' already exists in your database!"
-                        )
+                    if movie_data.get("Response") != "True":
+                        st.error(f"❌ Movie with OMDB ID '{imdb_id}' not found")
                     else:
-                        # Extract cast and crew
-                        cast_list = (
-                            list(credits.cast) if hasattr(credits, "cast") else []
-                        )
-                        crew_list = (
-                            list(credits.crew) if hasattr(credits, "crew") else []
-                        )
+                        # Load existing data using polars
+                        existing_df = pl.read_parquet("./data/movies_df.parquet")
 
-                        actors = ", ".join([c.name for c in cast_list[:5]])
-                        directors = ", ".join(
-                            [c.name for c in crew_list if c.job == "Director"]
-                        )
-
-                        # Create new row
-                        new_row = {
-                            "title": movie_data.title,
-                            "omdb_id": imdb_id,
-                            "year": int(movie_data.release_date.split("-")[0])
-                            if hasattr(movie_data, "release_date")
-                            and movie_data.release_date
-                            else None,
-                            "director": directors or "Unknown",
-                            "liked": liked_input,
-                            "genre": ", ".join([g["name"] for g in movie_data.genres])
-                            if hasattr(movie_data, "genres")
-                            else "",
-                            "actors": actors,
-                            "writer": "Unknown",
-                            "box_office": None,
-                            "index": existing_df["index"].max() + 1
-                            if "index" in existing_df.columns
-                            else 0,
-                        }
-
-                        # Append new row
-                        new_df = pd.concat(
-                            [existing_df, pd.DataFrame([new_row])], ignore_index=True
-                        )
-
-                        # If authenticated, push to GitHub
-                        if is_authenticated:
-                            st.info("📤 Pushing to GitHub...")
-                            # Save to parquet
-                            new_df.to_parquet("./data/movies_df.parquet", index=False)
-                            success, result = create_and_push_movie_branch(
-                                movie_data.title, new_row["year"]
+                        # Check if movie already exists
+                        if imdb_id in existing_df["omdb_id"].to_list():
+                            st.warning(
+                                f"⚠️ Movie '{movie_data['Title']}' already exists in your database!"
                             )
-                            if success:
-                                st.success(
-                                    f"✅ Successfully added '{movie_data.title}' ({new_row['year']})!"
-                                )
-                                st.success(f"🔗 PR created and auto-merged: {result}")
-                            else:
-                                st.warning(
-                                    f"✅ Movie added locally, but GitHub push failed: {result}"
-                                )
                         else:
-                            st.success(
-                                f"✅ Successfully added '{movie_data.title}' ({new_row['year']})!"
-                            )
-                            st.info("💡 Login to automatically sync with GitHub")
+                            # Parse box office
+                            box_office = None
+                            if movie_data.get("BoxOffice") != "N/A":
+                                try:
+                                    box_office = int(
+                                        re.sub(r"[^\d]", "", movie_data["BoxOffice"])
+                                    )
+                                except Exception:
+                                    box_office = None
 
-                        st.info("🔄 Refreshing page...")
-                        st.rerun()
+                            # Parse year
+                            year = None
+                            if movie_data.get("Year") != "N/A":
+                                try:
+                                    year = int(movie_data["Year"])
+                                except Exception:
+                                    year = None
+
+                            # Parse IMDb rating
+                            imdb_rating = None
+                            if movie_data.get("imdbRating") != "N/A":
+                                try:
+                                    imdb_rating = float(movie_data["imdbRating"])
+                                except Exception:
+                                    imdb_rating = None
+
+                            # Create new row matching the notebook structure
+                            new_row = {
+                                "index": existing_df["index"].max() + 1,
+                                "title": movie_data.get("Title", "Unknown"),
+                                "year": year,
+                                "viewed": datetime.today().date(),
+                                "omdb_id": imdb_id,
+                                "liked": liked_input,
+                                "genre": movie_data.get("Genre", "N/A"),
+                                "director": movie_data.get("Director", "Unknown"),
+                                "country": movie_data.get("Country", "N/A"),
+                                "actors": movie_data.get("Actors", "N/A"),
+                                "box_office": box_office,
+                                "writer": movie_data.get("Writer", "Unknown"),
+                                "language": movie_data.get("Language", "N/A"),
+                                "imdb_rating": imdb_rating,
+                            }
+
+                            # Create single-row DataFrame and cast to match schema
+                            new_row_df = pl.DataFrame([new_row])
+                            new_row_df = new_row_df.cast(existing_df.schema)
+
+                            # Concatenate
+                            new_df = pl.concat(
+                                [existing_df, new_row_df], how="vertical"
+                            )
+
+                            # Save to parquet
+                            new_df.write_parquet("./data/movies_df.parquet")
+
+                            # If authenticated, push to GitHub
+                            if is_authenticated:
+                                st.info("📤 Pushing to GitHub...")
+                                success, result = create_and_push_movie_branch(
+                                    movie_data["Title"], new_row["year"]
+                                )
+                                if success:
+                                    st.success(
+                                        f"✅ Successfully added '{movie_data['Title']}' ({new_row['year']})!"
+                                    )
+                                    st.success(
+                                        f"🔗 PR created and auto-merged: {result}"
+                                    )
+                                else:
+                                    st.warning(
+                                        f"✅ Movie added locally, but GitHub push failed: {result}"
+                                    )
+                            else:
+                                st.success(
+                                    f"✅ Successfully added '{movie_data['Title']}' ({new_row['year']})!"
+                                )
+                                st.info("💡 Login to automatically sync with GitHub")
+
+                            st.info("🔄 Refreshing page...")
+                            st.rerun()
 
         except Exception as e:
             st.error(f"❌ Error adding movie: {e}")
-            st.info("Make sure TMDB_API_KEY is configured in your environment.")
+            st.info("Make sure OMDB_API_KEY is configured in secrets.")
 
 st.divider()
 
