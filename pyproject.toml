@@ -57,6 +57,7 @@ omit = [
     "*/__pycache__/*",
     "*/venv/*",
     "*/.venv/*",
+    "scripts/streamlit_app.py",
 ]
 
 [tool.coverage.report]
