@@ -53,7 +53,7 @@ jobs:
     - name: Check code formatting with black
       id: format
       run: |
-        black --check scripts --line-length=120
+        black --check scripts
       continue-on-error: false
 
     - name: Lint with flake8 (strict)

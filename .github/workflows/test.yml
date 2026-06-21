@@ -54,7 +54,7 @@ jobs:
 
     - name: Check code formatting with black
       run: |
-        black --check scripts --line-length=120
+        black --check scripts
 
     - name: Run tests with pytest
       env:

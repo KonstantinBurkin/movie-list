@@ -25,7 +25,7 @@ isort scripts --check-only --diff
 
 echo ""
 echo "4️⃣  Checking formatting..."
-black --check scripts --line-length=120
+black --check scripts
 
 echo ""
 echo "5️⃣  Running tests..."
