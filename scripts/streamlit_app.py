@@ -334,12 +334,7 @@ if not recommendations_path.exists():
         from generate_recommendations import generate_recommendations  # noqa: E402
 
         with st.spinner("Analyzing your movie preferences..."):
-            recommendations_list = generate_recommendations(
-                retrain=True,
-                top_n=5,
-                months_back=6,
-                use_cf=True,  # Enable collaborative filtering
-            )
+            recommendations_list = generate_recommendations(top_n=5)
             if recommendations_list:
                 st.success("✅ Recommendations generated successfully!")
                 st.rerun()
@@ -371,20 +366,6 @@ if recommendations_path.exists():
                     col1, col2 = st.columns([3, 1])
 
                     with col1:
-                        # Add source badge
-                        source = rec.get("source", "content_based")
-                        if source == "collaborative_filtering":
-                            source_badge = "🤝 Collaborative Filtering"
-                            badge_color = "#4CAF50"
-                        else:
-                            source_badge = "📊 Content-Based"
-                            badge_color = "#2196F3"
-
-                        st.markdown(
-                            f'<span style="background-color: {badge_color}; color: white; padding: 2px 8px; '
-                            f'border-radius: 4px; font-size: 12px;">{source_badge}</span>',
-                            unsafe_allow_html=True,
-                        )
                         st.subheader(f"{i}. {rec['title']} ({rec['year']})")
 
                         # Create columns for metadata
