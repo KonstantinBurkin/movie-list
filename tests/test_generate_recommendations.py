@@ -2,13 +2,13 @@
 
 import sys
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import pytest
 
 sys.path.append(str(Path(__file__).parent.parent / "scripts"))
 
-from generate_recommendations import generate_recommendations
+from generate_recommendations import enrich_cf_recommendations_with_tmdb, generate_recommendations
 
 
 @pytest.fixture
@@ -118,3 +118,163 @@ def test_generate_recommendations_movielens_not_found():
         result = generate_recommendations(top_n=5)
 
         assert result == []
+
+
+def test_enrich_cf_recommendations_with_tmdb_success(mock_cf_recommendations):
+    """Test enriching CF recommendations with TMDB data successfully."""
+    mock_tmdb_client = Mock()
+    mock_tmdb_client.get_movie_by_title.side_effect = [
+        {
+            'tmdb_id': 789,
+            'rating': 8.4,
+            'genre_ids': [28, 18],
+            'overview': 'A test movie about action',
+            'poster_path': '/test1.jpg'
+        },
+        {
+            'tmdb_id': 101,
+            'rating': 8.0,
+            'genre_ids': [35],
+            'overview': 'A comedy test movie',
+            'poster_path': '/test2.jpg'
+        }
+    ]
+
+    enriched = enrich_cf_recommendations_with_tmdb(mock_cf_recommendations, mock_tmdb_client)
+
+    assert len(enriched) == 2
+    # Check first recommendation
+    assert enriched[0]['title'] == 'Test Movie 1'
+    assert enriched[0]['tmdb_id'] == 789
+    assert enriched[0]['rating'] == 8.4
+    assert enriched[0]['overview'] == 'A test movie about action'
+    assert enriched[0]['poster_path'] == '/test1.jpg'
+    assert enriched[0]['source'] == 'collaborative_filtering'
+    assert enriched[0]['cf_stats']['num_similar_users'] == 45
+
+
+def test_enrich_cf_recommendations_tmdb_not_found(mock_cf_recommendations):
+    """Test enriching when TMDB doesn't find the movie - should skip these movies."""
+    mock_tmdb_client = Mock()
+    mock_tmdb_client.get_movie_by_title.return_value = None
+
+    enriched = enrich_cf_recommendations_with_tmdb(mock_cf_recommendations, mock_tmdb_client)
+
+    # Movies without TMDB data should be skipped
+    assert len(enriched) == 0
+
+
+def test_enrich_cf_recommendations_no_tmdb_id(mock_cf_recommendations):
+    """Test enriching when TMDB returns data without tmdb_id - should skip these movies."""
+    mock_tmdb_client = Mock()
+    mock_tmdb_client.get_movie_by_title.return_value = {
+        'rating': 8.4,
+        'genre_ids': [28],
+        'overview': 'Test',
+        'poster_path': '/test.jpg'
+        # Missing tmdb_id
+    }
+
+    enriched = enrich_cf_recommendations_with_tmdb(mock_cf_recommendations, mock_tmdb_client)
+
+    # Movies without tmdb_id should be skipped
+    assert len(enriched) == 0
+
+
+def test_enrich_cf_recommendations_tmdb_exception(mock_cf_recommendations):
+    """Test handling TMDB exceptions gracefully - should skip movies with errors."""
+    mock_tmdb_client = Mock()
+    mock_tmdb_client.get_movie_by_title.side_effect = Exception("TMDB API error")
+
+    enriched = enrich_cf_recommendations_with_tmdb(mock_cf_recommendations, mock_tmdb_client)
+
+    # Movies with TMDB errors should be skipped
+    assert len(enriched) == 0
+
+
+def test_enrich_cf_recommendations_partial_tmdb_data(mock_cf_recommendations):
+    """Test handling partial TMDB data (some movies found, some not) - only includes movies with posters."""
+    mock_tmdb_client = Mock()
+    mock_tmdb_client.get_movie_by_title.side_effect = [
+        {
+            'tmdb_id': 789,
+            'rating': 8.4,
+            'genre_ids': [28, 18],
+            'overview': 'A test movie',
+            'poster_path': '/test1.jpg'
+        },
+        None  # Second movie not found
+    ]
+
+    enriched = enrich_cf_recommendations_with_tmdb(mock_cf_recommendations, mock_tmdb_client)
+
+    # Only movies with TMDB data and posters should be included
+    assert len(enriched) == 1
+    assert enriched[0]['tmdb_id'] == 789
+    assert enriched[0]['rating'] == 8.4
+    assert enriched[0]['poster_path'] == '/test1.jpg'
+
+
+def test_enrich_cf_recommendations_preserves_cf_stats(mock_cf_recommendations):
+    """Test that CF stats are preserved in enriched recommendations."""
+    mock_tmdb_client = Mock()
+    mock_tmdb_client.get_movie_by_title.return_value = {
+        'tmdb_id': 789,
+        'rating': 8.4,
+        'genre_ids': [28],
+        'overview': 'Test',
+        'poster_path': '/test.jpg'
+    }
+
+    enriched = enrich_cf_recommendations_with_tmdb(mock_cf_recommendations, mock_tmdb_client)
+
+    # Check CF stats are preserved
+    assert enriched[0]['cf_stats']['num_similar_users'] == 45
+    assert enriched[0]['cf_stats']['avg_movielens_rating'] == 4.2
+    assert enriched[1]['cf_stats']['num_similar_users'] == 38
+    assert enriched[1]['cf_stats']['avg_movielens_rating'] == 4.0
+
+
+def test_enrich_cf_recommendations_empty_list():
+    """Test enriching empty recommendations list."""
+    mock_tmdb_client = Mock()
+    enriched = enrich_cf_recommendations_with_tmdb([], mock_tmdb_client)
+    assert enriched == []
+
+
+def test_enrich_cf_recommendations_missing_poster(mock_cf_recommendations):
+    """Test handling TMDB response with missing poster - should skip these movies."""
+    mock_tmdb_client = Mock()
+    mock_tmdb_client.get_movie_by_title.return_value = {
+        'tmdb_id': 789,
+        'rating': 8.4,
+        'genre_ids': [28],
+        'overview': 'Test movie',
+        'poster_path': None  # No poster - should skip
+    }
+
+    enriched = enrich_cf_recommendations_with_tmdb(mock_cf_recommendations, mock_tmdb_client)
+
+    # Movies without poster_path should be skipped
+    assert len(enriched) == 0
+
+
+def test_enrich_cf_recommendations_with_all_optional_fields(mock_cf_recommendations):
+    """Test handling TMDB response with all fields including optional ones."""
+    mock_tmdb_client = Mock()
+    mock_tmdb_client.get_movie_by_title.return_value = {
+        'tmdb_id': 789,
+        'rating': 8.4,
+        'genre_ids': [28, 18],
+        'overview': 'A comprehensive test movie',
+        'poster_path': '/test.jpg'
+    }
+
+    enriched = enrich_cf_recommendations_with_tmdb(mock_cf_recommendations, mock_tmdb_client)
+
+    assert len(enriched) == 2
+    assert enriched[0]['tmdb_id'] == 789
+    assert enriched[0]['rating'] == 8.4
+    assert enriched[0]['genres'] == [28, 18]
+    assert enriched[0]['overview'] == 'A comprehensive test movie'
+    assert enriched[0]['poster_path'] == '/test.jpg'

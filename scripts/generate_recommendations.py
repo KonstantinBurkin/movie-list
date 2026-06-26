@@ -20,18 +20,24 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
 
     Args:
         cf_recs: List of CF recommendations from MovieLens
-        tmdb_client: TMDB client for fetching movie details
+        tmdb_client: TMDB client for fetching movie details (required)
 
     Returns:
-        List of enriched recommendations with TMDB data
+        List of enriched recommendations with TMDB data (movies without TMDB data are skipped)
     """
     enriched = []
 
     for rec in cf_recs:
         # Try to find movie on TMDB
-        tmdb_movie = tmdb_client.get_movie_by_title(rec["title"], rec.get("year"))
+        tmdb_movie = None
+        try:
+            tmdb_movie = tmdb_client.get_movie_by_title(rec["title"], rec.get("year"))
+        except Exception:
+            # TMDB lookup failed, skip this recommendation
+            continue
 
-        if tmdb_movie and tmdb_movie.get("tmdb_id"):
+        # Only add recommendations that have TMDB data with poster
+        if tmdb_movie and tmdb_movie.get("tmdb_id") and tmdb_movie.get("poster_path"):
             enriched.append(
                 {
                     "title": rec["title"],
@@ -41,26 +47,7 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
                     "genres": tmdb_movie.get("genre_ids", []),
                     "overview": tmdb_movie.get("overview", ""),
                     "score": rec["cf_score"],
-                    "poster_path": tmdb_movie.get("poster_path"),
-                    "source": "collaborative_filtering",
-                    "cf_stats": {
-                        "num_similar_users": rec["num_similar_users"],
-                        "avg_movielens_rating": rec["avg_rating"],
-                    },
-                }
-            )
-        else:
-            # Fallback: use MovieLens data without TMDB enrichment
-            enriched.append(
-                {
-                    "title": rec["title"],
-                    "year": rec["year"],
-                    "tmdb_id": None,
-                    "rating": rec["avg_rating"] * 2,  # Convert 5-scale to 10-scale
-                    "genres": [],
-                    "overview": f"Recommended by {rec['num_similar_users']} similar users (MovieLens)",
-                    "score": rec["cf_score"],
-                    "poster_path": None,
+                    "poster_path": tmdb_movie["poster_path"],
                     "source": "collaborative_filtering",
                     "cf_stats": {
                         "num_similar_users": rec["num_similar_users"],
@@ -94,13 +81,14 @@ def generate_recommendations(top_n: int = 5):
         my_movies = pl.read_parquet("data/movies_df.parquet")
         my_movies = my_movies.filter(pl.col("omdb_id") != "Not found")
 
-        cf_recs_raw = cf_model.get_recommendations(my_movies, top_n=top_n * 2)
+        # Generate more candidates since we filter for TMDB posters
+        cf_recs_raw = cf_model.get_recommendations(my_movies, top_n=top_n * 3)
 
         if cf_recs_raw:
-            # Enrich with TMDB data
+            # Enrich with TMDB data (required - only movies with posters are included)
             tmdb_client = TMDBClient()
             recommendations = enrich_cf_recommendations_with_tmdb(cf_recs_raw, tmdb_client)
-            print(f"\n✓ Generated {len(recommendations)} CF recommendations")
+            print(f"\n✓ Generated {len(recommendations)} CF recommendations with TMDB posters")
         else:
             print("\n⚠ No CF recommendations generated")
             return []
