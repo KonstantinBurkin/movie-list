@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-06-26T17:24:09.256491",
+  "recommendations": [
+    {
+      "title": "Silence of the Lambs, The",
+      "year": 1991,
+      "tmdb_id": null,
+      "rating": 8.92,
+      "genres": [],
+      "overview": "Recommended by 98 similar users (MovieLens)",
+      "score": 0.97,
+      "poster_path": null,
+      "source": "collaborative_filtering",
+      "cf_stats": {
+        "num_similar_users": 98,
+        "avg_movielens_rating": 4.46
+      }
+    },
+    {
+      "title": "Godfather: Part II, The",
+      "year": 1974,
+      "tmdb_id": null,
+      "rating": 9.28,
+      "genres": [],
+      "overview": "Recommended by 95 similar users (MovieLens)",
+      "score": 0.96,
+      "poster_path": null,
+      "source": "collaborative_filtering",
+      "cf_stats": {
+        "num_similar_users": 95,
+        "avg_movielens_rating": 4.64
+      }
+    },
+    {
+      "title": "12 Angry Men",
+      "year": 1957,
+      "tmdb_id": null,
+      "rating": 9.16,
+      "genres": [],
+      "overview": "Recommended by 93 similar users (MovieLens)",
+      "score": 0.94,
+      "poster_path": null,
+      "source": "collaborative_filtering",
+      "cf_stats": {
+        "num_similar_users": 93,
+        "avg_movielens_rating": 4.58
+      }
+    }
+  ]
+}

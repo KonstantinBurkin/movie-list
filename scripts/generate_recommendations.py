@@ -10,40 +10,100 @@ import json  # noqa: E402
 from datetime import datetime  # noqa: E402
 
 import polars as pl  # noqa: E402
-from recommendation.collaborative_filtering import CollaborativeFilteringModel  # noqa: E402
+from recommendation.movielens_cf import MovieLensCF  # noqa: E402
+from tmdb_client import TMDBClient  # noqa: E402
 
 
-def generate_recommendations(retrain: bool = True, top_n: int = 5, months_back: int = 6):
+def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) -> list:
     """
-    Generate movie recommendations.
+    Enrich MovieLens CF recommendations with TMDB data.
 
     Args:
-        retrain: Whether to retrain the model before generating recommendations
+        cf_recs: List of CF recommendations from MovieLens
+        tmdb_client: TMDB client for fetching movie details (required)
+
+    Returns:
+        List of enriched recommendations with TMDB data (movies without TMDB data are skipped)
+    """
+    enriched = []
+
+    for rec in cf_recs:
+        # Try to find movie on TMDB
+        tmdb_movie = None
+        try:
+            tmdb_movie = tmdb_client.get_movie_by_title(rec["title"], rec.get("year"))
+        except Exception:
+            # TMDB lookup failed, skip this recommendation
+            continue
+
+        # Only add recommendations that have TMDB data with poster
+        if tmdb_movie and tmdb_movie.get("tmdb_id") and tmdb_movie.get("poster_path"):
+            enriched.append(
+                {
+                    "title": rec["title"],
+                    "year": rec["year"],
+                    "tmdb_id": tmdb_movie["tmdb_id"],
+                    "rating": tmdb_movie.get("rating"),
+                    "genres": tmdb_movie.get("genre_ids", []),
+                    "overview": tmdb_movie.get("overview", ""),
+                    "score": rec["cf_score"],
+                    "poster_path": tmdb_movie["poster_path"],
+                    "source": "collaborative_filtering",
+                    "cf_stats": {
+                        "num_similar_users": rec["num_similar_users"],
+                        "avg_movielens_rating": rec["avg_rating"],
+                    },
+                }
+            )
+
+    return enriched
+
+
+def generate_recommendations(top_n: int = 5):
+    """
+    Generate movie recommendations using collaborative filtering.
+
+    Args:
         top_n: Number of recommendations to generate
-        months_back: Number of months of viewing history to use
     """
     print("=" * 60)
-    print("MOVIE RECOMMENDATION SYSTEM")
+    print("MOVIE RECOMMENDATION SYSTEM (COLLABORATIVE FILTERING)")
     print("=" * 60)
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Generating top {top_n} recommendations")
-    print(f"Using {months_back} months of viewing history")
     print("=" * 60 + "\n")
 
-    model = CollaborativeFilteringModel()
+    # Collaborative filtering recommendations
+    print("Collaborative filtering recommendations...")
+    print("-" * 60)
+    try:
+        cf_model = MovieLensCF()
+        my_movies = pl.read_parquet("data/movies_df.parquet")
+        my_movies = my_movies.filter(pl.col("omdb_id") != "Not found")
 
-    if retrain:
-        print("Training model...\n")
-        model.train(months_back=months_back)
-    else:
-        print("Loading existing model...\n")
-        try:
-            model.load_model()
-        except FileNotFoundError:
-            print("No existing model found. Training new model...\n")
-            model.train(months_back=months_back)
+        # Generate more candidates since we filter for TMDB posters
+        cf_recs_raw = cf_model.get_recommendations(my_movies, top_n=top_n * 3)
 
-    recommendations = model.predict(top_n=top_n)
+        if cf_recs_raw:
+            # Enrich with TMDB data (required - only movies with posters are included)
+            tmdb_client = TMDBClient()
+            recommendations = enrich_cf_recommendations_with_tmdb(cf_recs_raw, tmdb_client)
+            print(f"\n✓ Generated {len(recommendations)} CF recommendations with TMDB posters")
+        else:
+            print("\n⚠ No CF recommendations generated")
+            return []
+
+    except FileNotFoundError as e:
+        print(f"\n⚠ MovieLens dataset not found: {e}")
+        print("  Run: python scripts/download_movielens.py")
+        return []
+    except Exception as e:
+        print(f"\n⚠ CF error: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
+
+    recommendations = recommendations[:top_n]
 
     if not recommendations:
         print("\nNo recommendations generated. Please check your data and API configuration.")
@@ -58,7 +118,6 @@ def generate_recommendations(retrain: bool = True, top_n: int = 5, months_back: 
 
     output_data = {
         "generated_at": datetime.now().isoformat(),
-        "months_back": months_back,
         "recommendations": recommendations,
     }
 
@@ -78,10 +137,15 @@ def generate_recommendations(retrain: bool = True, top_n: int = 5, months_back: 
 
     for i, rec in enumerate(recommendations, 1):
         print(f"\n{i}. {rec['title']} ({rec['year']})")
-        print(f"   TMDB ID: {rec['tmdb_id']}")
-        print(f"   Rating: {rec['rating']:.1f}/10" if rec["rating"] else "   Rating: N/A")
-        print(f"   Match Score: {rec['score']}")
-        print(f"   Overview: {rec['overview'][:200]}...")
+        print(f"   TMDB ID: {rec.get('tmdb_id', 'N/A')}")
+        print(f"   Rating: {rec['rating']:.1f}/10" if rec.get("rating") else "   Rating: N/A")
+        print(f"   Match Score: {rec['score']:.2f}")
+
+        if rec.get("cf_stats"):
+            print(f"   Liked by {rec['cf_stats']['num_similar_users']} users with similar taste")
+            print(f"   MovieLens avg rating: {rec['cf_stats']['avg_movielens_rating']:.1f}/5.0")
+
+        print(f"   Overview: {rec['overview'][:200]}..." if rec.get("overview") else "   Overview: N/A")
         if rec.get("poster_path"):
             print(f"   Poster: https://image.tmdb.org/t/p/w500{rec['poster_path']}")
 
@@ -99,17 +163,13 @@ def main():
     """CLI entry point."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Generate movie recommendations")
-    parser.add_argument("--no-retrain", action="store_true", help="Use existing model without retraining")
+    parser = argparse.ArgumentParser(description="Generate movie recommendations using collaborative filtering")
     parser.add_argument("--top-n", type=int, default=5, help="Number of recommendations to generate (default: 5)")
-    parser.add_argument(
-        "--months-back", type=int, default=6, help="Number of months of viewing history to use (default: 6)"
-    )
 
     args = parser.parse_args()
 
     try:
-        generate_recommendations(retrain=not args.no_retrain, top_n=args.top_n, months_back=args.months_back)
+        generate_recommendations(top_n=args.top_n)
     except Exception as e:
         print(f"\nError: {e}")
         import traceback
