@@ -1,10 +1,7 @@
 """GitHub sync module using PyGithub API - works on Streamlit Cloud."""
 
-import base64
-import os
 from pathlib import Path
 
-import polars as pl
 from github import Github, GithubException
 
 
@@ -86,7 +83,7 @@ def create_pr_with_movie(
         # Enable auto-merge if available
         try:
             pr.enable_automerge(merge_method="MERGE")
-        except Exception as e:
+        except Exception:
             # Auto-merge might not be available, that's ok
             pass
 
@@ -114,6 +111,6 @@ def get_repo_info():
         if "github.com" in url:
             parts = url.replace(".git", "").split("/")
             return f"{parts[-2]}/{parts[-1]}"
-    except:
+    except (subprocess.CalledProcessError, FileNotFoundError, IndexError):
         pass
     return None
