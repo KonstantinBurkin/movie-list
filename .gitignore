@@ -205,6 +205,9 @@ __marimo__/
 # Data (keep base parquet)
 data/recommendations/*.json
 data/recommendations/*.parquet
+data/movielens/*.zip
+data/movielens/*.csv
+data/movielens/*.txt
 
 # Models
 models/*.pkl
