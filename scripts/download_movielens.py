@@ -51,11 +51,11 @@ def download_movielens(dataset: str = "ml-32m"):
         )
 
     url = datasets[dataset]
-    data_dir = Path("data")
+    data_dir = Path("data/movielens")
     data_dir.mkdir(exist_ok=True)
 
     zip_path = data_dir / f"{dataset}.zip"
-    extract_dir = data_dir / "movielens"
+    extract_dir = data_dir
 
     print(f"Downloading MovieLens {dataset}...")
     print(f"URL: {url}")
