@@ -1,13 +1,14 @@
 """Tests for TMDB client."""
 
-import pytest
-from unittest.mock import Mock, patch, MagicMock
 import sys
 from pathlib import Path
+from unittest.mock import MagicMock, Mock, patch
+
+import pytest
 
 sys.path.append(str(Path(__file__).parent.parent / "scripts"))
 
-from tmdb_client import TMDBClient, GENRE_MAP
+from tmdb_client import GENRE_MAP, TMDBClient
 
 
 class MockMovie:

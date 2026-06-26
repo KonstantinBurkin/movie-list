@@ -1,10 +1,11 @@
 """Tests for recommendation generation script."""
 
-import pytest
-from unittest.mock import Mock, patch, MagicMock
+import json
 import sys
 from pathlib import Path
-import json
+from unittest.mock import MagicMock, Mock, patch
+
+import pytest
 
 sys.path.append(str(Path(__file__).parent.parent / "scripts"))
 

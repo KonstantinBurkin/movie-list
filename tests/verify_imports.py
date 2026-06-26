@@ -10,7 +10,7 @@ sys.path.append(str(Path(__file__).parent.parent / "scripts"))
 def main():
     """Test that all critical imports work."""
     try:
-        from tmdb_client import TMDBClient, GENRE_MAP
+        from tmdb_client import GENRE_MAP, TMDBClient
         print("✅ tmdb_client imports successful")
 
         from recommendation.collaborative_filtering import CollaborativeFilteringModel
