@@ -10,7 +10,6 @@ import json  # noqa: E402
 from datetime import datetime  # noqa: E402
 
 import polars as pl  # noqa: E402
-from recommendation.content_based import ContentBasedModel  # noqa: E402
 from recommendation.movielens_cf import MovieLensCF  # noqa: E402
 from tmdb_client import TMDBClient  # noqa: E402
 
@@ -73,125 +72,50 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
     return enriched
 
 
-def blend_recommendations(content_recs: list, cf_recs: list, top_n: int = 5) -> list:
+def generate_recommendations(top_n: int = 5):
     """
-    Blend content-based and collaborative filtering recommendations.
+    Generate movie recommendations using collaborative filtering.
 
     Args:
-        content_recs: Content-based recommendations
-        cf_recs: Collaborative filtering recommendations
-        top_n: Number of final recommendations
-
-    Returns:
-        Blended list of recommendations
-    """
-    blended = []
-    seen_titles = set()
-
-    # Interleave recommendations (CF first as it's often more personalized)
-    cf_idx = 0
-    content_idx = 0
-
-    while len(blended) < top_n and (cf_idx < len(cf_recs) or content_idx < len(content_recs)):
-        # Add CF recommendation
-        if cf_idx < len(cf_recs):
-            rec = cf_recs[cf_idx]
-            if rec["title"] not in seen_titles:
-                blended.append(rec)
-                seen_titles.add(rec["title"])
-            cf_idx += 1
-
-        if len(blended) >= top_n:
-            break
-
-        # Add content recommendation
-        if content_idx < len(content_recs):
-            rec = content_recs[content_idx]
-            # Add source tag if not present
-            if "source" not in rec:
-                rec = {**rec, "source": "content_based"}
-            if rec["title"] not in seen_titles:
-                blended.append(rec)
-                seen_titles.add(rec["title"])
-            content_idx += 1
-
-    return blended[:top_n]
-
-
-def generate_recommendations(
-    retrain: bool = True, top_n: int = 5, months_back: int = 6, use_cf: bool = True
-):
-    """
-    Generate movie recommendations using hybrid approach.
-
-    Args:
-        retrain: Whether to retrain the model before generating recommendations
         top_n: Number of recommendations to generate
-        months_back: Number of months of viewing history to use
-        use_cf: Whether to use collaborative filtering (requires MovieLens dataset)
     """
     print("=" * 60)
-    print("MOVIE RECOMMENDATION SYSTEM (HYBRID)")
+    print("MOVIE RECOMMENDATION SYSTEM (COLLABORATIVE FILTERING)")
     print("=" * 60)
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Generating top {top_n} recommendations")
-    print(f"Using {months_back} months of viewing history")
-    print(f"Collaborative Filtering: {'Enabled' if use_cf else 'Disabled'}")
     print("=" * 60 + "\n")
 
-    # Content-based recommendations
-    print("[1/2] Content-based recommendations...")
-    print("-" * 60)
-    content_model = ContentBasedModel()
-
-    if retrain:
-        print("Training content-based model...\n")
-        content_model.train(months_back=months_back)
-    else:
-        print("Loading existing content-based model...\n")
-        try:
-            content_model.load_model()
-        except FileNotFoundError:
-            print("No existing model found. Training new model...\n")
-            content_model.train(months_back=months_back)
-
-    content_recommendations = content_model.predict(top_n=top_n * 2)
-
     # Collaborative filtering recommendations
-    cf_recommendations = []
-    if use_cf:
-        print("\n[2/2] Collaborative filtering recommendations...")
-        print("-" * 60)
-        try:
-            cf_model = MovieLensCF()
-            my_movies = pl.read_parquet("data/movies_df.parquet")
-            my_movies = my_movies.filter(pl.col("omdb_id") != "Not found")
+    print("Collaborative filtering recommendations...")
+    print("-" * 60)
+    try:
+        cf_model = MovieLensCF()
+        my_movies = pl.read_parquet("data/movies_df.parquet")
+        my_movies = my_movies.filter(pl.col("omdb_id") != "Not found")
 
-            cf_recs_raw = cf_model.get_recommendations(my_movies, top_n=top_n * 2)
+        cf_recs_raw = cf_model.get_recommendations(my_movies, top_n=top_n * 2)
 
-            if cf_recs_raw:
-                # Enrich with TMDB data
-                tmdb_client = TMDBClient()
-                cf_recommendations = enrich_cf_recommendations_with_tmdb(cf_recs_raw, tmdb_client)
-                print(f"\n✓ Generated {len(cf_recommendations)} CF recommendations")
-            else:
-                print("\n⚠ No CF recommendations generated")
+        if cf_recs_raw:
+            # Enrich with TMDB data
+            tmdb_client = TMDBClient()
+            recommendations = enrich_cf_recommendations_with_tmdb(cf_recs_raw, tmdb_client)
+            print(f"\n✓ Generated {len(recommendations)} CF recommendations")
+        else:
+            print("\n⚠ No CF recommendations generated")
+            return []
 
-        except FileNotFoundError as e:
-            print(f"\n⚠ MovieLens dataset not found: {e}")
-            print("  Run: python scripts/download_movielens.py")
-            print("  Falling back to content-based only")
-        except Exception as e:
-            print(f"\n⚠ CF error: {e}")
-            print("  Falling back to content-based only")
+    except FileNotFoundError as e:
+        print(f"\n⚠ MovieLens dataset not found: {e}")
+        print("  Run: python scripts/download_movielens.py")
+        return []
+    except Exception as e:
+        print(f"\n⚠ CF error: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
 
-    # Blend recommendations
-    if cf_recommendations:
-        print("\n" + "-" * 60)
-        print("Blending recommendations...")
-        recommendations = blend_recommendations(content_recommendations, cf_recommendations, top_n=top_n)
-    else:
-        recommendations = content_recommendations[:top_n]
+    recommendations = recommendations[:top_n]
 
     if not recommendations:
         print("\nNo recommendations generated. Please check your data and API configuration.")
@@ -206,7 +130,6 @@ def generate_recommendations(
 
     output_data = {
         "generated_at": datetime.now().isoformat(),
-        "months_back": months_back,
         "recommendations": recommendations,
     }
 
@@ -225,14 +148,14 @@ def generate_recommendations(
     print("=" * 60)
 
     for i, rec in enumerate(recommendations, 1):
-        source_label = "🤝 CF" if rec.get("source") == "collaborative_filtering" else "📊 Content"
-        print(f"\n{i}. [{source_label}] {rec['title']} ({rec['year']})")
+        print(f"\n{i}. {rec['title']} ({rec['year']})")
         print(f"   TMDB ID: {rec.get('tmdb_id', 'N/A')}")
         print(f"   Rating: {rec['rating']:.1f}/10" if rec.get("rating") else "   Rating: N/A")
         print(f"   Match Score: {rec['score']:.2f}")
 
         if rec.get("cf_stats"):
-            print(f"   CF: {rec['cf_stats']['num_similar_users']} similar users liked this")
+            print(f"   Liked by {rec['cf_stats']['num_similar_users']} users with similar taste")
+            print(f"   MovieLens avg rating: {rec['cf_stats']['avg_movielens_rating']:.1f}/5.0")
 
         print(f"   Overview: {rec['overview'][:200]}..." if rec.get("overview") else "   Overview: N/A")
         if rec.get("poster_path"):
@@ -245,14 +168,6 @@ def generate_recommendations(
     print(f"  - {parquet_path}")
     print("=" * 60)
 
-    # Print breakdown
-    cf_count = sum(1 for r in recommendations if r.get("source") == "collaborative_filtering")
-    content_count = len(recommendations) - cf_count
-    print("\nRecommendation sources:")
-    print(f"  - Collaborative Filtering: {cf_count}")
-    print(f"  - Content-based: {content_count}")
-    print("=" * 60)
-
     return recommendations
 
 
@@ -260,27 +175,13 @@ def main():
     """CLI entry point."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Generate movie recommendations")
-    parser.add_argument("--no-retrain", action="store_true", help="Use existing model without retraining")
+    parser = argparse.ArgumentParser(description="Generate movie recommendations using collaborative filtering")
     parser.add_argument("--top-n", type=int, default=5, help="Number of recommendations to generate (default: 5)")
-    parser.add_argument(
-        "--months-back", type=int, default=6, help="Number of months of viewing history to use (default: 6)"
-    )
-    parser.add_argument(
-        "--no-cf",
-        action="store_true",
-        help="Disable collaborative filtering (content-based only)",
-    )
 
     args = parser.parse_args()
 
     try:
-        generate_recommendations(
-            retrain=not args.no_retrain,
-            top_n=args.top_n,
-            months_back=args.months_back,
-            use_cf=not args.no_cf,
-        )
+        generate_recommendations(top_n=args.top_n)
     except Exception as e:
         print(f"\nError: {e}")
         import traceback
