@@ -39,6 +39,21 @@ def check_authentication():
 # ============================================================================
 def create_and_push_movie_branch(movie_title, movie_year):
     """Create a new branch, commit movie data, push to GitHub, and create PR."""
+    # Try GitHub API first (works on Streamlit Cloud)
+    github_token = st.secrets.get("GITHUB_TOKEN")
+
+    if github_token:
+        try:
+            from github_sync import create_pr_with_movie
+
+            success, result = create_pr_with_movie(
+                movie_title, movie_year, github_token
+            )
+            return success, result
+        except Exception as e:
+            st.warning(f"GitHub API failed: {e}. Trying local git...")
+
+    # Fallback to local git/gh CLI (works locally)
     try:
         # Generate branch name
         safe_title = "".join(c if c.isalnum() else "-" for c in movie_title.lower())
