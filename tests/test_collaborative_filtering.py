@@ -1,11 +1,12 @@
 """Tests for collaborative filtering model."""
 
-import pytest
-from unittest.mock import Mock, patch, MagicMock
 import sys
-from pathlib import Path
-import polars as pl
 from datetime import datetime, timedelta
+from pathlib import Path
+from unittest.mock import MagicMock, Mock, patch
+
+import polars as pl
+import pytest
 
 sys.path.append(str(Path(__file__).parent.parent / "scripts"))
 
