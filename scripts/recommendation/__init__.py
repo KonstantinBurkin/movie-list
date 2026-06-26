@@ -1,5 +1,6 @@
 """Recommendation system module."""
 
-from .collaborative_filtering import CollaborativeFilteringModel
+from .content_based import ContentBasedModel
+from .movielens_cf import MovieLensCF
 
-__all__ = ["CollaborativeFilteringModel"]
+__all__ = ["ContentBasedModel", "MovieLensCF"]

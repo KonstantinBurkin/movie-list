@@ -1,4 +1,4 @@
-"""Collaborative filtering recommendation model using matrix factorization."""
+"""Content-based recommendation model using movie features."""
 
 import sys
 from pathlib import Path
@@ -16,8 +16,8 @@ import polars as pl  # noqa: E402
 from tmdb_client import TMDBClient  # noqa: E402
 
 
-class CollaborativeFilteringModel:
-    """Item-based collaborative filtering using cosine similarity."""
+class ContentBasedModel:
+    """Content-based filtering using movie features (genres, directors, actors)."""
 
     def __init__(self, data_path: str = "data/movies_df.parquet"):
         """Initialize the model with movie data."""
@@ -27,7 +27,7 @@ class CollaborativeFilteringModel:
         self.item_similarity_matrix = None
         self.movie_features = None
         self.tmdb_client = TMDBClient()
-        self.model_path = Path("models/cf_model.pkl")
+        self.model_path = Path("models/content_based_model.pkl")
 
     def load_data(self, months_back: int = 6):
         """Load and filter movies watched in the last N months."""
@@ -275,13 +275,13 @@ class CollaborativeFilteringModel:
 
 
 if __name__ == "__main__":
-    model = CollaborativeFilteringModel()
+    model = ContentBasedModel()
     model.train(months_back=6)
 
     recommendations = model.predict(top_n=5)
 
     print("\n" + "=" * 50)
-    print("TOP 5 RECOMMENDATIONS")
+    print("TOP 5 RECOMMENDATIONS (CONTENT-BASED)")
     print("=" * 50)
 
     for i, rec in enumerate(recommendations, 1):

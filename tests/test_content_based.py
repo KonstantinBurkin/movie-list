@@ -10,7 +10,7 @@ import pytest
 
 sys.path.append(str(Path(__file__).parent.parent / "scripts"))
 
-from recommendation.collaborative_filtering import CollaborativeFilteringModel
+from recommendation.content_based import ContentBasedModel
 
 
 @pytest.fixture
@@ -48,9 +48,9 @@ def mock_model(tmp_path, sample_movies_df):
     data_path = tmp_path / "movies_df.parquet"
     sample_movies_df.write_parquet(data_path)
 
-    with patch('recommendation.collaborative_filtering.TMDBClient'):
-        model = CollaborativeFilteringModel(data_path=str(data_path))
-        model.model_path = tmp_path / "cf_model.pkl"
+    with patch('recommendation.content_based.TMDBClient'):
+        model = ContentBasedModel(data_path=str(data_path))
+        model.model_path = tmp_path / "content_based_model.pkl"
         return model
 
 
@@ -140,8 +140,8 @@ def test_save_and_load_model(mock_model):
     assert mock_model.model_path.exists()
 
     # Create new model and load saved data
-    with patch('recommendation.collaborative_filtering.TMDBClient'):
-        new_model = CollaborativeFilteringModel()
+    with patch('recommendation.content_based.TMDBClient'):
+        new_model = ContentBasedModel()
         new_model.model_path = mock_model.model_path
         new_model.load_model()
 
@@ -200,8 +200,8 @@ def test_insufficient_data_warning(mock_model, sample_movies_df, tmp_path):
     data_path = tmp_path / "old_movies.parquet"
     old_df.write_parquet(data_path)
 
-    with patch('recommendation.collaborative_filtering.TMDBClient'):
-        model = CollaborativeFilteringModel(data_path=str(data_path))
+    with patch('recommendation.content_based.TMDBClient'):
+        model = ContentBasedModel(data_path=str(data_path))
         recent = model.load_data(months_back=6)
 
         assert len(recent) == 0
