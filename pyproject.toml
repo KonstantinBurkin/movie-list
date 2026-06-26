@@ -59,6 +59,8 @@ omit = [
     "*/venv/*",
     "*/.venv/*",
     "scripts/streamlit_app.py",
+    "scripts/download_movielens.py",
+    "scripts/github_sync.py",
 ]
 
 [tool.coverage.report]

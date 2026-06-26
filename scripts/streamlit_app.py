@@ -334,11 +334,7 @@ if not recommendations_path.exists():
         from generate_recommendations import generate_recommendations  # noqa: E402
 
         with st.spinner("Analyzing your movie preferences..."):
-            recommendations_list = generate_recommendations(
-                retrain=True,
-                top_n=5,
-                months_back=6,
-            )
+            recommendations_list = generate_recommendations(top_n=5)
             if recommendations_list:
                 st.success("✅ Recommendations generated successfully!")
                 st.rerun()
@@ -386,6 +382,12 @@ if recommendations_path.exists():
 
                         with meta_col3:
                             st.metric("Year", rec["year"])
+
+                        # Show CF stats if available
+                        if rec.get("cf_stats"):
+                            st.caption(
+                                f"💡 Liked by {rec['cf_stats']['num_similar_users']} users with similar taste"
+                            )
 
                         # Description
                         if rec.get("overview"):
