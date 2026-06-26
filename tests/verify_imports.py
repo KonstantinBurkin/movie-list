@@ -13,7 +13,7 @@ def main():
         from tmdb_client import GENRE_MAP, TMDBClient
         print("✅ tmdb_client imports successful")
 
-        from recommendation.collaborative_filtering import CollaborativeFilteringModel
+        from recommendation.content_based import ContentBasedModel
         print("✅ collaborative_filtering imports successful")
 
         from generate_recommendations import generate_recommendations

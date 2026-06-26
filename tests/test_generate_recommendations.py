@@ -41,7 +41,7 @@ def mock_recommendations():
 
 def test_generate_recommendations_with_retraining(tmp_path, mock_recommendations):
     """Test generating recommendations with model retraining."""
-    with patch('generate_recommendations.CollaborativeFilteringModel') as MockModel:
+    with patch('generate_recommendations.ContentBasedModel') as MockModel:
         mock_model = MockModel.return_value
         mock_model.predict.return_value = mock_recommendations
 
@@ -60,7 +60,7 @@ def test_generate_recommendations_with_retraining(tmp_path, mock_recommendations
 
 def test_generate_recommendations_without_retraining(tmp_path, mock_recommendations):
     """Test generating recommendations without retraining."""
-    with patch('generate_recommendations.CollaborativeFilteringModel') as MockModel:
+    with patch('generate_recommendations.ContentBasedModel') as MockModel:
         mock_model = MockModel.return_value
         mock_model.predict.return_value = mock_recommendations
 
@@ -78,7 +78,7 @@ def test_generate_recommendations_without_retraining(tmp_path, mock_recommendati
 
 def test_generate_recommendations_empty_result(tmp_path):
     """Test handling of empty recommendations."""
-    with patch('generate_recommendations.CollaborativeFilteringModel') as MockModel:
+    with patch('generate_recommendations.ContentBasedModel') as MockModel:
         mock_model = MockModel.return_value
         mock_model.predict.return_value = []
 
@@ -97,7 +97,7 @@ def test_output_file_creation(tmp_path, mock_recommendations):
     output_dir = tmp_path / 'recommendations'
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    with patch('generate_recommendations.CollaborativeFilteringModel') as MockModel:
+    with patch('generate_recommendations.ContentBasedModel') as MockModel:
         mock_model = MockModel.return_value
         mock_model.predict.return_value = mock_recommendations
 
