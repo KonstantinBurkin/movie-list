@@ -40,18 +40,18 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
         if tmdb_movie and tmdb_movie.get("tmdb_id") and tmdb_movie.get("poster_path"):
             enriched.append(
                 {
-                    "title": rec["title"],
-                    "year": rec["year"],
-                    "tmdb_id": tmdb_movie["tmdb_id"],
-                    "rating": tmdb_movie.get("rating"),
-                    "genres": tmdb_movie.get("genre_ids", []),
-                    "overview": tmdb_movie.get("overview", ""),
-                    "score": rec["cf_score"],
-                    "poster_path": tmdb_movie["poster_path"],
+                    "title": str(rec["title"]),
+                    "year": int(rec["year"]) if rec["year"] else None,
+                    "tmdb_id": int(tmdb_movie["tmdb_id"]),
+                    "rating": float(tmdb_movie["rating"]) if tmdb_movie.get("rating") else None,
+                    "genres": list(tmdb_movie.get("genre_ids", [])),
+                    "overview": str(tmdb_movie.get("overview", "")),
+                    "score": float(rec["cf_score"]),
+                    "poster_path": str(tmdb_movie["poster_path"]),
                     "source": "collaborative_filtering",
                     "cf_stats": {
-                        "num_similar_users": rec["num_similar_users"],
-                        "avg_movielens_rating": rec["avg_rating"],
+                        "num_similar_users": int(rec["num_similar_users"]),
+                        "avg_movielens_rating": float(rec["avg_rating"]),
                     },
                 }
             )
@@ -66,9 +66,6 @@ def generate_recommendations(top_n: int = 5):
     Args:
         top_n: Number of recommendations to generate
     """
-    print("=" * 60)
-    print("MOVIE RECOMMENDATION SYSTEM (COLLABORATIVE FILTERING)")
-    print("=" * 60)
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Generating top {top_n} recommendations")
     print("=" * 60 + "\n")
@@ -87,8 +84,12 @@ def generate_recommendations(top_n: int = 5):
         if cf_recs_raw:
             # Enrich with TMDB data (required - only movies with posters are included)
             tmdb_client = TMDBClient()
-            recommendations = enrich_cf_recommendations_with_tmdb(cf_recs_raw, tmdb_client)
-            print(f"\n✓ Generated {len(recommendations)} CF recommendations with TMDB posters")
+            recommendations = enrich_cf_recommendations_with_tmdb(
+                cf_recs_raw, tmdb_client
+            )
+            print(
+                f"\n✓ Generated {len(recommendations)} CF recommendations with TMDB posters"
+            )
         else:
             print("\n⚠ No CF recommendations generated")
             return []
@@ -100,13 +101,16 @@ def generate_recommendations(top_n: int = 5):
     except Exception as e:
         print(f"\n⚠ CF error: {e}")
         import traceback
+
         traceback.print_exc()
         return []
 
     recommendations = recommendations[:top_n]
 
     if not recommendations:
-        print("\nNo recommendations generated. Please check your data and API configuration.")
+        print(
+            "\nNo recommendations generated. Please check your data and API configuration."
+        )
         return []
 
     output_dir = Path("data/recommendations")
@@ -137,24 +141,6 @@ def generate_recommendations(top_n: int = 5):
 
     for i, rec in enumerate(recommendations, 1):
         print(f"\n{i}. {rec['title']} ({rec['year']})")
-        print(f"   TMDB ID: {rec.get('tmdb_id', 'N/A')}")
-        print(f"   Rating: {rec['rating']:.1f}/10" if rec.get("rating") else "   Rating: N/A")
-        print(f"   Match Score: {rec['score']:.2f}")
-
-        if rec.get("cf_stats"):
-            print(f"   Liked by {rec['cf_stats']['num_similar_users']} users with similar taste")
-            print(f"   MovieLens avg rating: {rec['cf_stats']['avg_movielens_rating']:.1f}/5.0")
-
-        print(f"   Overview: {rec['overview'][:200]}..." if rec.get("overview") else "   Overview: N/A")
-        if rec.get("poster_path"):
-            print(f"   Poster: https://image.tmdb.org/t/p/w500{rec['poster_path']}")
-
-    print("\n" + "=" * 60)
-    print("Recommendations saved to:")
-    print(f"  - {json_path}")
-    print(f"  - {latest_path}")
-    print(f"  - {parquet_path}")
-    print("=" * 60)
 
     return recommendations
 
@@ -163,8 +149,13 @@ def main():
     """CLI entry point."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Generate movie recommendations using collaborative filtering")
-    parser.add_argument("--top-n", type=int, default=5, help="Number of recommendations to generate (default: 5)")
+    parser = argparse.ArgumentParser(description="Generate movie recommendations")
+    parser.add_argument(
+        "--top-n",
+        type=int,
+        default=5,
+        help="Number of recommendations to generate (default: 5)",
+    )
 
     args = parser.parse_args()
 
