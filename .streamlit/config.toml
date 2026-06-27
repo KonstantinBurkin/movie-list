@@ -1,0 +1,19 @@
+[server]
+# Disable file watcher to avoid inotify limits on Streamlit Cloud
+fileWatcherType = "none"
+headless = true
+
+[runner]
+# Faster reruns
+fastReruns = true
+
+[client]
+# Show error details
+showErrorDetails = true
+
+[theme]
+# Optional: Customize your theme
+primaryColor = "#FF6B6B"
+backgroundColor = "#0E1117"
+secondaryBackgroundColor = "#262730"
+textColor = "#FAFAFA"
