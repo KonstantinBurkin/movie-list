@@ -40,18 +40,18 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
         if tmdb_movie and tmdb_movie.get("tmdb_id") and tmdb_movie.get("poster_path"):
             enriched.append(
                 {
-                    "title": rec["title"],
-                    "year": rec["year"],
-                    "tmdb_id": tmdb_movie["tmdb_id"],
-                    "rating": tmdb_movie.get("rating"),
-                    "genres": tmdb_movie.get("genre_ids", []),
-                    "overview": tmdb_movie.get("overview", ""),
-                    "score": rec["cf_score"],
-                    "poster_path": tmdb_movie["poster_path"],
+                    "title": str(rec["title"]),
+                    "year": int(rec["year"]) if rec["year"] else None,
+                    "tmdb_id": int(tmdb_movie["tmdb_id"]),
+                    "rating": float(tmdb_movie["rating"]) if tmdb_movie.get("rating") else None,
+                    "genres": list(tmdb_movie.get("genre_ids", [])),
+                    "overview": str(tmdb_movie.get("overview", "")),
+                    "score": float(rec["cf_score"]),
+                    "poster_path": str(tmdb_movie["poster_path"]),
                     "source": "collaborative_filtering",
                     "cf_stats": {
-                        "num_similar_users": rec["num_similar_users"],
-                        "avg_movielens_rating": rec["avg_rating"],
+                        "num_similar_users": int(rec["num_similar_users"]),
+                        "avg_movielens_rating": float(rec["avg_rating"]),
                     },
                 }
             )
