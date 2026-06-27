@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27T08:56:47.029437",
+  "generated_at": "2026-06-27T09:45:25.081411",
   "recommendations": [
     {
       "title": "Silence of the Lambs, The",
@@ -39,23 +39,6 @@
       }
     },
     {
-      "title": "12 Angry Men",
-      "year": 1957,
-      "tmdb_id": 389,
-      "rating": 8.563,
-      "genres": [
-        18
-      ],
-      "overview": "The defense and the prosecution have rested and the jury is filing into the jury room to decide if a young Spanish-American is guilty or innocent of murdering his father. What begins as an open and shut case soon becomes a mini-drama of each of the jurors' prejudices and preconceptions about the trial, the accused, and each other.",
-      "score": 0.94,
-      "poster_path": "/zhG3vKWyDRaZYoaww1UVAi29T9h.jpg",
-      "source": "collaborative_filtering",
-      "cf_stats": {
-        "num_similar_users": 93,
-        "avg_movielens_rating": 4.58
-      }
-    },
-    {
       "title": "Star Wars: Episode V - The Empire Strikes Back",
       "year": 1980,
       "tmdb_id": 1891,
@@ -75,20 +58,38 @@
       }
     },
     {
-      "title": "Die Hard",
-      "year": 1988,
-      "tmdb_id": 562,
-      "rating": 7.813,
+      "title": "Unforgiven",
+      "year": 1992,
+      "tmdb_id": 33,
+      "rating": 7.911,
       "genres": [
-        28,
-        53
+        37
       ],
-      "overview": "High above the city of L.A. a team of terrorists has seized a building, taken hostages, and declared war. One man has manages to escape... An off-duty cop hiding somewhere inside. He's alone, tired... and the only chance anyone has got.",
-      "score": 0.93,
-      "poster_path": "/7Bjd8kfmDSOzpmhySpEhkUyK2oH.jpg",
+      "overview": "William Munny is a retired, once-ruthless killer turned gentle widower and hog farmer. To help support his two motherless children, he accepts one last bounty-hunter mission to find the men who brutalized a prostitute. Joined by his former partner and a cocky greenhorn, he takes on a corrupt sheriff.",
+      "score": 0.91,
+      "poster_path": "/54roTwbX9fltg85zjsmrooXAs12.jpg",
       "source": "collaborative_filtering",
       "cf_stats": {
-        "num_similar_users": 96,
+        "num_similar_users": 92,
+        "avg_movielens_rating": 4.34
+      }
+    },
+    {
+      "title": "Jaws",
+      "year": 1975,
+      "tmdb_id": 578,
+      "rating": 7.682,
+      "genres": [
+        27,
+        53,
+        12
+      ],
+      "overview": "When the seaside community of Amity finds itself under attack by a dangerous great white shark, the town's chief of police, a young marine biologist, and a grizzled shark hunter embark on a desperate quest to kill the beast before it strikes again.",
+      "score": 0.91,
+      "poster_path": "/lxM6kqilAdpdhqUl2biYp5frUxE.jpg",
+      "source": "collaborative_filtering",
+      "cf_stats": {
+        "num_similar_users": 92,
         "avg_movielens_rating": 4.28
       }
     }
