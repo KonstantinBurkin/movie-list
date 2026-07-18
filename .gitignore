@@ -208,6 +208,7 @@ data/recommendations/*.parquet
 data/movielens/*.zip
 data/movielens/*.csv
 data/movielens/*.txt
+data/movies**
 
 # Models
 models/*.pkl
