@@ -30,33 +30,33 @@ jobs:
       with:
         python-version: '3.12'
 
-    - name: Cache pip packages
+    - name: Install Poetry
+      run: pipx install poetry
+
+    - name: Cache Poetry virtualenv
       uses: actions/cache@v4
       with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        path: ~/.cache/pypoetry/virtualenvs
+        key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
         restore-keys: |
-          ${{ runner.os }}-pip-
+          ${{ runner.os }}-poetry-
 
     - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest pytest-cov pytest-mock flake8
+      run: poetry install --extras dev --no-interaction --no-root
 
     - name: Check import sorting with isort
       id: isort
       run: |
-        isort scripts --check-only --diff
+        poetry run isort scripts --check-only --diff
       continue-on-error: false
 
     - name: Lint with flake8 (strict)
       id: lint
       run: |
         # Stop on syntax errors or undefined names
-        flake8 scripts --count --select=E9,F63,F7,F82 --show-source --statistics
+        poetry run flake8 scripts --count --select=E9,F63,F7,F82 --show-source --statistics
         # Check for code quality issues
-        flake8 scripts --count --max-complexity=10 --max-line-length=127 --statistics
+        poetry run flake8 scripts --count --max-complexity=10 --max-line-length=127 --statistics
       continue-on-error: false
 
     - name: Run unit tests
@@ -65,7 +65,7 @@ jobs:
         TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         OMDB_API_KEY: ${{ secrets.OMDB_API_KEY }}
       run: |
-        pytest tests/ -v --cov=scripts --cov-report=term-missing --cov-report=xml --cov-fail-under=65
+        poetry run pytest tests/ -v --cov=scripts --cov-report=term-missing --cov-report=xml --cov-fail-under=65
       continue-on-error: false
 
     - name: Check for data file
@@ -80,7 +80,7 @@ jobs:
     - name: Verify imports
       env:
         TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-      run: python tests/verify_imports.py
+      run: poetry run python tests/verify_imports.py
 
     - name: Comment PR with results
       if: always()
@@ -119,13 +119,16 @@ jobs:
       with:
         python-version: '3.12'
 
-    - name: Install and check dependencies
+    - name: Install Poetry
+      run: pipx install poetry
+
+    - name: Install dependencies
+      run: poetry install --no-interaction --no-root
+
+    - name: Check for known security vulnerabilities
       run: |
-        python -m pip install --upgrade pip
-        pip install safety
-        pip install -r requirements.txt
-        # Check for known security vulnerabilities (non-blocking)
-        safety check --json || echo "⚠️  Some vulnerabilities found, review required"
+        poetry run pip install safety
+        poetry run safety check --json || echo "⚠️  Some vulnerabilities found, review required"
 
   pr-size-check:
     name: PR Size Check
