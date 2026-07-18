@@ -77,13 +77,8 @@ jobs:
           echo "✅ Data file found"
         fi
 
-    - name: Verify imports
-      env:
-        TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-      run: poetry run python tests/verify_imports.py
-
   dependency-check:
-    name: Dependency Security Check
+    name: Dependency Check
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false
 
@@ -100,6 +95,11 @@ jobs:
 
     - name: Install dependencies
       run: poetry install --no-interaction --no-root
+
+    - name: Verify imports
+      env:
+        TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+      run: poetry run python tests/verify_imports.py
 
     - name: Check for known security vulnerabilities
       run: |
@@ -136,16 +136,3 @@ jobs:
         else
           echo "✅ PR size is reasonable"
         fi
-
-  ready-to-merge:
-    name: Ready to Merge
-    runs-on: ubuntu-latest
-    needs: [pr-validation, dependency-check]
-    if: github.event.pull_request.draft == false
-
-    steps:
-    - name: All checks passed
-      run: |
-        echo "✅ All required checks passed!"
-        echo ""
-        echo "This PR is ready for review and merge."
