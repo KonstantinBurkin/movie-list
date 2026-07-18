@@ -523,6 +523,22 @@ files = [
 ]
 
 [[package]]
+name = "isort"
+version = "8.0.1"
+description = "A Python utility / library to sort Python imports."
+optional = true
+python-versions = ">=3.10.0"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "isort-8.0.1-py3-none-any.whl", hash = "sha256:28b89bc70f751b559aeca209e6120393d43fbe2490de0559662be7a9787e3d75"},
+    {file = "isort-8.0.1.tar.gz", hash = "sha256:171ac4ff559cdc060bcfff550bc8404a486fee0caab245679c2abe7cb253c78d"},
+]
+
+[package.extras]
+colors = ["colorama"]
+
+[[package]]
 name = "joblib"
 version = "1.5.3"
 description = "Lightweight pipelining with Python functions"
@@ -1624,9 +1640,9 @@ files = [
 ]
 
 [extras]
-dev = ["flake8", "pytest", "pytest-cov", "pytest-mock"]
+dev = ["flake8", "isort", "pytest", "pytest-cov", "pytest-mock"]
 
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "5a30907465e2601548e72b648d69051262cf3da23f71b505f85e89749f167a0e"
+content-hash = "e7c41a6343623b7eaa6b0b64031d2cc3fe4522c7509abf96643f082e6cd2c339"
