@@ -82,30 +82,6 @@ jobs:
         TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
       run: poetry run python tests/verify_imports.py
 
-    - name: Comment PR with results
-      if: always()
-      continue-on-error: true
-      uses: actions/github-script@v7
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const outcome = '${{ job.status }}';
-          const icon = outcome === 'success' ? '✅' : '❌';
-          const testOutcome = '${{ steps.test.outcome }}' || 'N/A';
-          const lintOutcome = '${{ steps.lint.outcome }}' || 'N/A';
-
-          const message = `${icon} **PR Checks ${outcome}**\n\n` +
-            `**Tests:** ${testOutcome}\n` +
-            `**Linting:** ${lintOutcome}\n\n` +
-            `View details: ${context.payload.pull_request.html_url}/checks`;
-
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: message
-          });
-
   dependency-check:
     name: Dependency Security Check
     runs-on: ubuntu-latest
