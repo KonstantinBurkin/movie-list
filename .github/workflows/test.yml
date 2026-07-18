@@ -57,4 +57,4 @@ jobs:
         TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         OMDB_API_KEY: ${{ secrets.OMDB_API_KEY }}
       run: |
-        pytest tests/ -v --cov=scripts --cov-report=term-missing --cov-report=xml
+        pytest tests/ -v --cov=scripts --cov-report=term-missing
