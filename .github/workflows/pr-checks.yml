@@ -25,10 +25,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python 3.13
+    - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
-        python-version: '3.13'
+        python-version: '3.12'
 
     - name: Cache pip packages
       uses: actions/cache@v4
@@ -117,7 +117,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.13'
+        python-version: '3.12'
 
     - name: Install and check dependencies
       run: |
@@ -168,8 +168,5 @@ jobs:
     - name: All checks passed
       run: |
         echo "✅ All required checks passed!"
-        echo "✅ Tests passed"
-        echo "✅ Code quality checks passed"
-        echo "✅ Dependencies verified"
         echo ""
         echo "This PR is ready for review and merge."
