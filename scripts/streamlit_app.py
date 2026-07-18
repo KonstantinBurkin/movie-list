@@ -150,6 +150,151 @@ if is_authenticated:
 #     st.info("ℹ️ Login to enable automatic GitHub sync")
 # st.header("📚 My Movies")
 
+# ============================================================================
+# ADD NEW MOVIE SECTION (sidebar, below Authentication)
+# ============================================================================
+with st.sidebar:
+    st.divider()
+    st.header("➕ Add New Movie")
+
+    with st.form("add_movie_form"):
+        col1, col2 = st.columns([3, 1])
+
+        with col1:
+            omdb_id_input = st.text_input(
+                "OMDB ID (e.g., tt0111161 for The Shawshank Redemption)",
+                placeholder="tt0111161",
+            )
+
+        with col2:
+            liked_input = st.checkbox("Liked", value=True)
+
+        submit_button = st.form_submit_button("Add Movie")
+
+        if submit_button and omdb_id_input:
+            try:
+                import re
+
+                import polars as pl
+                import requests
+
+                # Extract IMDb ID from input (handle both "tt1234567" and "1234567")
+                imdb_id = omdb_id_input.strip()
+                if not imdb_id.startswith("tt"):
+                    imdb_id = f"tt{imdb_id}"
+
+                # Fetch movie details from OMDB API
+                with st.spinner("Fetching movie details from OMDB..."):
+                    omdb_api_key = st.secrets.get("OMDB_API_KEY")
+                    if not omdb_api_key:
+                        st.error("❌ OMDB_API_KEY not found in secrets")
+                    else:
+                        url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&i={requests.utils.quote(imdb_id)}"
+                        response = requests.get(url)
+                        movie_data = response.json()
+
+                        if movie_data.get("Response") != "True":
+                            st.error(f"❌ Movie with OMDB ID '{imdb_id}' not found")
+                        else:
+                            # Load existing data using polars
+                            existing_df = pl.read_parquet("./data/movies_df.parquet")
+
+                            # Check if movie already exists
+                            if imdb_id in existing_df["omdb_id"].to_list():
+                                st.warning(
+                                    f"⚠️ Movie '{movie_data['Title']}' already exists in your database!"
+                                )
+                            else:
+                                # Parse box office
+                                box_office = None
+                                if movie_data.get("BoxOffice") != "N/A":
+                                    try:
+                                        box_office = int(
+                                            re.sub(
+                                                r"[^\d]", "", movie_data["BoxOffice"]
+                                            )
+                                        )
+                                    except Exception:
+                                        box_office = None
+
+                                # Parse year
+                                year = None
+                                if movie_data.get("Year") != "N/A":
+                                    try:
+                                        year = int(movie_data["Year"])
+                                    except Exception:
+                                        year = None
+
+                                # Parse IMDb rating
+                                imdb_rating = None
+                                if movie_data.get("imdbRating") != "N/A":
+                                    try:
+                                        imdb_rating = float(movie_data["imdbRating"])
+                                    except Exception:
+                                        imdb_rating = None
+
+                                # Create new row matching the notebook structure
+                                new_row = {
+                                    "index": existing_df["index"].max() + 1,
+                                    "title": movie_data.get("Title", "Unknown"),
+                                    "year": year,
+                                    "viewed": datetime.today().date(),
+                                    "liked": liked_input,
+                                    "omdb_id": imdb_id,
+                                    "genre": movie_data.get("Genre", "N/A"),
+                                    "director": movie_data.get("Director", "Unknown"),
+                                    "country": movie_data.get("Country", "N/A"),
+                                    "actors": movie_data.get("Actors", "N/A"),
+                                    "box_office": box_office,
+                                    "writer": movie_data.get("Writer", "Unknown"),
+                                    "language": movie_data.get("Language", "N/A"),
+                                    "imdb_rating": imdb_rating,
+                                    "comment": None,
+                                }
+
+                                # Create single-row DataFrame and cast to match schema
+                                new_row_df = pl.DataFrame([new_row])
+                                new_row_df = new_row_df.cast(existing_df.schema)
+
+                                # Concatenate
+                                new_df = pl.concat(
+                                    [existing_df, new_row_df], how="vertical"
+                                )
+
+                                # If authenticated, push to GitHub
+                                if is_authenticated:
+                                    # Save to parquet
+                                    new_df.write_parquet("./data/movies_df.parquet")
+                                    st.info("📤 Pushing to GitHub...")
+                                    success, result = create_and_push_movie_branch(
+                                        movie_data["Title"], new_row["year"]
+                                    )
+                                    if success:
+                                        st.success(
+                                            f"✅ Successfully added '{movie_data['Title']}' ({new_row['year']})!"
+                                        )
+                                        st.success(
+                                            f"🔗 PR created and auto-merged: {result}"
+                                        )
+                                    else:
+                                        st.warning(
+                                            f"✅ Movie added locally, but GitHub push failed: {result}"
+                                        )
+                                else:
+                                    st.success(
+                                        f"✅ Successfully added '{movie_data['Title']}' ({new_row['year']})!"
+                                    )
+                                    st.info(
+                                        "💡 Login to automatically sync with GitHub"
+                                    )
+
+                                st.info("🔄 Refreshing page...")
+                                st.rerun()
+
+            except Exception as e:
+                st.error(f"❌ Error adding movie: {e}")
+                st.info("Make sure OMDB_API_KEY is configured in secrets.")
+
 # Filters
 viewed_filter = st.selectbox("liked?", options=["All", True, False])
 if viewed_filter != "All":
@@ -170,155 +315,6 @@ st.dataframe(
     ]
 )
 
-
-# ============================================================================
-# ADD NEW MOVIE SECTION
-# ============================================================================
-st.header("➕ Add New Movie")
-
-with st.form("add_movie_form"):
-    col1, col2 = st.columns([3, 1])
-
-    with col1:
-        omdb_id_input = st.text_input(
-            "OMDB ID (e.g., tt0111161 for The Shawshank Redemption)",
-            placeholder="tt0111161",
-        )
-
-    with col2:
-        liked_input = st.checkbox("Liked", value=True)
-
-    submit_button = st.form_submit_button("Add Movie")
-
-    if submit_button and omdb_id_input:
-        try:
-            import re
-
-            import polars as pl
-            import requests
-
-            # Extract IMDb ID from input (handle both "tt1234567" and "1234567")
-            imdb_id = omdb_id_input.strip()
-            if not imdb_id.startswith("tt"):
-                imdb_id = f"tt{imdb_id}"
-
-            # Fetch movie details from OMDB API
-            with st.spinner("Fetching movie details from OMDB..."):
-                omdb_api_key = st.secrets.get("OMDB_API_KEY")
-                if not omdb_api_key:
-                    st.error("❌ OMDB_API_KEY not found in secrets")
-                else:
-                    url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&i={requests.utils.quote(imdb_id)}"
-                    response = requests.get(url)
-                    movie_data = response.json()
-
-                    if movie_data.get("Response") != "True":
-                        st.error(f"❌ Movie with OMDB ID '{imdb_id}' not found")
-                    else:
-                        # Load existing data using polars
-                        existing_df = pl.read_parquet("./data/movies_df.parquet")
-
-                        # Check if movie already exists
-                        if imdb_id in existing_df["omdb_id"].to_list():
-                            st.warning(
-                                f"⚠️ Movie '{movie_data['Title']}' already exists in your database!"
-                            )
-                        else:
-                            # Parse box office
-                            box_office = None
-                            if movie_data.get("BoxOffice") != "N/A":
-                                try:
-                                    box_office = int(
-                                        re.sub(r"[^\d]", "", movie_data["BoxOffice"])
-                                    )
-                                except Exception:
-                                    box_office = None
-
-                            # Parse year
-                            year = None
-                            if movie_data.get("Year") != "N/A":
-                                try:
-                                    year = int(movie_data["Year"])
-                                except Exception:
-                                    year = None
-
-                            # Parse IMDb rating
-                            imdb_rating = None
-                            if movie_data.get("imdbRating") != "N/A":
-                                try:
-                                    imdb_rating = float(movie_data["imdbRating"])
-                                except Exception:
-                                    imdb_rating = None
-
-                            # Create new row matching the notebook structure
-                            new_row = {
-                                "index": existing_df["index"].max() + 1,
-                                "title": movie_data.get("Title", "Unknown"),
-                                "year": year,
-                                "viewed": datetime.today().date(),
-                                "liked": liked_input,
-                                "omdb_id": imdb_id,
-                                "genre": movie_data.get("Genre", "N/A"),
-                                "director": movie_data.get("Director", "Unknown"),
-                                "country": movie_data.get("Country", "N/A"),
-                                "actors": movie_data.get("Actors", "N/A"),
-                                "box_office": box_office,
-                                "writer": movie_data.get("Writer", "Unknown"),
-                                "language": movie_data.get("Language", "N/A"),
-                                "imdb_rating": imdb_rating,
-                                "comment": None,
-                            }
-
-                            # Create single-row DataFrame and cast to match schema
-                            new_row_df = pl.DataFrame([new_row])
-                            new_row_df = new_row_df.cast(existing_df.schema)
-
-                            # Concatenate
-                            new_df = pl.concat(
-                                [existing_df, new_row_df], how="vertical"
-                            )
-
-                            # If authenticated, push to GitHub
-                            if is_authenticated:
-                                # Save to parquet
-                                new_df.write_parquet("./data/movies_df.parquet")
-                                st.info("📤 Pushing to GitHub...")
-                                success, result = create_and_push_movie_branch(
-                                    movie_data["Title"], new_row["year"]
-                                )
-                                if success:
-                                    st.success(
-                                        f"✅ Successfully added '{movie_data['Title']}' ({new_row['year']})!"
-                                    )
-                                    st.success(
-                                        f"🔗 PR created and auto-merged: {result}"
-                                    )
-                                else:
-                                    st.warning(
-                                        f"✅ Movie added locally, but GitHub push failed: {result}"
-                                    )
-                            else:
-                                st.success(
-                                    f"✅ Successfully added '{movie_data['Title']}' ({new_row['year']})!"
-                                )
-                                st.info("💡 Login to automatically sync with GitHub")
-
-                            st.info("🔄 Refreshing page...")
-                            st.rerun()
-
-        except Exception as e:
-            st.error(f"❌ Error adding movie: {e}")
-            st.info("Make sure OMDB_API_KEY is configured in secrets.")
-
-st.divider()
-
-# ============================================================================
-# WATCHED MOVIES TABLE
-# ============================================================================
-# ============================================================================
-# RECOMMENDATIONS SECTION
-# ============================================================================
-st.divider()
 st.header("🎯 Recommended Movies")
 
 # Load latest recommendations
