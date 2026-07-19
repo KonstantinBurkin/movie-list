@@ -375,11 +375,11 @@ if recommendations_path.exists():
                     else:
                         st.info("No poster available")
 
-                    st.subheader(f"{i}. {rec['title']}, {rec['year']}")
+                    st.write(f"{rec['title']}, {rec['year']}")
 
                     # Description
                     if rec.get("overview"):
-                        with st.expander("📝 Description", expanded=False):
+                        with st.expander("Description", expanded=False):
                             st.write(f" ⭐ {rating_str} \n\n", rec["overview"])
 
         else:
