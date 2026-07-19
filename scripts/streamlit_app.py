@@ -407,7 +407,7 @@ else:
 # ============================================================================
 # ANALYTICS SECTION
 # ============================================================================
-st.header("📊 Movie Analytics")
+st.header("📊 Analytics")
 # Extract director column, split by comma, and count occurrences
 director_list = df["director"].dropna().tolist()
 all_directors = []
@@ -430,7 +430,7 @@ fig = px.bar(
     height=600,
     orientation="h",
     labels={"x": "Number of Movies", "y": "Director"},
-    title="Top 25 Most Common Directors",
+    # title="Top 25 Directors",
     hover_name=directors,
     hover_data={"Movies": hover_text},
 )
@@ -439,7 +439,8 @@ fig.update_traces(
     hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
 )
 
-st.plotly_chart(fig, width="stretch")
+with st.expander("Top Favourite Directors", expanded=False):
+    st.plotly_chart(fig, width="stretch")
 
 # Extract actor column, split by comma, and count occurrences
 actor_list = df["actors"].dropna().tolist()
@@ -462,7 +463,7 @@ fig_actors = px.bar(
     y=actors,
     orientation="h",
     labels={"x": "Number of Movies", "y": "Actor"},
-    title="Top 15 Most Popular Actors",
+    # title="Top 15 Most Popular Actors",
     hover_name=actors,
     hover_data={"Movies": actor_hover_text},
 )
@@ -470,7 +471,8 @@ fig_actors.update_traces(
     hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
 )
 
-st.plotly_chart(fig_actors, width="stretch")
+with st.expander("Most Popular Actors", expanded=False):
+    st.plotly_chart(fig_actors, width="stretch")
 
 # Extract genre column, split by comma, and count occurrences
 genre_list = df["genre"].dropna().tolist()
@@ -486,9 +488,10 @@ fig_genre = px.bar(
     y=genres,
     orientation="h",
     labels={"x": "Number of Movies", "y": "Genre"},
-    title="Top 15 Favorite Genres",
+    # title="Favorite Genres",
 )
-st.plotly_chart(fig_genre, width="stretch")
+with st.expander("Favorite Genres", expanded=False):
+    st.plotly_chart(fig_genre, width="stretch")
 
 
 years = df["year"].dropna().tolist()
@@ -496,12 +499,13 @@ fig_years = px.histogram(
     x=years,
     nbins=40,
     # histnorm="probability density",
-    labels={"x": "Year", "y": "Density"},
-    title="Distribution of Movie Release Years",
+    labels={"x": "Year", "y": "Count"},
+    # title="Distribution of Movie Release Years",
 )
 fig_years.update_traces(marker_color="green", opacity=0.6)
 fig_years.update_layout(yaxis_title="Density", xaxis_title="Year", bargap=0.05)
-st.plotly_chart(fig_years, width="stretch")
+with st.expander("Distribution of Movie Release Years", expanded=False):
+    st.plotly_chart(fig_years, width="stretch")
 
 
 # Most expensive movies
@@ -515,9 +519,10 @@ fig_expensive = px.bar(
     y="title",
     orientation="h",
     labels={"box_office": "Box Office ($)", "title": "Movie"},
-    title="Top 15 Most Grossing Movies (Box Office)",
+    # title="Top 15 Most Grossing Movies (Box Office)",
 )
-st.plotly_chart(fig_expensive, width="stretch")
+with st.expander("Most Grossing Movies", expanded=False):
+    st.plotly_chart(fig_expensive, width="stretch")
 
 # Least expensive movies
 cheap_movies = (
@@ -530,6 +535,7 @@ fig_cheap = px.bar(
     y="title",
     orientation="h",
     labels={"box_office": "Box Office ($)", "title": "Movie"},
-    title="Top 15 Least Grossing Movies (Box Office)",
+    # title="Top 15 Least Grossing Movies (Box Office)",
 )
-st.plotly_chart(fig_cheap, width="stretch")
+with st.expander("Least Grossing Movies", expanded=False):
+    st.plotly_chart(fig_cheap, width="stretch")
