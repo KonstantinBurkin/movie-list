@@ -295,11 +295,6 @@ with st.sidebar:
                 st.error(f"❌ Error adding movie: {e}")
                 st.info("Make sure OMDB_API_KEY is configured in secrets.")
 
-# Filters
-viewed_filter = st.selectbox("liked?", options=["All", True, False])
-if viewed_filter != "All":
-    df = df.loc[df["liked"] == viewed_filter]
-
 st.dataframe(
     df.reset_index(drop=True).sort_values("index", ascending=False)[
         [
@@ -315,7 +310,7 @@ st.dataframe(
     ]
 )
 
-st.header("🎯 Recommended Movies")
+st.header("🎯 Recommendations")
 
 # Load latest recommendations
 recommendations_path = Path("./data/recommendations/recommendations_latest.json")
@@ -354,64 +349,43 @@ if recommendations_path.exists():
             except Exception:
                 time_str = generated_at
 
-            st.caption(f"Generated on {time_str}")
+            # Display recommendations side by side (columns stack vertically on
+            # narrow/mobile screens automatically, so this stays horizontal on PC)
+            rec_columns = st.columns(len(recommendations))
 
-            # Display recommendations in a nice format
-            for i, rec in enumerate(recommendations, 1):
-                with st.container():
-                    col1, col2 = st.columns([3, 1])
+            for i, (rec, col) in enumerate(zip(recommendations, rec_columns), 1):
+                with col:
+                    # Display poster if available
+                    if rec.get("poster_path"):
+                        poster_url = (
+                            f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
+                        )
+                        st.image(poster_url, use_container_width=True)
+                    else:
+                        st.info("No poster available")
 
-                    with col1:
-                        st.subheader(f"{i}. {rec['title']} ({rec['year']})")
+                    st.write(f"{rec['title']}, {rec['year']}")
 
-                        # Create columns for metadata
-                        meta_col1, meta_col2, meta_col3 = st.columns(3)
-
-                        with meta_col1:
-                            if rec.get("rating"):
-                                st.metric("Rating", f"{rec['rating']:.1f}/10")
-                            else:
-                                st.metric("Rating", "N/A")
-
-                        with meta_col2:
-                            st.metric("Match Score", f"{rec['score']:.1f}")
-
-                        with meta_col3:
-                            st.metric("Year", rec["year"])
-
-                        # Show CF stats if available
-                        if rec.get("cf_stats"):
-                            st.caption(
-                                f"💡 Liked by {rec['cf_stats']['num_similar_users']} users with similar taste"
-                            )
-
-                        # Description
-                        if rec.get("overview"):
-                            with st.expander("📝 Description", expanded=(i == 1)):
-                                st.write(rec["overview"])
-
-                    with col2:
-                        # Display poster if available
-                        if rec.get("poster_path"):
-                            poster_url = (
-                                f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
-                            )
-                            st.image(poster_url, use_container_width=True)
-                        else:
-                            st.info("No poster available")
-
-                    st.divider()
+            # Single expander with all descriptions below the posters
+            with st.expander("Descriptions", expanded=False):
+                for rec in recommendations:
+                    rating_str = (
+                        f"{rec['rating']:.1f}/10" if rec.get("rating") else "N/A"
+                    )
+                    st.write(f"**{rec['title']}, {rec['year']}** — ⭐ {rating_str}")
+                    st.write(rec.get("overview", ""))
+                    # st.divider()
 
         else:
             st.info("No recommendations available yet. Run the recommendation system!")
             with st.expander("🚀 How to generate recommendations"):
                 st.code(
                     """
-# Generate recommendations
-python scripts/generate_recommendations.py
+                # Generate recommendations
+                python scripts/generate_recommendations.py
 
-# Or generate more recommendations
-python scripts/generate_recommendations.py --top-n 10
+                # Or generate more recommendations
+                python scripts/generate_recommendations.py --top-n 10
                 """,
                     language="bash",
                 )
@@ -433,7 +407,7 @@ else:
 # ============================================================================
 # ANALYTICS SECTION
 # ============================================================================
-st.header("📊 Movie Analytics")
+st.header("📊 Analytics")
 # Extract director column, split by comma, and count occurrences
 director_list = df["director"].dropna().tolist()
 all_directors = []
@@ -456,7 +430,7 @@ fig = px.bar(
     height=600,
     orientation="h",
     labels={"x": "Number of Movies", "y": "Director"},
-    title="Top 25 Most Common Directors",
+    # title="Top 25 Directors",
     hover_name=directors,
     hover_data={"Movies": hover_text},
 )
@@ -465,7 +439,8 @@ fig.update_traces(
     hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
 )
 
-st.plotly_chart(fig, width="stretch")
+with st.expander("Top Favourite Directors", expanded=False):
+    st.plotly_chart(fig, width="stretch")
 
 # Extract actor column, split by comma, and count occurrences
 actor_list = df["actors"].dropna().tolist()
@@ -488,7 +463,7 @@ fig_actors = px.bar(
     y=actors,
     orientation="h",
     labels={"x": "Number of Movies", "y": "Actor"},
-    title="Top 15 Most Popular Actors",
+    # title="Top 15 Most Popular Actors",
     hover_name=actors,
     hover_data={"Movies": actor_hover_text},
 )
@@ -496,7 +471,8 @@ fig_actors.update_traces(
     hovertemplate="<b>%{y}</b><br>Number of Movies: %{x}<br>Movies:<br>%{customdata[0]}"
 )
 
-st.plotly_chart(fig_actors, width="stretch")
+with st.expander("Most Popular Actors", expanded=False):
+    st.plotly_chart(fig_actors, width="stretch")
 
 # Extract genre column, split by comma, and count occurrences
 genre_list = df["genre"].dropna().tolist()
@@ -512,9 +488,10 @@ fig_genre = px.bar(
     y=genres,
     orientation="h",
     labels={"x": "Number of Movies", "y": "Genre"},
-    title="Top 15 Favorite Genres",
+    # title="Favorite Genres",
 )
-st.plotly_chart(fig_genre, width="stretch")
+with st.expander("Favorite Genres", expanded=False):
+    st.plotly_chart(fig_genre, width="stretch")
 
 
 years = df["year"].dropna().tolist()
@@ -522,12 +499,13 @@ fig_years = px.histogram(
     x=years,
     nbins=40,
     # histnorm="probability density",
-    labels={"x": "Year", "y": "Density"},
-    title="Distribution of Movie Release Years",
+    labels={"x": "Year", "y": "Count"},
+    # title="Distribution of Movie Release Years",
 )
 fig_years.update_traces(marker_color="green", opacity=0.6)
 fig_years.update_layout(yaxis_title="Density", xaxis_title="Year", bargap=0.05)
-st.plotly_chart(fig_years, width="stretch")
+with st.expander("Distribution of Movie Release Years", expanded=False):
+    st.plotly_chart(fig_years, width="stretch")
 
 
 # Most expensive movies
@@ -541,9 +519,10 @@ fig_expensive = px.bar(
     y="title",
     orientation="h",
     labels={"box_office": "Box Office ($)", "title": "Movie"},
-    title="Top 15 Most Grossing Movies (Box Office)",
+    # title="Top 15 Most Grossing Movies (Box Office)",
 )
-st.plotly_chart(fig_expensive, width="stretch")
+with st.expander("Most Grossing Movies", expanded=False):
+    st.plotly_chart(fig_expensive, width="stretch")
 
 # Least expensive movies
 cheap_movies = (
@@ -556,6 +535,7 @@ fig_cheap = px.bar(
     y="title",
     orientation="h",
     labels={"box_office": "Box Office ($)", "title": "Movie"},
-    title="Top 15 Least Grossing Movies (Box Office)",
+    # title="Top 15 Least Grossing Movies (Box Office)",
 )
-st.plotly_chart(fig_cheap, width="stretch")
+with st.expander("Least Grossing Movies", expanded=False):
+    st.plotly_chart(fig_cheap, width="stretch")
