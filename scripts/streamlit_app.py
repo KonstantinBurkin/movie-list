@@ -360,7 +360,7 @@ if recommendations_path.exists():
                         poster_url = (
                             f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
                         )
-                        st.image(poster_url, use_container_width=True)
+                        st.image(poster_url, width="stretch")
                     else:
                         st.info("No poster available")
 
