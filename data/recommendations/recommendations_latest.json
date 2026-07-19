@@ -1,26 +1,6 @@
 {
-  "generated_at": "20260719_185232",
+  "generated_at": "20260719_192645",
   "recommendations": [
-    {
-      "title": "Mulholland Drive",
-      "year": 2001,
-      "tmdb_id": 1018,
-      "rating": 7.8,
-      "genres": [
-        53,
-        18,
-        9648
-      ],
-      "overview": "Blonde Betty Elms has only just arrived in Hollywood to become a movie star when she meets an enigmatic brunette with amnesia. Meanwhile, as the two set off to solve the second woman's identity, filmmaker Adam Kesher runs into ominous trouble while casting his latest project.",
-      "score": 1.0727,
-      "poster_path": "/x7A59t6ySylr1L7aubOQEA480vM.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 16635,
-        "avg_movielens_rating": 3.85
-      }
-    },
     {
       "title": "Whiplash",
       "year": 2014,
@@ -32,7 +12,7 @@
         53
       ],
       "overview": "Under the direction of a ruthless instructor, a talented young drummer begins to pursue perfection at any cost, even his humanity.",
-      "score": 1.0321,
+      "score": 1.045,
       "poster_path": "/7fn624j5lj3xTme2SgiLCeuedmO.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
@@ -51,7 +31,7 @@
         18
       ],
       "overview": "The men who made millions from a global economic meltdown.",
-      "score": 1.0193,
+      "score": 1.0235,
       "poster_path": "/scVEaJEwP8zUix8vgmMoJJ9Nq0w.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
@@ -61,23 +41,22 @@
       }
     },
     {
-      "title": "Her",
-      "year": 2013,
-      "tmdb_id": 152601,
-      "rating": 7.837,
+      "title": "Ex Machina",
+      "year": 2015,
+      "tmdb_id": 264660,
+      "rating": 7.572,
       "genres": [
-        10749,
-        878,
-        18
+        18,
+        878
       ],
-      "overview": "In the not so distant future, Theodore, a lonely writer, purchases a newly developed operating system designed to meet the user's every need. To Theodore's surprise, a romantic relationship develops between him and his operating system. This unconventional love story blends science fiction and romance in a sweet tale that explores the nature of love and the ways that technology isolates and connects us all.",
-      "score": 1.0068,
-      "poster_path": "/eCOtqtfvn7mxGl6nfmq4b1exJRc.jpg",
+      "overview": "Caleb, a coder at the world's largest internet company, wins a competition to spend a week at a private mountain retreat belonging to Nathan, the reclusive CEO of the company. But when Caleb arrives at the remote location he finds that he will have to participate in a strange and fascinating experiment in which he must interact with the world's first true artificial intelligence, housed in the body of a beautiful robot girl.",
+      "score": 0.9676,
+      "poster_path": "/dmJW8IAKHKxFNiUnoDR7JfsK7Rp.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 17110,
-        "avg_movielens_rating": 3.9
+        "num_similar_users": 20588,
+        "avg_movielens_rating": 3.99
       }
     },
     {
@@ -90,13 +69,33 @@
         18
       ],
       "overview": "Near a gray and unnamed city is the Zone, a place guarded by barbed wire and soldiers, and where the normal laws of physics are victim to frequent anomalies. A stalker guides two men into the Zone, specifically to an area in which deep-seated desires are granted.",
-      "score": 0.9698,
+      "score": 0.9642,
       "poster_path": "/1qhOyf5C4s9ZdvY8d5JDx9DFMeT.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
         "num_similar_users": 3905,
         "avg_movielens_rating": 4.08
+      }
+    },
+    {
+      "title": "Gone Girl",
+      "year": 2014,
+      "tmdb_id": 210577,
+      "rating": 7.891,
+      "genres": [
+        9648,
+        53,
+        18
+      ],
+      "overview": "With his wife's disappearance having become the focus of an intense media circus, a man sees the spotlight turned on him when it's suspected that he may not be innocent.",
+      "score": 0.954,
+      "poster_path": "/ts996lKsxvjkO2yiYG0ht4qAicO.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 20160,
+        "avg_movielens_rating": 3.95
       }
     }
   ]
