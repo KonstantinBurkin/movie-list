@@ -365,14 +365,12 @@ if recommendations_path.exists():
                         rating_str = (
                             f"{rec['rating']:.1f}/10" if rec.get("rating") else "N/A"
                         )
-                        st.subheader(
-                            f"{i}. {rec['title']}, {rec['year']} ⭐ {rating_str}"
-                        )
+                        st.subheader(f"{i}. {rec['title']}, {rec['year']}")
 
                         # Description
                         if rec.get("overview"):
                             with st.expander("📝 Description", expanded=False):
-                                st.write(rec["overview"])
+                                st.write(f" ⭐ {rating_str} \n\n", rec["overview"])
 
                     with col2:
                         # Display poster if available
