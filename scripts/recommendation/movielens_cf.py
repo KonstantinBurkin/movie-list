@@ -14,8 +14,7 @@ class MovieLensCF:
         Initialize with MovieLens dataset.
 
         Args:
-            movielens_path: Path to MovieLens dataset directory
-                Download from: https://files.grouplens.org/datasets/movielens/ml-1m.zip
+            movielens_path: Path to MovieLens dataset director
         """
         self.movielens_path = Path(movielens_path)
         self.ratings_df = None
@@ -29,8 +28,7 @@ class MovieLensCF:
         if not self.movielens_path.exists():
             raise FileNotFoundError(
                 f"MovieLens dataset not found at {self.movielens_path}\n"
-                "Download from: https://files.grouplens.org/datasets/movielens/ml-1m.zip\n"
-                "Or run: python scripts/download_movielens.py"
+                "Run: python scripts/download_movielens.py"
             )
 
         # Load ratings (userId::movieId::rating::timestamp)
