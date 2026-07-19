@@ -21,7 +21,9 @@ class TMDBClient:
         self.movie = Movie()
         self.discover = Discover()
 
-    def get_movie_by_title(self, title: str, year: Optional[int] = None) -> Optional[Dict]:
+    def get_movie_by_title(
+        self, title: str, year: Optional[int] = None
+    ) -> Optional[Dict]:
         """Search for a movie by title and optionally year."""
         search = self.movie.search(title)
 
@@ -38,6 +40,13 @@ class TMDBClient:
 
         return self._format_movie_details(search[0]) if search else None
 
+    def is_part_of_collection(self, tmdb_id: int) -> bool:
+        """Check whether a movie belongs to a TMDB collection
+        (i.e. is part of a franchise/sequel series).
+        """
+        details = self.movie.details(tmdb_id)
+        return bool(getattr(details, "belongs_to_collection", None))
+
     def get_similar_movies(self, tmdb_id: int, limit: int = 20) -> List[Dict]:
         """Get similar movies based on TMDB's recommendation algorithm."""
         similar = self.movie.similar(tmdb_id)
@@ -50,7 +59,9 @@ class TMDBClient:
         recommendations_list = list(recommendations) if recommendations else []
         return [self._format_movie_details(m) for m in recommendations_list[:limit]]
 
-    def discover_by_genres(self, genre_ids: List[int], min_rating: float = 7.0, limit: int = 20) -> List[Dict]:
+    def discover_by_genres(
+        self, genre_ids: List[int], min_rating: float = 7.0, limit: int = 20
+    ) -> List[Dict]:
         """Discover movies by genre IDs with minimum rating."""
         movies = self.discover.discover_movies(
             {
@@ -64,7 +75,9 @@ class TMDBClient:
         movies_list = list(movies) if movies else []
         return [self._format_movie_details(m) for m in movies_list[:limit]]
 
-    def discover_popular_recent(self, min_year: int = 2020, limit: int = 50) -> List[Dict]:
+    def discover_popular_recent(
+        self, min_year: int = 2020, limit: int = 50
+    ) -> List[Dict]:
         """Discover popular recent movies."""
         movies = self.discover.discover_movies(
             {
@@ -84,7 +97,9 @@ class TMDBClient:
             "tmdb_id": movie.id,
             "title": movie.title,
             "year": (
-                int(movie.release_date.split("-")[0]) if hasattr(movie, "release_date") and movie.release_date else None
+                int(movie.release_date.split("-")[0])
+                if hasattr(movie, "release_date") and movie.release_date
+                else None
             ),
             "genre_ids": movie.genre_ids if hasattr(movie, "genre_ids") else [],
             "rating": movie.vote_average if hasattr(movie, "vote_average") else None,
@@ -93,7 +108,9 @@ class TMDBClient:
             "poster_path": movie.poster_path if hasattr(movie, "poster_path") else None,
         }
 
-    def enrich_watched_movies_with_tmdb_ids(self, movies_df: pl.DataFrame) -> pl.DataFrame:
+    def enrich_watched_movies_with_tmdb_ids(
+        self, movies_df: pl.DataFrame
+    ) -> pl.DataFrame:
         """Add TMDB IDs to watched movies dataframe."""
         tmdb_ids = []
 
