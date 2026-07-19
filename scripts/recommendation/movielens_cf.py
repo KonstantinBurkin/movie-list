@@ -1,26 +1,54 @@
 """Collaborative filtering using MovieLens dataset."""
 
+import sys
 from pathlib import Path
 from typing import Dict, List
 
+import numpy as np
 import polars as pl
+import scipy.sparse as sparse
+from implicit.cpu.als import AlternatingLeastSquares
+
+# Make `scripts/settings.py` importable whether this module is run standalone
+# (`python scripts/recommendation/movielens_cf.py`) or imported as a package.
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+import settings  # noqa: E402
 
 
 class MovieLensCF:
     """Collaborative filtering using MovieLens public dataset."""
 
-    def __init__(self, movielens_path: str = "data/movielens"):
+    def __init__(
+        self,
+        movielens_path: str = str(settings.MOVIELENS_DATA_DIR),
+        model_dir: str = str(settings.MODEL_DIR),
+        factors: int = settings.ALS_FACTORS,
+        regularization: float = settings.ALS_REGULARIZATION,
+        iterations: int = settings.ALS_ITERATIONS,
+    ):
         """
         Initialize with MovieLens dataset.
 
         Args:
             movielens_path: Path to MovieLens dataset director
+            model_dir: Directory to cache the trained ALS model
+            factors: Number of ALS latent factors
+            regularization: ALS regularization strength
+            iterations: Number of ALS training iterations
         """
         self.movielens_path = Path(movielens_path)
+        self.model_dir = Path(model_dir)
+        self.factors = factors
+        self.regularization = regularization
+        self.iterations = iterations
+
         self.ratings_df = None
         self.movies_df = None
         self.links_df = None
-        self.user_item_matrix = None
+
+        self.als_model = None
+        self.movie_id_to_idx = None
+        self.idx_to_movie_id = None
 
     def load_movielens_data(self):
         """Load MovieLens dataset."""
@@ -122,82 +150,161 @@ class MovieLensCF:
         print(f"  - {len(mapping) - liked_count} watched (rating ~3.0)")
         return mapping
 
-    def find_similar_users(
-        self, my_movies_with_ratings: Dict[int, float], top_k: int = 50
-    ) -> List[int]:
-        """
-        Find MovieLens users who have similar taste.
+    def _build_sparse_matrix(self) -> sparse.csr_matrix:
+        """Build the user-item confidence matrix (all MovieLens users) for ALS training."""
+        user_ids = self.ratings_df["userId"].to_numpy()
+        movie_ids = self.ratings_df["movieId"].to_numpy()
+        confidence = self.ratings_df["rating"].to_numpy().astype(np.float32)
 
-        Args:
-            my_movies_with_ratings: Dict of {movieId: implicit_rating}
-            top_k: Number of similar users to find
+        unique_users, user_idx = np.unique(user_ids, return_inverse=True)
+        unique_movies, movie_idx = np.unique(movie_ids, return_inverse=True)
 
-        Returns:
-            List of similar user IDs
-        """
+        self.idx_to_movie_id = unique_movies
+        self.movie_id_to_idx = {
+            int(movie_id): idx for idx, movie_id in enumerate(unique_movies)
+        }
+
+        return sparse.csr_matrix(
+            (confidence, (user_idx, movie_idx)),
+            shape=(len(unique_users), len(unique_movies)),
+        )
+
+    def _get_als_model(self, force_retrain: bool = False) -> AlternatingLeastSquares:
+        """Train (or load a cached) ALS model on the full MovieLens ratings matrix."""
+        model_path = self.model_dir / "als_model.npz"
+        movie_ids_path = self.model_dir / "als_movie_ids.npy"
+
+        if not force_retrain and model_path.exists() and movie_ids_path.exists():
+            self.als_model = AlternatingLeastSquares.load(str(model_path))
+            self.idx_to_movie_id = np.load(movie_ids_path)
+            self.movie_id_to_idx = {
+                int(movie_id): idx for idx, movie_id in enumerate(self.idx_to_movie_id)
+            }
+            print(f"Loaded cached ALS model from {model_path}")
+            return self.als_model
+
         if self.ratings_df is None:
             self.load_movielens_data()
 
-        my_movie_ids = list(my_movies_with_ratings.keys())
+        print("Training ALS model on MovieLens ratings (this may take a while)...")
+        user_item_matrix = self._build_sparse_matrix()
 
-        # Find users who rated the same movies
-        users_who_rated = self.ratings_df.filter(pl.col("movieId").is_in(my_movie_ids))
+        self.als_model = AlternatingLeastSquares(
+            factors=self.factors,
+            regularization=self.regularization,
+            iterations=self.iterations,
+            random_state=42,
+        )
+        self.als_model.fit(user_item_matrix)
 
-        # Calculate similarity score for each user
-        user_scores = []
-        for user_id in users_who_rated["userId"].unique().to_list():
-            user_ratings = users_who_rated.filter(pl.col("userId") == user_id)
+        self.model_dir.mkdir(parents=True, exist_ok=True)
+        self.als_model.save(str(model_path))
+        np.save(movie_ids_path, self.idx_to_movie_id)
+        print(f"Cached trained ALS model to {model_path}")
 
-            # Calculate weighted similarity
-            overlap_count = 0
-            rating_similarity = 0.0
-            preference_match = 0.0
+        return self.als_model
 
-            for row in user_ratings.iter_rows(named=True):
-                movie_id = row["movieId"]
-                user_rating = row["rating"]
-                my_rating = my_movies_with_ratings[movie_id]
+    def _build_cold_start_vector(
+        self, my_movies_with_ratings: Dict[int, float]
+    ) -> sparse.csr_matrix | None:
+        """Build a single-row sparse confidence vector for the user, in ALS item space."""
+        item_idx, confidence = [], []
+        for movie_id, rating in my_movies_with_ratings.items():
+            idx = self.movie_id_to_idx.get(movie_id)
+            if idx is not None:
+                item_idx.append(idx)
+                confidence.append(rating)
 
-                overlap_count += 1
+        if not item_idx:
+            return None
 
-                # Rating similarity (how close are the ratings?)
-                rating_diff = abs(user_rating - my_rating)
-                rating_similarity += max(0, 5 - rating_diff) / 5.0
+        return sparse.csr_matrix(
+            (confidence, ([0] * len(item_idx), item_idx)),
+            shape=(1, len(self.idx_to_movie_id)),
+        )
 
-                # Preference match (both liked it?)
-                if my_rating >= 4.0 and user_rating >= 4.0:
-                    preference_match += 2.0  # Both loved it
-                elif my_rating >= 3.0 and user_rating >= 3.0:
-                    preference_match += 1.0  # Both liked it
+    def _recommend_movie_ids(
+        self,
+        my_user_items: sparse.csr_matrix,
+        my_movies_with_ratings: Dict[int, float],
+        top_n: int,
+    ) -> tuple[List[int], List[float]]:
+        """Query the ALS model and clean its raw output into (movieIds, scores)."""
+        recommended_idx, scores = self.als_model.recommend(
+            userid=0,
+            user_items=my_user_items,
+            N=top_n,
+            filter_already_liked_items=True,
+            recalculate_user=True,
+        )
 
-            if overlap_count >= max(2, len(my_movie_ids) * 0.2):  # At least 20% overlap
-                avg_rating_similarity = rating_similarity / overlap_count
-                total_score = (
-                    overlap_count * 0.4
-                    + avg_rating_similarity * 0.3
-                    + preference_match * 0.3
+        # When fewer valid candidates exist than N, implicit pads the tail with
+        # masked placeholder slots (sentinel score = float32 min) instead of
+        # shrinking the result - drop those, and belt-and-suspenders exclude
+        # anything the user already rated.
+        mask_sentinel = np.finfo(np.float32).min
+        movie_ids, kept_scores = [], []
+        for idx, score in zip(recommended_idx, scores):
+            if score <= mask_sentinel:
+                continue
+            movie_id = int(self.idx_to_movie_id[idx])
+            if movie_id in my_movies_with_ratings:
+                continue
+            movie_ids.append(movie_id)
+            kept_scores.append(float(score))
+
+        return movie_ids, kept_scores
+
+    def _get_movielens_stats(self, movie_ids: List[int]) -> Dict[int, Dict]:
+        """Aggregate avg rating / rater count for the given movies, for display only."""
+        return {
+            row["movieId"]: row
+            for row in (
+                self.ratings_df.filter(pl.col("movieId").is_in(movie_ids))
+                .group_by("movieId")
+                .agg(
+                    [
+                        pl.count("userId").alias("num_users"),
+                        pl.mean("rating").alias("avg_rating"),
+                    ]
                 )
-                user_scores.append((user_id, overlap_count, total_score))
-
-        # Sort by total score
-        user_scores.sort(key=lambda x: x[2], reverse=True)
-
-        similar_users = [user_id for user_id, _, _ in user_scores[:top_k]]
-        print(f"Found {len(similar_users)} similar users")
-
-        if similar_users and len(user_scores) > 0:
-            top_user = user_scores[0]
-            print(
-                f"  Top similar user: ID={top_user[0]}, overlap={top_user[1]} movies, score={top_user[2]:.2f}"
+                .iter_rows(named=True)
             )
+        }
 
-        return similar_users
+    @staticmethod
+    def _parse_title_year(title: str) -> tuple[str, int | None]:
+        """Split a MovieLens title like 'Movie Title (2020)' into (title, year)."""
+        if "(" in title and ")" in title:
+            try:
+                year = int(title[title.rfind("(") + 1 : title.rfind(")")])
+                return title[: title.rfind("(")].strip(), year
+            except ValueError:
+                pass
+        return title, None
+
+    def _format_recommendation(self, row: Dict, stats_by_id: Dict[int, Dict]) -> Dict:
+        """Build a single recommendation dict from a joined movies_df row + ALS score."""
+        title, year = self._parse_title_year(row["title"])
+        movie_stats = stats_by_id.get(row["movieId"], {})
+
+        return {
+            "title": title,
+            "year": year,
+            "movielens_id": row["movieId"],
+            "genres": row["genres"],
+            "avg_rating": round(float(movie_stats.get("avg_rating", 0.0)), 2),
+            "num_similar_users": int(movie_stats.get("num_users", 0)),
+            "cf_score": round(float(row["als_score"]), 4),
+        }
 
     def get_recommendations(
-        self, my_movies_df: pl.DataFrame, top_n: int = 10
+        self,
+        my_movies_df: pl.DataFrame,
+        top_n: int = 10,
     ) -> List[Dict]:
         """
-        Generate recommendations using collaborative filtering.
+        Generate recommendations using ALS matrix factorization.
 
         Args:
             my_movies_df: User's watched movies dataframe with 'omdb_id' and 'liked' columns
@@ -206,94 +313,35 @@ class MovieLensCF:
         Returns:
             List of recommended movies with scores
         """
-        # Map user's movies to MovieLens with preference weights
         movie_mapping = self.map_my_movies_to_movielens(my_movies_df)
-
         if not movie_mapping:
             print("Could not map any movies to MovieLens dataset")
             return []
 
-        # Create {movieId: implicit_rating} dict for similarity calculation
         my_movies_with_ratings = {
             info["movieId"]: info["implicit_rating"] for info in movie_mapping.values()
         }
 
-        # Find similar users based on weighted preferences
-        similar_users = self.find_similar_users(my_movies_with_ratings, top_k=100)
+        self._get_als_model()
 
-        if not similar_users:
-            print("No similar users found")
+        my_user_items = self._build_cold_start_vector(my_movies_with_ratings)
+        if my_user_items is None:
+            print("None of your movies are present in the ALS item space")
             return []
 
-        # Get movies rated by similar users (not already watched by me)
-        my_movielens_ids = list(my_movies_with_ratings.keys())
-        similar_users_ratings = self.ratings_df.filter(
-            (pl.col("userId").is_in(similar_users))
-            & (pl.col("rating") >= 3.5)  # Movies they liked (not just watched)
-            & (~pl.col("movieId").is_in(my_movielens_ids))  # Not already watched
+        recommended_movie_ids, scores = self._recommend_movie_ids(
+            my_user_items, my_movies_with_ratings, top_n
         )
+        stats_by_id = self._get_movielens_stats(recommended_movie_ids)
 
-        # Aggregate recommendations with weighted scoring
-        recommendations = (
-            similar_users_ratings.group_by("movieId")
-            .agg(
-                [
-                    pl.count("userId").alias("num_users"),
-                    pl.mean("rating").alias("avg_rating"),
-                    pl.sum("rating").alias("total_rating"),  # Sum for popularity
-                ]
-            )
-            .sort(["total_rating", "num_users"], descending=True)
-            .head(top_n * 2)  # Get extra for filtering
-        )
+        recs_with_details = pl.DataFrame(
+            {"movieId": recommended_movie_ids, "als_score": scores}
+        ).join(self.movies_df, on="movieId", how="left")
 
-        # Join with movie details
-        recs_with_details = recommendations.join(
-            self.movies_df, on="movieId", how="left"
-        )
-
-        # Calculate collaborative filtering score
-        # Weight heavily on: how many similar users liked it + their ratings
-        recs_with_scores = recs_with_details.with_columns(
-            [
-                (
-                    (
-                        pl.col("num_users") / pl.col("num_users").max() * 0.5
-                    )  # Popularity among similar users
-                    + (pl.col("avg_rating") / 5.0 * 0.3)  # Average rating
-                    + (
-                        pl.col("total_rating") / pl.col("total_rating").max() * 0.2
-                    )  # Total endorsement
-                ).alias("cf_score")
-            ]
-        ).sort("cf_score", descending=True)
-
-        # Convert to list of dicts
-        results = []
-        for row in recs_with_scores.head(top_n).iter_rows(named=True):
-            # Extract year from title (format: "Movie Title (2020)")
-            title = row["title"]
-            year = None
-            if "(" in title and ")" in title:
-                try:
-                    year = int(title[title.rfind("(") + 1 : title.rfind(")")])
-                    title = title[: title.rfind("(")].strip()
-                except ValueError:
-                    pass
-
-            results.append(
-                {
-                    "title": title,
-                    "year": year,
-                    "movielens_id": row["movieId"],
-                    "genres": row["genres"],
-                    "avg_rating": round(float(row["avg_rating"]), 2),
-                    "num_similar_users": int(row["num_users"]),
-                    "cf_score": round(float(row["cf_score"]), 2),
-                }
-            )
-
-        return results
+        return [
+            self._format_recommendation(row, stats_by_id)
+            for row in recs_with_details.iter_rows(named=True)
+        ]
 
 
 if __name__ == "__main__":
@@ -301,7 +349,7 @@ if __name__ == "__main__":
     cf = MovieLensCF()
 
     # Load user's data (all watched movies, not just liked)
-    my_movies = pl.read_parquet("data/movies_df.parquet")
+    my_movies = pl.read_parquet(settings.MOVIES_DF_PATH)
     my_movies = my_movies.filter(pl.col("omdb_id") != "Not found")
 
     print("\nYour movie preferences:")

@@ -10,6 +10,7 @@ import json  # noqa: E402
 from datetime import datetime  # noqa: E402
 
 import polars as pl  # noqa: E402
+import settings  # noqa: E402
 from recommendation.movielens_cf import MovieLensCF  # noqa: E402
 from tmdb_client import TMDBClient  # noqa: E402
 
@@ -75,7 +76,7 @@ def filter_recs(recs: list, top_n: int) -> list:
 
 
 def save_recommendations(recs: list) -> None:
-    output_dir = Path("data/recommendations")
+    output_dir = settings.RECOMMENDATIONS_DIR
     output_dir.mkdir(parents=True, exist_ok=True)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -106,7 +107,7 @@ def generate_recommendations(top_n: int = 5):
     print("-" * 60)
     try:
         cf_model = MovieLensCF()
-        my_movies = pl.read_parquet("data/movies_df.parquet")
+        my_movies = pl.read_parquet(settings.MOVIES_DF_PATH)
         my_movies = my_movies.filter(pl.col("omdb_id") != "Not found")
 
         # Generate more candidates since we filter for TMDB posters

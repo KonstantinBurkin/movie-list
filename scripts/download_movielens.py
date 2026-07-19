@@ -4,6 +4,7 @@ import zipfile
 from pathlib import Path
 
 import requests
+import settings
 from tqdm import tqdm
 
 
@@ -51,7 +52,7 @@ def download_movielens(dataset: str = "ml-32m"):
         )
 
     url = datasets[dataset]
-    data_dir = Path("data/movielens")
+    data_dir = settings.MOVIELENS_DATA_DIR
     data_dir.mkdir(exist_ok=True)
 
     zip_path = data_dir / f"{dataset}.zip"
