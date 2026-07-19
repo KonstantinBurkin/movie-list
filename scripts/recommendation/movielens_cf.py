@@ -204,6 +204,100 @@ class MovieLensCF:
 
         return self.als_model
 
+    def _build_cold_start_vector(
+        self, my_movies_with_ratings: Dict[int, float]
+    ) -> sparse.csr_matrix | None:
+        """Build a single-row sparse confidence vector for the user, in ALS item space."""
+        item_idx, confidence = [], []
+        for movie_id, rating in my_movies_with_ratings.items():
+            idx = self.movie_id_to_idx.get(movie_id)
+            if idx is not None:
+                item_idx.append(idx)
+                confidence.append(rating)
+
+        if not item_idx:
+            return None
+
+        return sparse.csr_matrix(
+            (confidence, ([0] * len(item_idx), item_idx)),
+            shape=(1, len(self.idx_to_movie_id)),
+        )
+
+    def _recommend_movie_ids(
+        self,
+        my_user_items: sparse.csr_matrix,
+        my_movies_with_ratings: Dict[int, float],
+        top_n: int,
+    ) -> tuple[List[int], List[float]]:
+        """Query the ALS model and clean its raw output into (movieIds, scores)."""
+        recommended_idx, scores = self.als_model.recommend(
+            userid=0,
+            user_items=my_user_items,
+            N=top_n,
+            filter_already_liked_items=True,
+            recalculate_user=True,
+        )
+
+        # When fewer valid candidates exist than N, implicit pads the tail with
+        # masked placeholder slots (sentinel score = float32 min) instead of
+        # shrinking the result - drop those, and belt-and-suspenders exclude
+        # anything the user already rated.
+        mask_sentinel = np.finfo(np.float32).min
+        movie_ids, kept_scores = [], []
+        for idx, score in zip(recommended_idx, scores):
+            if score <= mask_sentinel:
+                continue
+            movie_id = int(self.idx_to_movie_id[idx])
+            if movie_id in my_movies_with_ratings:
+                continue
+            movie_ids.append(movie_id)
+            kept_scores.append(float(score))
+
+        return movie_ids, kept_scores
+
+    def _get_movielens_stats(self, movie_ids: List[int]) -> Dict[int, Dict]:
+        """Aggregate avg rating / rater count for the given movies, for display only."""
+        return {
+            row["movieId"]: row
+            for row in (
+                self.ratings_df.filter(pl.col("movieId").is_in(movie_ids))
+                .group_by("movieId")
+                .agg(
+                    [
+                        pl.count("userId").alias("num_users"),
+                        pl.mean("rating").alias("avg_rating"),
+                    ]
+                )
+                .iter_rows(named=True)
+            )
+        }
+
+    @staticmethod
+    def _parse_title_year(title: str) -> tuple[str, int | None]:
+        """Split a MovieLens title like 'Movie Title (2020)' into (title, year)."""
+        if "(" in title and ")" in title:
+            try:
+                year = int(title[title.rfind("(") + 1 : title.rfind(")")])
+                return title[: title.rfind("(")].strip(), year
+            except ValueError:
+                pass
+        return title, None
+
+    def _format_recommendation(self, row: Dict, stats_by_id: Dict[int, Dict]) -> Dict:
+        """Build a single recommendation dict from a joined movies_df row + ALS score."""
+        title, year = self._parse_title_year(row["title"])
+        movie_stats = stats_by_id.get(row["movieId"], {})
+
+        return {
+            "title": title,
+            "year": year,
+            "movielens_id": row["movieId"],
+            "genres": row["genres"],
+            "avg_rating": round(float(movie_stats.get("avg_rating", 0.0)), 2),
+            "num_similar_users": int(movie_stats.get("num_users", 0)),
+            "cf_score": round(float(row["als_score"]), 4),
+        }
+
     def get_recommendations(
         self,
         my_movies_df: pl.DataFrame,
@@ -219,9 +313,7 @@ class MovieLensCF:
         Returns:
             List of recommended movies with scores
         """
-        # Map user's movies to MovieLens with preference weights
         movie_mapping = self.map_my_movies_to_movielens(my_movies_df)
-
         if not movie_mapping:
             print("Could not map any movies to MovieLens dataset")
             return []
@@ -232,98 +324,24 @@ class MovieLensCF:
 
         self._get_als_model()
 
-        # Fold the user's ratings into the trained item space as a cold-start row vector
-        item_idx, confidence = [], []
-        for movie_id, rating in my_movies_with_ratings.items():
-            idx = self.movie_id_to_idx.get(movie_id)
-            if idx is not None:
-                item_idx.append(idx)
-                confidence.append(rating)
-
-        if not item_idx:
+        my_user_items = self._build_cold_start_vector(my_movies_with_ratings)
+        if my_user_items is None:
             print("None of your movies are present in the ALS item space")
             return []
 
-        my_user_items = sparse.csr_matrix(
-            (confidence, ([0] * len(item_idx), item_idx)),
-            shape=(1, len(self.idx_to_movie_id)),
+        recommended_movie_ids, scores = self._recommend_movie_ids(
+            my_user_items, my_movies_with_ratings, top_n
         )
-
-        recommended_idx, scores = self.als_model.recommend(
-            userid=0,
-            user_items=my_user_items,
-            N=top_n,
-            filter_already_liked_items=True,
-            recalculate_user=True,
-        )
-
-        # When fewer valid candidates exist than N, implicit pads the tail with
-        # masked placeholder slots (sentinel score = float32 min) instead of
-        # shrinking the result - drop those, and belt-and-suspenders exclude
-        # anything the user already rated.
-        mask_sentinel = np.finfo(np.float32).min
-        recommended_movie_ids = []
-        kept_scores = []
-        for idx, score in zip(recommended_idx, scores):
-            if score <= mask_sentinel:
-                continue
-            movie_id = int(self.idx_to_movie_id[idx])
-            if movie_id in my_movies_with_ratings:
-                continue
-            recommended_movie_ids.append(movie_id)
-            kept_scores.append(score)
-        scores = kept_scores
-
-        # Pull supplementary stats (avg rating, number of raters) for display only
-        stats_by_id = {
-            row["movieId"]: row
-            for row in (
-                self.ratings_df.filter(pl.col("movieId").is_in(recommended_movie_ids))
-                .group_by("movieId")
-                .agg(
-                    [
-                        pl.count("userId").alias("num_users"),
-                        pl.mean("rating").alias("avg_rating"),
-                    ]
-                )
-                .iter_rows(named=True)
-            )
-        }
+        stats_by_id = self._get_movielens_stats(recommended_movie_ids)
 
         recs_with_details = pl.DataFrame(
-            {
-                "movieId": recommended_movie_ids,
-                "als_score": [float(s) for s in scores],
-            }
+            {"movieId": recommended_movie_ids, "als_score": scores}
         ).join(self.movies_df, on="movieId", how="left")
 
-        results = []
-        for row in recs_with_details.iter_rows(named=True):
-            # Extract year from title (format: "Movie Title (2020)")
-            title = row["title"]
-            year = None
-            if "(" in title and ")" in title:
-                try:
-                    year = int(title[title.rfind("(") + 1 : title.rfind(")")])
-                    title = title[: title.rfind("(")].strip()
-                except ValueError:
-                    pass
-
-            movie_stats = stats_by_id.get(row["movieId"], {})
-
-            results.append(
-                {
-                    "title": title,
-                    "year": year,
-                    "movielens_id": row["movieId"],
-                    "genres": row["genres"],
-                    "avg_rating": round(float(movie_stats.get("avg_rating", 0.0)), 2),
-                    "num_similar_users": int(movie_stats.get("num_users", 0)),
-                    "cf_score": round(float(row["als_score"]), 4),
-                }
-            )
-
-        return results
+        return [
+            self._format_recommendation(row, stats_by_id)
+            for row in recs_with_details.iter_rows(named=True)
+        ]
 
 
 if __name__ == "__main__":
