@@ -212,6 +212,8 @@ data/movies**
 
 # Models
 models/*.pkl
+models/*.npz
+models/*.npy
 
 # Logs
 logs/
