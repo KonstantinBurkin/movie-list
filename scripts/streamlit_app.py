@@ -295,11 +295,6 @@ with st.sidebar:
                 st.error(f"❌ Error adding movie: {e}")
                 st.info("Make sure OMDB_API_KEY is configured in secrets.")
 
-# Filters
-viewed_filter = st.selectbox("liked?", options=["All", True, False])
-if viewed_filter != "All":
-    df = df.loc[df["liked"] == viewed_filter]
-
 st.dataframe(
     df.reset_index(drop=True).sort_values("index", ascending=False)[
         [
@@ -315,7 +310,7 @@ st.dataframe(
     ]
 )
 
-st.header("🎯 Recommended Movies")
+st.header("🎯 Recommendations")
 
 # Load latest recommendations
 recommendations_path = Path("./data/recommendations/recommendations_latest.json")
@@ -354,18 +349,12 @@ if recommendations_path.exists():
             except Exception:
                 time_str = generated_at
 
-            st.caption(f"Generated on {time_str}")
-
             # Display recommendations side by side (columns stack vertically on
             # narrow/mobile screens automatically, so this stays horizontal on PC)
             rec_columns = st.columns(len(recommendations))
 
             for i, (rec, col) in enumerate(zip(recommendations, rec_columns), 1):
                 with col:
-                    rating_str = (
-                        f"{rec['rating']:.1f}/10" if rec.get("rating") else "N/A"
-                    )
-
                     # Display poster if available
                     if rec.get("poster_path"):
                         poster_url = (
@@ -377,21 +366,26 @@ if recommendations_path.exists():
 
                     st.write(f"{rec['title']}, {rec['year']}")
 
-                    # Description
-                    if rec.get("overview"):
-                        with st.expander("Description", expanded=False):
-                            st.write(f" ⭐ {rating_str} \n\n", rec["overview"])
+            # Single expander with all descriptions below the posters
+            with st.expander("Descriptions", expanded=False):
+                for rec in recommendations:
+                    rating_str = (
+                        f"{rec['rating']:.1f}/10" if rec.get("rating") else "N/A"
+                    )
+                    st.write(f"**{rec['title']}, {rec['year']}** — ⭐ {rating_str}")
+                    st.write(rec.get("overview", ""))
+                    # st.divider()
 
         else:
             st.info("No recommendations available yet. Run the recommendation system!")
             with st.expander("🚀 How to generate recommendations"):
                 st.code(
                     """
-# Generate recommendations
-python scripts/generate_recommendations.py
+                # Generate recommendations
+                python scripts/generate_recommendations.py
 
-# Or generate more recommendations
-python scripts/generate_recommendations.py --top-n 10
+                # Or generate more recommendations
+                python scripts/generate_recommendations.py --top-n 10
                 """,
                     language="bash",
                 )
