@@ -4,9 +4,8 @@ import zipfile
 from pathlib import Path
 
 import requests
-from tqdm import tqdm
-
 import settings
+from tqdm import tqdm
 
 
 def download_file(url: str, dest: Path):

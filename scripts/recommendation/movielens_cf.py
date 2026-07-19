@@ -7,7 +7,6 @@ from typing import Dict, List
 import numpy as np
 import polars as pl
 import scipy.sparse as sparse
-
 from implicit.cpu.als import AlternatingLeastSquares
 
 # Make `scripts/settings.py` importable whether this module is run standalone
