@@ -1,100 +1,102 @@
 {
-  "generated_at": "20260719_093321",
+  "generated_at": "20260719_185232",
   "recommendations": [
     {
-      "title": "Unforgiven",
-      "year": 1992,
-      "tmdb_id": 33,
-      "rating": 7.913,
+      "title": "Mulholland Drive",
+      "year": 2001,
+      "tmdb_id": 1018,
+      "rating": 7.8,
       "genres": [
-        37
+        53,
+        18,
+        9648
       ],
-      "overview": "William Munny is a retired, once-ruthless killer turned gentle widower and hog farmer. To help support his two motherless children, he accepts one last bounty-hunter mission to find the men who brutalized a prostitute. Joined by his former partner and a cocky greenhorn, he takes on a corrupt sheriff.",
-      "score": 0.91,
-      "poster_path": "/54roTwbX9fltg85zjsmrooXAs12.jpg",
+      "overview": "Blonde Betty Elms has only just arrived in Hollywood to become a movie star when she meets an enigmatic brunette with amnesia. Meanwhile, as the two set off to solve the second woman's identity, filmmaker Adam Kesher runs into ominous trouble while casting his latest project.",
+      "score": 1.0727,
+      "poster_path": "/x7A59t6ySylr1L7aubOQEA480vM.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 92,
-        "avg_movielens_rating": 4.34
+        "num_similar_users": 16635,
+        "avg_movielens_rating": 3.85
       }
     },
     {
-      "title": "City of God (Cidade de Deus)",
-      "year": 2002,
-      "tmdb_id": 598,
-      "rating": 8.428,
+      "title": "Whiplash",
+      "year": 2014,
+      "tmdb_id": 244786,
+      "rating": 8.376,
       "genres": [
         18,
-        80
+        10402,
+        53
       ],
-      "overview": "In the poverty-stricken favelas of Rio de Janeiro in the 1970s, two young men choose different paths. Rocket is a budding photographer who documents the increasing drug-related violence of his neighborhood, while José “Zé” Pequeno is an ambitious drug dealer diving into a dangerous life of crime.",
-      "score": 0.89,
-      "poster_path": "/k7eYdWvhYQyRQoU2TB2A2Xu2TfD.jpg",
+      "overview": "Under the direction of a ruthless instructor, a talented young drummer begins to pursue perfection at any cost, even his humanity.",
+      "score": 1.0321,
+      "poster_path": "/7fn624j5lj3xTme2SgiLCeuedmO.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 89,
-        "avg_movielens_rating": 4.39
+        "num_similar_users": 19477,
+        "avg_movielens_rating": 4.15
       }
     },
     {
-      "title": "Saving Private Ryan",
-      "year": 1998,
-      "tmdb_id": 857,
-      "rating": 8.23,
+      "title": "Big Short, The",
+      "year": 2015,
+      "tmdb_id": 318846,
+      "rating": 7.367,
       "genres": [
-        10752,
-        18,
-        36
-      ],
-      "overview": "As U.S. troops storm the beaches of Normandy, three brothers lie dead on the battlefield, with a fourth trapped behind enemy lines. Ranger captain John Miller and seven men are tasked with penetrating German-held territory and bringing the boy home.",
-      "score": 0.89,
-      "poster_path": "/uqx37cS8cpHg8U35f9U5IBlrCV3.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 89,
-        "avg_movielens_rating": 4.36
-      }
-    },
-    {
-      "title": "Amadeus",
-      "year": 1984,
-      "tmdb_id": 279,
-      "rating": 8.023,
-      "genres": [
-        18,
-        36,
-        10402
-      ],
-      "overview": "Disciplined Italian composer Antonio Salieri becomes consumed by jealousy and resentment towards the hedonistic and remarkably talented young Salzburger composer Wolfgang Amadeus Mozart.",
-      "score": 0.89,
-      "poster_path": "/gQRfiyfGvr1az0quaYyMram3Aqt.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 88,
-        "avg_movielens_rating": 4.38
-      }
-    },
-    {
-      "title": "Stand by Me",
-      "year": 1986,
-      "tmdb_id": 235,
-      "rating": 7.836,
-      "genres": [
-        80,
+        35,
         18
       ],
-      "overview": "After learning that a boy their age has been accidentally killed near their rural homes, four boys decide to go see the body. Gordie, Vern, Chris, and Teddy encounter a mean junk man and a marsh full of leeches, but they also learn more about one another and their very different home lives. Just a lark at first, the boys' adventure evolves into a defining event in their lives.",
-      "score": 0.89,
-      "poster_path": "/vz0w9BSehcqjDcJOjRaCk7fgJe7.jpg",
+      "overview": "The men who made millions from a global economic meltdown.",
+      "score": 1.0193,
+      "poster_path": "/scVEaJEwP8zUix8vgmMoJJ9Nq0w.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 91,
-        "avg_movielens_rating": 4.16
+        "num_similar_users": 14997,
+        "avg_movielens_rating": 4.06
+      }
+    },
+    {
+      "title": "Her",
+      "year": 2013,
+      "tmdb_id": 152601,
+      "rating": 7.837,
+      "genres": [
+        10749,
+        878,
+        18
+      ],
+      "overview": "In the not so distant future, Theodore, a lonely writer, purchases a newly developed operating system designed to meet the user's every need. To Theodore's surprise, a romantic relationship develops between him and his operating system. This unconventional love story blends science fiction and romance in a sweet tale that explores the nature of love and the ways that technology isolates and connects us all.",
+      "score": 1.0068,
+      "poster_path": "/eCOtqtfvn7mxGl6nfmq4b1exJRc.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 17110,
+        "avg_movielens_rating": 3.9
+      }
+    },
+    {
+      "title": "Stalker",
+      "year": 1979,
+      "tmdb_id": 1398,
+      "rating": 8.088,
+      "genres": [
+        878,
+        18
+      ],
+      "overview": "Near a gray and unnamed city is the Zone, a place guarded by barbed wire and soldiers, and where the normal laws of physics are victim to frequent anomalies. A stalker guides two men into the Zone, specifically to an area in which deep-seated desires are granted.",
+      "score": 0.9698,
+      "poster_path": "/1qhOyf5C4s9ZdvY8d5JDx9DFMeT.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 3905,
+        "avg_movielens_rating": 4.08
       }
     }
   ]
