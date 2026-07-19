@@ -63,6 +63,14 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
     return enriched
 
 
+def filter_recs(recs: list, top_n: int) -> list:
+
+    # remove sequels
+
+    recs = recs[:top_n]
+    return recs
+
+
 def save_recommendations(recs: list) -> None:
     output_dir = Path("data/recommendations")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -121,7 +129,7 @@ def generate_recommendations(top_n: int = 5):
         traceback.print_exc()
         return []
 
-    recommendations = recommendations[:top_n]
+    recommendations = filter_recs(recommendations, top_n)
 
     if not recommendations:
         print(
