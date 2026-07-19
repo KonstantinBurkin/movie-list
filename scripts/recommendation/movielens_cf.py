@@ -1,5 +1,6 @@
 """Collaborative filtering using MovieLens dataset."""
 
+import sys
 from pathlib import Path
 from typing import Dict, List
 
@@ -9,17 +10,22 @@ import scipy.sparse as sparse
 
 from implicit.cpu.als import AlternatingLeastSquares
 
+# Make `scripts/settings.py` importable whether this module is run standalone
+# (`python scripts/recommendation/movielens_cf.py`) or imported as a package.
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+import settings  # noqa: E402
+
 
 class MovieLensCF:
     """Collaborative filtering using MovieLens public dataset."""
 
     def __init__(
         self,
-        movielens_path: str = "data/movielens",
-        model_dir: str = "models",
-        factors: int = 64,
-        regularization: float = 0.05,
-        iterations: int = 15,
+        movielens_path: str = str(settings.MOVIELENS_DATA_DIR),
+        model_dir: str = str(settings.MODEL_DIR),
+        factors: int = settings.ALS_FACTORS,
+        regularization: float = settings.ALS_REGULARIZATION,
+        iterations: int = settings.ALS_ITERATIONS,
     ):
         """
         Initialize with MovieLens dataset.
@@ -326,7 +332,7 @@ if __name__ == "__main__":
     cf = MovieLensCF()
 
     # Load user's data (all watched movies, not just liked)
-    my_movies = pl.read_parquet("data/movies_df.parquet")
+    my_movies = pl.read_parquet(settings.MOVIES_DF_PATH)
     my_movies = my_movies.filter(pl.col("omdb_id") != "Not found")
 
     print("\nYour movie preferences:")
