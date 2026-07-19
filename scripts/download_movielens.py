@@ -6,6 +6,8 @@ from pathlib import Path
 import requests
 from tqdm import tqdm
 
+import settings
+
 
 def download_file(url: str, dest: Path):
     """Download file with progress bar."""
@@ -51,7 +53,7 @@ def download_movielens(dataset: str = "ml-32m"):
         )
 
     url = datasets[dataset]
-    data_dir = Path("data/movielens")
+    data_dir = settings.MOVIELENS_DATA_DIR
     data_dir.mkdir(exist_ok=True)
 
     zip_path = data_dir / f"{dataset}.zip"
