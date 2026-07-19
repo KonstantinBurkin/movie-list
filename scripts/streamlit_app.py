@@ -356,33 +356,31 @@ if recommendations_path.exists():
 
             st.caption(f"Generated on {time_str}")
 
-            # Display recommendations in a nice format
-            for i, rec in enumerate(recommendations, 1):
-                with st.container():
-                    col1, col2 = st.columns([3, 1])
+            # Display recommendations side by side (columns stack vertically on
+            # narrow/mobile screens automatically, so this stays horizontal on PC)
+            rec_columns = st.columns(len(recommendations))
 
-                    with col1:
-                        rating_str = (
-                            f"{rec['rating']:.1f}/10" if rec.get("rating") else "N/A"
+            for i, (rec, col) in enumerate(zip(recommendations, rec_columns), 1):
+                with col:
+                    rating_str = (
+                        f"{rec['rating']:.1f}/10" if rec.get("rating") else "N/A"
+                    )
+
+                    # Display poster if available
+                    if rec.get("poster_path"):
+                        poster_url = (
+                            f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
                         )
-                        st.subheader(f"{i}. {rec['title']}, {rec['year']}")
+                        st.image(poster_url, use_container_width=True)
+                    else:
+                        st.info("No poster available")
 
-                        # Description
-                        if rec.get("overview"):
-                            with st.expander("📝 Description", expanded=False):
-                                st.write(f" ⭐ {rating_str} \n\n", rec["overview"])
+                    st.subheader(f"{i}. {rec['title']}, {rec['year']}")
 
-                    with col2:
-                        # Display poster if available
-                        if rec.get("poster_path"):
-                            poster_url = (
-                                f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
-                            )
-                            st.image(poster_url, use_container_width=True)
-                        else:
-                            st.info("No poster available")
-
-                    st.divider()
+                    # Description
+                    if rec.get("overview"):
+                        with st.expander("📝 Description", expanded=False):
+                            st.write(f" ⭐ {rating_str} \n\n", rec["overview"])
 
         else:
             st.info("No recommendations available yet. Run the recommendation system!")
