@@ -362,32 +362,16 @@ if recommendations_path.exists():
                     col1, col2 = st.columns([3, 1])
 
                     with col1:
-                        st.subheader(f"{i}. {rec['title']} ({rec['year']})")
-
-                        # Create columns for metadata
-                        meta_col1, meta_col2, meta_col3 = st.columns(3)
-
-                        with meta_col1:
-                            if rec.get("rating"):
-                                st.metric("Rating", f"{rec['rating']:.1f}/10")
-                            else:
-                                st.metric("Rating", "N/A")
-
-                        with meta_col2:
-                            st.metric("Match Score", f"{rec['score']:.1f}")
-
-                        with meta_col3:
-                            st.metric("Year", rec["year"])
-
-                        # Show CF stats if available
-                        if rec.get("cf_stats"):
-                            st.caption(
-                                f"💡 Liked by {rec['cf_stats']['num_similar_users']} users with similar taste"
-                            )
+                        rating_str = (
+                            f"{rec['rating']:.1f}/10" if rec.get("rating") else "N/A"
+                        )
+                        st.subheader(
+                            f"{i}. {rec['title']}, {rec['year']} ⭐ {rating_str}"
+                        )
 
                         # Description
                         if rec.get("overview"):
-                            with st.expander("📝 Description", expanded=(i == 1)):
+                            with st.expander("📝 Description", expanded=False):
                                 st.write(rec["overview"])
 
                     with col2:
