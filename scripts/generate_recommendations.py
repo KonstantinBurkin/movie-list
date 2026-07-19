@@ -53,6 +53,9 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
                     "score": float(rec["cf_score"]),
                     "poster_path": str(tmdb_movie["poster_path"]),
                     "source": "collaborative_filtering",
+                    "belongs_to_collection": tmdb_client.is_part_of_collection(
+                        tmdb_movie["tmdb_id"]
+                    ),
                     "cf_stats": {
                         "num_similar_users": int(rec["num_similar_users"]),
                         "avg_movielens_rating": float(rec["avg_rating"]),
@@ -64,8 +67,8 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
 
 
 def filter_recs(recs: list, top_n: int) -> list:
-
-    # remove sequels
+    # remove sequels/franchise entries
+    recs = [rec for rec in recs if not rec.get("belongs_to_collection")]
 
     recs = recs[:top_n]
     return recs
