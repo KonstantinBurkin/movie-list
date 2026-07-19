@@ -43,7 +43,11 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
                     "title": str(rec["title"]),
                     "year": int(rec["year"]) if rec["year"] else None,
                     "tmdb_id": int(tmdb_movie["tmdb_id"]),
-                    "rating": float(tmdb_movie["rating"]) if tmdb_movie.get("rating") else None,
+                    "rating": (
+                        float(tmdb_movie["rating"])
+                        if tmdb_movie.get("rating")
+                        else None
+                    ),
                     "genres": list(tmdb_movie.get("genre_ids", [])),
                     "overview": str(tmdb_movie.get("overview", "")),
                     "score": float(rec["cf_score"]),
@@ -59,6 +63,26 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
     return enriched
 
 
+def save_recommendations(recs: list) -> None:
+    output_dir = Path("data/recommendations")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    json_path = output_dir / f"recommendations_{timestamp}.json"
+    latest_path = output_dir / "recommendations_latest.json"
+
+    output_data = {
+        "generated_at": timestamp,
+        "recommendations": recs,
+    }
+
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(output_data, f, indent=2, ensure_ascii=False)
+
+    with open(latest_path, "w", encoding="utf-8") as f:
+        json.dump(output_data, f, indent=2, ensure_ascii=False)
+
+
 def generate_recommendations(top_n: int = 5):
     """
     Generate movie recommendations using collaborative filtering.
@@ -66,11 +90,7 @@ def generate_recommendations(top_n: int = 5):
     Args:
         top_n: Number of recommendations to generate
     """
-    print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Generating top {top_n} recommendations")
-    print("=" * 60 + "\n")
 
-    # Collaborative filtering recommendations
     print("Collaborative filtering recommendations...")
     print("-" * 60)
     try:
@@ -94,12 +114,8 @@ def generate_recommendations(top_n: int = 5):
             print("\n⚠ No CF recommendations generated")
             return []
 
-    except FileNotFoundError as e:
-        print(f"\n⚠ MovieLens dataset not found: {e}")
-        print("  Run: python scripts/download_movielens.py")
-        return []
     except Exception as e:
-        print(f"\n⚠ CF error: {e}")
+        print(f"Generate recs error: {e}")
         import traceback
 
         traceback.print_exc()
@@ -113,34 +129,7 @@ def generate_recommendations(top_n: int = 5):
         )
         return []
 
-    output_dir = Path("data/recommendations")
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    json_path = output_dir / f"recommendations_{timestamp}.json"
-    latest_path = output_dir / "recommendations_latest.json"
-
-    output_data = {
-        "generated_at": datetime.now().isoformat(),
-        "recommendations": recommendations,
-    }
-
-    with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(output_data, f, indent=2, ensure_ascii=False)
-
-    with open(latest_path, "w", encoding="utf-8") as f:
-        json.dump(output_data, f, indent=2, ensure_ascii=False)
-
-    df = pl.DataFrame(recommendations)
-    parquet_path = output_dir / "recommendations_latest.parquet"
-    df.write_parquet(parquet_path)
-
-    print("\n" + "=" * 60)
-    print("TOP MOVIE RECOMMENDATIONS")
-    print("=" * 60)
-
-    for i, rec in enumerate(recommendations, 1):
-        print(f"\n{i}. {rec['title']} ({rec['year']})")
+    save_recommendations(recommendations)
 
     return recommendations
 
