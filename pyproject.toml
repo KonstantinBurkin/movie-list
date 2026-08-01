@@ -21,6 +21,7 @@ dependencies = [
     "tmdbv3api (>=1.9.0)",
     "gh (>=0.0.4,<0.0.5)",
     "implicit (>=0.7.3,<0.8.0)",
+    "pygithub (>=2.4.0,<3.0.0)",
 ]
 
 [project.optional-dependencies]
