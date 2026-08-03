@@ -169,7 +169,7 @@ class MovieLensCF:
             shape=(len(unique_users), len(unique_movies)),
         )
 
-    def _get_als_model(self, force_retrain: bool = False) -> AlternatingLeastSquares:
+    def _get_als_model(self, force_retrain: bool = True) -> AlternatingLeastSquares:
         """Train (or load a cached) ALS model on the full MovieLens ratings matrix."""
         model_path = self.model_dir / "als_model.npz"
         movie_ids_path = self.model_dir / "als_movie_ids.npy"
