@@ -1,18 +1,18 @@
 {
-  "generated_at": "20260719_192645",
+  "generated_at": "20260803_090843",
   "recommendations": [
     {
       "title": "Whiplash",
       "year": 2014,
       "tmdb_id": 244786,
-      "rating": 8.376,
+      "rating": 8.375,
       "genres": [
         18,
         10402,
         53
       ],
       "overview": "Under the direction of a ruthless instructor, a talented young drummer begins to pursue perfection at any cost, even his humanity.",
-      "score": 1.045,
+      "score": 1.0442,
       "poster_path": "/7fn624j5lj3xTme2SgiLCeuedmO.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
@@ -25,13 +25,13 @@
       "title": "Big Short, The",
       "year": 2015,
       "tmdb_id": 318846,
-      "rating": 7.367,
+      "rating": 7.369,
       "genres": [
         35,
         18
       ],
       "overview": "The men who made millions from a global economic meltdown.",
-      "score": 1.0235,
+      "score": 1.022,
       "poster_path": "/scVEaJEwP8zUix8vgmMoJJ9Nq0w.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
@@ -44,13 +44,13 @@
       "title": "Ex Machina",
       "year": 2015,
       "tmdb_id": 264660,
-      "rating": 7.572,
+      "rating": 7.571,
       "genres": [
         18,
         878
       ],
       "overview": "Caleb, a coder at the world's largest internet company, wins a competition to spend a week at a private mountain retreat belonging to Nathan, the reclusive CEO of the company. But when Caleb arrives at the remote location he finds that he will have to participate in a strange and fascinating experiment in which he must interact with the world's first true artificial intelligence, housed in the body of a beautiful robot girl.",
-      "score": 0.9676,
+      "score": 0.9647,
       "poster_path": "/dmJW8IAKHKxFNiUnoDR7JfsK7Rp.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
@@ -63,13 +63,13 @@
       "title": "Stalker",
       "year": 1979,
       "tmdb_id": 1398,
-      "rating": 8.088,
+      "rating": 8.086,
       "genres": [
         878,
         18
       ],
       "overview": "Near a gray and unnamed city is the Zone, a place guarded by barbed wire and soldiers, and where the normal laws of physics are victim to frequent anomalies. A stalker guides two men into the Zone, specifically to an area in which deep-seated desires are granted.",
-      "score": 0.9642,
+      "score": 0.964,
       "poster_path": "/1qhOyf5C4s9ZdvY8d5JDx9DFMeT.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
@@ -79,23 +79,22 @@
       }
     },
     {
-      "title": "Gone Girl",
-      "year": 2014,
-      "tmdb_id": 210577,
-      "rating": 7.891,
+      "title": "Once Upon a Time in America",
+      "year": 1984,
+      "tmdb_id": 311,
+      "rating": 8.374,
       "genres": [
-        9648,
-        53,
-        18
+        18,
+        80
       ],
-      "overview": "With his wife's disappearance having become the focus of an intense media circus, a man sees the spotlight turned on him when it's suspected that he may not be innocent.",
-      "score": 0.954,
-      "poster_path": "/ts996lKsxvjkO2yiYG0ht4qAicO.jpg",
+      "overview": "A former Prohibition-era Jewish gangster returns to the Lower East Side of Manhattan over thirty years later, where he once again must confront the ghosts and regrets of his old life.",
+      "score": 0.9547,
+      "poster_path": "/i0enkzsL5dPeneWnjl1fCWm6L7k.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 20160,
-        "avg_movielens_rating": 3.95
+        "num_similar_users": 5925,
+        "avg_movielens_rating": 3.98
       }
     }
   ]
