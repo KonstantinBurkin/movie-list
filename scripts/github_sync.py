@@ -56,7 +56,7 @@ def create_pr_with_movie(
             file_sha = None
 
         # Update file in new branch
-        commit_message = f"Add movie: {movie_title} ({movie_year})\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+        commit_message = f"Add movie: {movie_title} ({movie_year})"
 
         repo.update_file(
             path="data/movies_df.parquet",
@@ -72,8 +72,6 @@ def create_pr_with_movie(
 
 **Movie:** {movie_title}
 **Year:** {movie_year}
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
 """
 
         pr = repo.create_pull(
