@@ -1,5 +1,5 @@
 {
-  "generated_at": "20260803_090843",
+  "generated_at": "20260810_220200",
   "recommendations": [
     {
       "title": "Whiplash",
@@ -12,7 +12,7 @@
         53
       ],
       "overview": "Under the direction of a ruthless instructor, a talented young drummer begins to pursue perfection at any cost, even his humanity.",
-      "score": 1.0442,
+      "score": 1.0443,
       "poster_path": "/7fn624j5lj3xTme2SgiLCeuedmO.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
@@ -31,13 +31,32 @@
         18
       ],
       "overview": "The men who made millions from a global economic meltdown.",
-      "score": 1.022,
+      "score": 1.0214,
       "poster_path": "/scVEaJEwP8zUix8vgmMoJJ9Nq0w.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
         "num_similar_users": 14997,
         "avg_movielens_rating": 4.06
+      }
+    },
+    {
+      "title": "Stalker",
+      "year": 1979,
+      "tmdb_id": 1398,
+      "rating": 8.087,
+      "genres": [
+        878,
+        18
+      ],
+      "overview": "Near a gray and unnamed city is the Zone, a place guarded by barbed wire and soldiers, and where the normal laws of physics are victim to frequent anomalies. A stalker guides two men into the Zone, specifically to an area in which deep-seated desires are granted.",
+      "score": 0.9662,
+      "poster_path": "/1qhOyf5C4s9ZdvY8d5JDx9DFMeT.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 3905,
+        "avg_movielens_rating": 4.08
       }
     },
     {
@@ -50,7 +69,7 @@
         878
       ],
       "overview": "Caleb, a coder at the world's largest internet company, wins a competition to spend a week at a private mountain retreat belonging to Nathan, the reclusive CEO of the company. But when Caleb arrives at the remote location he finds that he will have to participate in a strange and fascinating experiment in which he must interact with the world's first true artificial intelligence, housed in the body of a beautiful robot girl.",
-      "score": 0.9647,
+      "score": 0.9626,
       "poster_path": "/dmJW8IAKHKxFNiUnoDR7JfsK7Rp.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
@@ -60,41 +79,22 @@
       }
     },
     {
-      "title": "Stalker",
-      "year": 1979,
-      "tmdb_id": 1398,
-      "rating": 8.086,
+      "title": "Casino",
+      "year": 1995,
+      "tmdb_id": 524,
+      "rating": 7.996,
       "genres": [
-        878,
+        80,
         18
       ],
-      "overview": "Near a gray and unnamed city is the Zone, a place guarded by barbed wire and soldiers, and where the normal laws of physics are victim to frequent anomalies. A stalker guides two men into the Zone, specifically to an area in which deep-seated desires are granted.",
-      "score": 0.964,
-      "poster_path": "/1qhOyf5C4s9ZdvY8d5JDx9DFMeT.jpg",
+      "overview": "In Las Vegas, two best friends--a casino executive and a Mafia enforcer--compete for a gambling empire and a fast-living, fast-loving socialite.",
+      "score": 0.9535,
+      "poster_path": "/gziIkUSnYuj9ChCi8qOu2ZunpSC.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 3905,
-        "avg_movielens_rating": 4.08
-      }
-    },
-    {
-      "title": "Once Upon a Time in America",
-      "year": 1984,
-      "tmdb_id": 311,
-      "rating": 8.374,
-      "genres": [
-        18,
-        80
-      ],
-      "overview": "A former Prohibition-era Jewish gangster returns to the Lower East Side of Manhattan over thirty years later, where he once again must confront the ghosts and regrets of his old life.",
-      "score": 0.9547,
-      "poster_path": "/i0enkzsL5dPeneWnjl1fCWm6L7k.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 5925,
-        "avg_movielens_rating": 3.98
+        "num_similar_users": 22298,
+        "avg_movielens_rating": 3.84
       }
     }
   ]
