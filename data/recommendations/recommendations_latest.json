@@ -1,100 +1,103 @@
 {
-  "generated_at": "20260810_220200",
+  "generated_at": "20260812_154750",
   "recommendations": [
     {
-      "title": "Whiplash",
-      "year": 2014,
-      "tmdb_id": 244786,
-      "rating": 8.375,
+      "title": "Edward Scissorhands",
+      "year": 1990,
+      "tmdb_id": 162,
+      "rating": 7.72,
       "genres": [
+        14,
         18,
-        10402,
-        53
+        10749
       ],
-      "overview": "Under the direction of a ruthless instructor, a talented young drummer begins to pursue perfection at any cost, even his humanity.",
-      "score": 1.0443,
-      "poster_path": "/7fn624j5lj3xTme2SgiLCeuedmO.jpg",
+      "overview": "A small suburban town receives a visit from a castaway unfinished science experiment named Edward.",
+      "score": 0.9325,
+      "poster_path": "/e0FqKFvGPdQNWG8tF9cZBtev9Em.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 19477,
-        "avg_movielens_rating": 4.15
+        "num_similar_users": 28689,
+        "avg_movielens_rating": 3.73
       }
     },
     {
-      "title": "Big Short, The",
-      "year": 2015,
-      "tmdb_id": 318846,
-      "rating": 7.369,
+      "title": "Ran",
+      "year": 1985,
+      "tmdb_id": 11645,
+      "rating": 8.011,
+      "genres": [
+        28,
+        18,
+        36
+      ],
+      "overview": "Shakespeare's King Lear is reimagined as a singular historical epic set in sixteenth-century Japan where an aging warlord divides his kingdom between his three sons.",
+      "score": 0.9031,
+      "poster_path": "/dGgiXMWDcS5aJTBEFu7bmaQPNox.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 6350,
+        "avg_movielens_rating": 4.14
+      }
+    },
+    {
+      "title": "Once Upon a Time in the West (C'era una volta il West)",
+      "year": 1968,
+      "tmdb_id": 335,
+      "rating": 8.3,
+      "genres": [
+        18,
+        37
+      ],
+      "overview": "As the railroad builders advance unstoppably through the Arizona desert on their way to the sea, Jill arrives in the small town of Flagstone with the intention of starting a new life.",
+      "score": 0.8939,
+      "poster_path": "/qbYgqOczabWNn2XKwgMtVrntD6P.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 7227,
+        "avg_movielens_rating": 4.11
+      }
+    },
+    {
+      "title": "Silver Linings Playbook",
+      "year": 2012,
+      "tmdb_id": 82693,
+      "rating": 7.154,
+      "genres": [
+        18,
+        35,
+        10749
+      ],
+      "overview": "After losing his job and wife, and spending time in an institution, a former teacher winds up living with his parents. He wants to rebuild his life and reconcile with his wife, but his father would be happy if he shared his obsession with the Philadelphia Eagles. Things get complicated when he meets Tiffany Maxwell who offers to help him reconnect with his wife if he will do something very important for her in exchange.",
+      "score": 0.8707,
+      "poster_path": "/fhHB1uvfFKKFbj6bTKE8xdtsjKi.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 13576,
+        "avg_movielens_rating": 3.7
+      }
+    },
+    {
+      "title": "Parasite",
+      "year": 2019,
+      "tmdb_id": 496243,
+      "rating": 8.49,
       "genres": [
         35,
+        53,
         18
       ],
-      "overview": "The men who made millions from a global economic meltdown.",
-      "score": 1.0214,
-      "poster_path": "/scVEaJEwP8zUix8vgmMoJJ9Nq0w.jpg",
+      "overview": "All unemployed, Ki-taek's family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.",
+      "score": 0.8661,
+      "poster_path": "/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 14997,
-        "avg_movielens_rating": 4.06
-      }
-    },
-    {
-      "title": "Stalker",
-      "year": 1979,
-      "tmdb_id": 1398,
-      "rating": 8.087,
-      "genres": [
-        878,
-        18
-      ],
-      "overview": "Near a gray and unnamed city is the Zone, a place guarded by barbed wire and soldiers, and where the normal laws of physics are victim to frequent anomalies. A stalker guides two men into the Zone, specifically to an area in which deep-seated desires are granted.",
-      "score": 0.9662,
-      "poster_path": "/1qhOyf5C4s9ZdvY8d5JDx9DFMeT.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 3905,
-        "avg_movielens_rating": 4.08
-      }
-    },
-    {
-      "title": "Ex Machina",
-      "year": 2015,
-      "tmdb_id": 264660,
-      "rating": 7.571,
-      "genres": [
-        18,
-        878
-      ],
-      "overview": "Caleb, a coder at the world's largest internet company, wins a competition to spend a week at a private mountain retreat belonging to Nathan, the reclusive CEO of the company. But when Caleb arrives at the remote location he finds that he will have to participate in a strange and fascinating experiment in which he must interact with the world's first true artificial intelligence, housed in the body of a beautiful robot girl.",
-      "score": 0.9626,
-      "poster_path": "/dmJW8IAKHKxFNiUnoDR7JfsK7Rp.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 20588,
-        "avg_movielens_rating": 3.99
-      }
-    },
-    {
-      "title": "Casino",
-      "year": 1995,
-      "tmdb_id": 524,
-      "rating": 7.996,
-      "genres": [
-        80,
-        18
-      ],
-      "overview": "In Las Vegas, two best friends--a casino executive and a Mafia enforcer--compete for a gambling empire and a fast-living, fast-loving socialite.",
-      "score": 0.9535,
-      "poster_path": "/gziIkUSnYuj9ChCi8qOu2ZunpSC.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 22298,
-        "avg_movielens_rating": 3.84
+        "num_similar_users": 11670,
+        "avg_movielens_rating": 4.31
       }
     }
   ]
