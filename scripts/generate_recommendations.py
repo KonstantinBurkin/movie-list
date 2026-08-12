@@ -67,9 +67,43 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
     return enriched
 
 
-def filter_recs(recs: list, top_n: int) -> list:
+def load_recommended_history() -> dict:
+    """Load the log of previously recommended movies, keyed by str(tmdb_id)."""
+    history_path = settings.RECOMMENDATIONS_DIR / "recommended_history.json"
+    if not history_path.exists():
+        return {}
+    with open(history_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def update_recommended_history(recs: list) -> None:
+    """Record newly served recommendations in the history log."""
+    history_path = settings.RECOMMENDATIONS_DIR / "recommended_history.json"
+    history = load_recommended_history()
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    for rec in recs:
+        key = str(rec["tmdb_id"])
+        history[key] = {
+            "title": rec["title"],
+            "year": rec["year"],
+            "first_recommended_at": history.get(key, {}).get(
+                "first_recommended_at", timestamp
+            ),
+        }
+
+    settings.RECOMMENDATIONS_DIR.mkdir(parents=True, exist_ok=True)
+    with open(history_path, "w", encoding="utf-8") as f:
+        json.dump(history, f, indent=2, ensure_ascii=False)
+
+
+def filter_recs(recs: list, top_n: int, history: dict | None = None) -> list:
     # remove sequels/franchise entries
     recs = [rec for rec in recs if not rec.get("belongs_to_collection")]
+
+    # remove movies already served in a previous run
+    if history:
+        recs = [rec for rec in recs if str(rec["tmdb_id"]) not in history]
 
     recs = recs[:top_n]
     return recs
@@ -111,7 +145,7 @@ def generate_recommendations(top_n: int = 5):
         my_movies = my_movies.filter(pl.col("omdb_id") != "Not found")
 
         # Generate more candidates since we filter for TMDB posters
-        cf_recs_raw = cf_model.get_recommendations(my_movies, top_n=top_n * 3)
+        cf_recs_raw = cf_model.get_recommendations(my_movies, top_n=top_n * 10)
 
         if cf_recs_raw:
             # Enrich with TMDB data (required - only movies with posters are included)
@@ -133,7 +167,8 @@ def generate_recommendations(top_n: int = 5):
         traceback.print_exc()
         return []
 
-    recommendations = filter_recs(recommendations, top_n)
+    history = load_recommended_history()
+    recommendations = filter_recs(recommendations, top_n, history)
 
     if not recommendations:
         print(
@@ -142,6 +177,7 @@ def generate_recommendations(top_n: int = 5):
         return []
 
     save_recommendations(recommendations)
+    update_recommended_history(recommendations)
 
     return recommendations
 

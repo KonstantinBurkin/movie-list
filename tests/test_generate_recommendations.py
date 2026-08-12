@@ -78,21 +78,18 @@ def test_generate_recommendations_with_cf(tmp_path, mock_cf_recommendations, moc
     with patch('generate_recommendations.MovieLensCF') as MockCF, \
          patch('generate_recommendations.pl'), \
          patch('generate_recommendations.TMDBClient'), \
-         patch('generate_recommendations.enrich_cf_recommendations_with_tmdb') as mock_enrich:
+         patch('generate_recommendations.enrich_cf_recommendations_with_tmdb') as mock_enrich, \
+         patch('generate_recommendations.settings.RECOMMENDATIONS_DIR', tmp_path / 'recommendations'):
 
         mock_cf_model = MockCF.return_value
         mock_cf_model.get_recommendations.return_value = mock_cf_recommendations
         mock_enrich.return_value = mock_enriched_recommendations
 
-        with patch('generate_recommendations.Path') as MockPath:
-            mock_output_dir = tmp_path / 'recommendations'
-            mock_output_dir.mkdir(parents=True, exist_ok=True)
-            MockPath.return_value = mock_output_dir
+        result = generate_recommendations(top_n=2)
 
-            result = generate_recommendations(top_n=2)
-
-            assert len(result) == 2
-            mock_cf_model.get_recommendations.assert_called_once()
+        assert len(result) == 2
+        mock_cf_model.get_recommendations.assert_called_once()
+        assert (tmp_path / 'recommendations' / 'recommendations_latest.json').exists()
 
 
 def test_generate_recommendations_empty_result(tmp_path):
