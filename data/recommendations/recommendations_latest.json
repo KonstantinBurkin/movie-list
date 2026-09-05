@@ -1,103 +1,100 @@
 {
-  "generated_at": "20260812_154750",
+  "generated_at": "20260905_204138",
   "recommendations": [
     {
-      "title": "Edward Scissorhands",
-      "year": 1990,
-      "tmdb_id": 162,
-      "rating": 7.72,
+      "title": "Intouchables",
+      "year": 2011,
+      "tmdb_id": 77338,
+      "rating": 8.272,
+      "genres": [
+        18,
+        35
+      ],
+      "overview": "A true story of two men who should never have met – a quadriplegic aristocrat who was injured in a paragliding accident and a young man from the projects.",
+      "score": 0.8747,
+      "poster_path": "/1QU7HKgsQbGpzsJbJK4pAVQV9F5.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 18416,
+        "avg_movielens_rating": 4.12
+      }
+    },
+    {
+      "title": "Third Man, The",
+      "year": 1949,
+      "tmdb_id": 1092,
+      "rating": 7.885,
+      "genres": [
+        53,
+        9648
+      ],
+      "overview": "In postwar Vienna, Austria, Holly Martins, a writer of pulp Westerns, arrives penniless as a guest of his childhood chum Harry Lime, only to learn he has died. Martins develops a conspiracy theory after learning of a \"third man\" present at the time of Harry's death, running into interference from British officer Major Calloway, and falling head-over-heels for Harry's grief-stricken lover, Anna.",
+      "score": 0.8505,
+      "poster_path": "/vqnFHTx1phgTAsLfxZoejSbMVHA.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 8823,
+        "avg_movielens_rating": 4.18
+      }
+    },
+    {
+      "title": "What Women Want",
+      "year": 2000,
+      "tmdb_id": 3981,
+      "rating": 6.5,
+      "genres": [
+        35,
+        10749
+      ],
+      "overview": "Advertising executive Nick Marshall is as cocky as they come, but what happens to a chauvinistic guy when he can suddenly hear what women are thinking? Nick gets passed over for a promotion, but after an accident enables him to hear women's thoughts, he puts his newfound talent to work against Darcy, his new boss, who seems to be infatuated with him.",
+      "score": 0.8485,
+      "poster_path": "/eqkBEMDk1316Yx5wVoabWY07JAi.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 14132,
+        "avg_movielens_rating": 3.09
+      }
+    },
+    {
+      "title": "Notting Hill",
+      "year": 1999,
+      "tmdb_id": 509,
+      "rating": 7.263,
+      "genres": [
+        10749,
+        35
+      ],
+      "overview": "London bookstore owner William Thacker's quiet life turns upside down when a chance encounter with famous actress Anna Scott sparks an unlikely romance challenged by their vastly different worlds.",
+      "score": 0.8437,
+      "poster_path": "/hHRIf2XHeQMbyRb3HUx19SF5Ujw.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 17387,
+        "avg_movielens_rating": 3.48
+      }
+    },
+    {
+      "title": "Green Mile, The",
+      "year": 1999,
+      "tmdb_id": 497,
+      "rating": 8.506,
       "genres": [
         14,
         18,
-        10749
+        80
       ],
-      "overview": "A small suburban town receives a visit from a castaway unfinished science experiment named Edward.",
-      "score": 0.9325,
-      "poster_path": "/e0FqKFvGPdQNWG8tF9cZBtev9Em.jpg",
+      "overview": "A supernatural tale set on death row in a Southern prison, where gentle giant John Coffey possesses the mysterious power to heal people's ailments. When the cell block's head guard, Paul Edgecomb, recognizes Coffey's miraculous gift, he tries desperately to help stave off the condemned man's execution.",
+      "score": 0.8397,
+      "poster_path": "/8VG8fDNiy50H4FedGwdSVUPoaJe.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 28689,
-        "avg_movielens_rating": 3.73
-      }
-    },
-    {
-      "title": "Ran",
-      "year": 1985,
-      "tmdb_id": 11645,
-      "rating": 8.011,
-      "genres": [
-        28,
-        18,
-        36
-      ],
-      "overview": "Shakespeare's King Lear is reimagined as a singular historical epic set in sixteenth-century Japan where an aging warlord divides his kingdom between his three sons.",
-      "score": 0.9031,
-      "poster_path": "/dGgiXMWDcS5aJTBEFu7bmaQPNox.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 6350,
-        "avg_movielens_rating": 4.14
-      }
-    },
-    {
-      "title": "Once Upon a Time in the West (C'era una volta il West)",
-      "year": 1968,
-      "tmdb_id": 335,
-      "rating": 8.3,
-      "genres": [
-        18,
-        37
-      ],
-      "overview": "As the railroad builders advance unstoppably through the Arizona desert on their way to the sea, Jill arrives in the small town of Flagstone with the intention of starting a new life.",
-      "score": 0.8939,
-      "poster_path": "/qbYgqOczabWNn2XKwgMtVrntD6P.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 7227,
-        "avg_movielens_rating": 4.11
-      }
-    },
-    {
-      "title": "Silver Linings Playbook",
-      "year": 2012,
-      "tmdb_id": 82693,
-      "rating": 7.154,
-      "genres": [
-        18,
-        35,
-        10749
-      ],
-      "overview": "After losing his job and wife, and spending time in an institution, a former teacher winds up living with his parents. He wants to rebuild his life and reconcile with his wife, but his father would be happy if he shared his obsession with the Philadelphia Eagles. Things get complicated when he meets Tiffany Maxwell who offers to help him reconnect with his wife if he will do something very important for her in exchange.",
-      "score": 0.8707,
-      "poster_path": "/fhHB1uvfFKKFbj6bTKE8xdtsjKi.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 13576,
-        "avg_movielens_rating": 3.7
-      }
-    },
-    {
-      "title": "Parasite",
-      "year": 2019,
-      "tmdb_id": 496243,
-      "rating": 8.49,
-      "genres": [
-        35,
-        53,
-        18
-      ],
-      "overview": "All unemployed, Ki-taek's family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.",
-      "score": 0.8661,
-      "poster_path": "/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 11670,
-        "avg_movielens_rating": 4.31
+        "num_similar_users": 38965,
+        "avg_movielens_rating": 4.04
       }
     }
   ]
