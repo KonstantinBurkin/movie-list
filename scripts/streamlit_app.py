@@ -325,7 +325,7 @@ if not recommendations_path.exists():
         from generate_recommendations import generate_recommendations  # noqa: E402
 
         with st.spinner("Analyzing your movie preferences..."):
-            recommendations_list = generate_recommendations(top_n=5)
+            recommendations_list = generate_recommendations(top_n=30)
             if recommendations_list:
                 st.success("✅ Recommendations generated successfully!")
                 st.rerun()
@@ -349,22 +349,34 @@ if recommendations_path.exists():
             except Exception:
                 time_str = generated_at
 
-            # Display recommendations side by side (columns stack vertically on
-            # narrow/mobile screens automatically, so this stays horizontal on PC)
-            rec_columns = st.columns(len(recommendations))
+            # Display recommendations in a horizontally scrolling strip so all
+            # of them are reachable without stacking vertically on any screen.
+            # NOTE: every line below must start at column 0 — st.markdown
+            # treats 4-space-indented lines as a code block, not HTML.
+            cards_html = []
+            for rec in recommendations:
+                if rec.get("poster_path"):
+                    poster_url = f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
+                    poster_html = f'<img src="{poster_url}" style="width:100%;border-radius:8px;display:block;" />'
+                else:
+                    poster_html = (
+                        '<div style="width:100%;aspect-ratio:2/3;border-radius:8px;'
+                        "background:rgba(128,128,128,0.2);display:flex;align-items:center;"
+                        'justify-content:center;text-align:center;padding:8px;">No poster</div>'
+                    )
+                cards_html.append(
+                    f'<div style="flex:0 0 auto;width:150px;">{poster_html}'
+                    f'<div style="margin-top:6px;font-size:0.85rem;text-align:center;">'
+                    f"{rec['title']}, {rec['year']}</div></div>"
+                )
 
-            for i, (rec, col) in enumerate(zip(recommendations, rec_columns), 1):
-                with col:
-                    # Display poster if available
-                    if rec.get("poster_path"):
-                        poster_url = (
-                            f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
-                        )
-                        st.image(poster_url, width="stretch")
-                    else:
-                        st.info("No poster available")
-
-                    st.write(f"{rec['title']}, {rec['year']}")
+            st.markdown(
+                '<div style="display:flex;flex-direction:row;gap:16px;'
+                'overflow-x:auto;padding-bottom:12px;">'
+                + "".join(cards_html)
+                + "</div>",
+                unsafe_allow_html=True,
+            )
 
             # Single expander with all descriptions below the posters
             with st.expander("Descriptions", expanded=False):
