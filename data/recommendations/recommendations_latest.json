@@ -1,100 +1,567 @@
 {
-  "generated_at": "20260905_204138",
+  "generated_at": "20260912_080737",
   "recommendations": [
     {
-      "title": "Intouchables",
-      "year": 2011,
-      "tmdb_id": 77338,
-      "rating": 8.272,
+      "title": "Being John Malkovich",
+      "year": 1999,
+      "tmdb_id": 492,
+      "rating": 7.42,
       "genres": [
+        35,
         18,
-        35
+        14
       ],
-      "overview": "A true story of two men who should never have met – a quadriplegic aristocrat who was injured in a paragliding accident and a young man from the projects.",
-      "score": 0.8747,
-      "poster_path": "/1QU7HKgsQbGpzsJbJK4pAVQV9F5.jpg",
+      "overview": "One day at work, unsuccessful puppeteer Craig finds a portal into the head of actor John Malkovich. The portal soon becomes a passion for anybody who enters its mad and controlling world of overtaking another human body.",
+      "score": 0.8357,
+      "poster_path": "/31FGQu3OnwdmS4COquENe0vMZc0.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 18416,
-        "avg_movielens_rating": 4.12
+        "num_similar_users": 36151,
+        "avg_movielens_rating": 3.93
       }
     },
     {
-      "title": "Third Man, The",
-      "year": 1949,
-      "tmdb_id": 1092,
-      "rating": 7.885,
+      "title": "Titanic",
+      "year": 1997,
+      "tmdb_id": 597,
+      "rating": 7.9,
       "genres": [
-        53,
-        9648
+        18,
+        10749
       ],
-      "overview": "In postwar Vienna, Austria, Holly Martins, a writer of pulp Westerns, arrives penniless as a guest of his childhood chum Harry Lime, only to learn he has died. Martins develops a conspiracy theory after learning of a \"third man\" present at the time of Harry's death, running into interference from British officer Major Calloway, and falling head-over-heels for Harry's grief-stricken lover, Anna.",
-      "score": 0.8505,
-      "poster_path": "/vqnFHTx1phgTAsLfxZoejSbMVHA.jpg",
+      "overview": "101-year-old Rose DeWitt Bukater tells the story of her life aboard the Titanic, 84 years later. A young Rose boards the ship with her mother and fiancé. Meanwhile, Jack Dawson and Fabrizio De Rossi win third-class tickets aboard the ship. Rose tells the whole story from Titanic's departure through to its death—on its first and last voyage—on April 15, 1912.",
+      "score": 0.8253,
+      "poster_path": "/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 8823,
+        "num_similar_users": 45767,
+        "avg_movielens_rating": 3.4
+      }
+    },
+    {
+      "title": "Raising Arizona",
+      "year": 1987,
+      "tmdb_id": 378,
+      "rating": 7.053,
+      "genres": [
+        35,
+        80
+      ],
+      "overview": "When a childless couple—an ex-con and an ex-cop—take one of a wealthy family’s quintuplets to raise as their own, their lives grow more complicated than anticipated.",
+      "score": 0.8243,
+      "poster_path": "/niKyjOqiB4XVl0BqgKTHIlHOCeF.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 18065,
+        "avg_movielens_rating": 3.87
+      }
+    },
+    {
+      "title": "Solaris (Solyaris)",
+      "year": 1972,
+      "tmdb_id": 593,
+      "rating": 7.757,
+      "genres": [
+        18,
+        878,
+        9648
+      ],
+      "overview": "A psychologist is sent to a space station orbiting a planet called Solaris to investigate the death of a doctor and the mental problems of cosmonauts on the station. He soon discovers that the water on the planet is a type of brain which brings out repressed memories and obsessions.",
+      "score": 0.8234,
+      "poster_path": "/pgqj7QoBPWFLLKtLEpPmFYFRMgB.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 3616,
+        "avg_movielens_rating": 3.88
+      }
+    },
+    {
+      "title": "Arrival",
+      "year": 2016,
+      "tmdb_id": 329865,
+      "rating": 7.634,
+      "genres": [
+        18,
+        878,
+        9648
+      ],
+      "overview": "Taking place after alien crafts land around the world, an expert linguist is recruited by the military to determine whether they come in peace or are a threat.",
+      "score": 0.8174,
+      "poster_path": "/pEzNVQfdzYDzVK0XqxERIw2x2se.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 19742,
+        "avg_movielens_rating": 4.05
+      }
+    },
+    {
+      "title": "O Brother, Where Art Thou?",
+      "year": 2000,
+      "tmdb_id": 134,
+      "rating": 7.325,
+      "genres": [
+        12,
+        35,
+        80
+      ],
+      "overview": "In the deep south during the 1930s, three escaped convicts search for hidden treasure while a relentless lawman pursues them.",
+      "score": 0.8161,
+      "poster_path": "/2YztYilviFCYcEtDAnrOstUWGie.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 29593,
+        "avg_movielens_rating": 3.87
+      }
+    },
+    {
+      "title": "Amadeus",
+      "year": 1984,
+      "tmdb_id": 279,
+      "rating": 8.024,
+      "genres": [
+        18,
+        36,
+        10402
+      ],
+      "overview": "Disciplined Italian composer Antonio Salieri becomes consumed by jealousy and resentment towards the hedonistic and remarkably talented young Salzburger composer Wolfgang Amadeus Mozart.",
+      "score": 0.8153,
+      "poster_path": "/gQRfiyfGvr1az0quaYyMram3Aqt.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 24986,
+        "avg_movielens_rating": 4.07
+      }
+    },
+    {
+      "title": "Erin Brockovich",
+      "year": 2000,
+      "tmdb_id": 462,
+      "rating": 7.426,
+      "genres": [
+        18
+      ],
+      "overview": "A twice-divorced mother of three who sees an injustice, takes on the bad guy and wins -- with a little help from her push-up bra. Erin goes to work for an attorney and comes across medical records describing illnesses clustered in one nearby town. She starts investigating and soon exposes a monumental cover-up.",
+      "score": 0.8152,
+      "poster_path": "/eMs20iUQyZVs05Ck7Q0LNnRsstr.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 21645,
+        "avg_movielens_rating": 3.58
+      }
+    },
+    {
+      "title": "In Bruges",
+      "year": 2008,
+      "tmdb_id": 8321,
+      "rating": 7.497,
+      "genres": [
+        35,
+        18,
+        80
+      ],
+      "overview": "Ray and Ken, two hit men, are in Bruges, Belgium, waiting for their next mission. While they are there they have time to think and discuss their previous assignment. When the mission is revealed to Ken, it is not what he expected.",
+      "score": 0.8048,
+      "poster_path": "/vz3Vd6nfq9YZrVvyYx5RHFaYKV3.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 15472,
+        "avg_movielens_rating": 3.91
+      }
+    },
+    {
+      "title": "Dead Man",
+      "year": 1995,
+      "tmdb_id": 687,
+      "rating": 7.31,
+      "genres": [
+        18
+      ],
+      "overview": "A death row inmate turns for spiritual guidance to a local nun in the days leading up to his scheduled execution for the murders of a young couple.",
+      "score": 0.7989,
+      "poster_path": "/eShxyjhWoFl3BwsuEmVsr4nLaMZ.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 4642,
+        "avg_movielens_rating": 3.88
+      }
+    },
+    {
+      "title": "Double Indemnity",
+      "year": 1944,
+      "tmdb_id": 996,
+      "rating": 8.086,
+      "genres": [
+        80,
+        53
+      ],
+      "overview": "An insurance representative is seduced by a dissatisfied housewife into a scheme of insurance fraud and murder that arouses the suspicion of his colleague, a claims investigator.",
+      "score": 0.7986,
+      "poster_path": "/rVNYZZgfhwqVMMWlBmxOfWqnwCj.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 6586,
         "avg_movielens_rating": 4.18
       }
     },
     {
-      "title": "What Women Want",
+      "title": "High Fidelity",
       "year": 2000,
-      "tmdb_id": 3981,
-      "rating": 6.5,
+      "tmdb_id": 243,
+      "rating": 7.1,
+      "genres": [
+        18,
+        35,
+        10749,
+        10402
+      ],
+      "overview": "After his long-time girlfriend dumps him, a thirty-year-old record store owner seeks to understand why he is unlucky in love while recounting his \"top five breakups of all time\".",
+      "score": 0.7969,
+      "poster_path": "/e2LZGB62GMhv3Fo8tDZjY87I81a.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 20240,
+        "avg_movielens_rating": 3.8
+      }
+    },
+    {
+      "title": "Nightcrawler",
+      "year": 2014,
+      "tmdb_id": 242582,
+      "rating": 7.709,
+      "genres": [
+        80,
+        18,
+        53
+      ],
+      "overview": "When Lou Bloom, desperate for work, muscles into the world of L.A. crime journalism, he blurs the line between observer and participant to become the star of his own story. Aiding him in his effort is Nina, a TV-news veteran.",
+      "score": 0.7876,
+      "poster_path": "/j9HrX8f7GbZQm1BrBiR40uFQZSb.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 13215,
+        "avg_movielens_rating": 3.98
+      }
+    },
+    {
+      "title": "Cool Hand Luke",
+      "year": 1967,
+      "tmdb_id": 903,
+      "rating": 7.733,
+      "genres": [
+        18,
+        80
+      ],
+      "overview": "When petty criminal Luke Jackson is sentenced to two years in a Florida prison farm, he doesn't play by the rules of either the sadistic warden or the yard's resident heavy, Dragline, who ends up admiring the new guy's unbreakable will. Luke's bravado, even in the face of repeated stints in the prison's dreaded solitary confinement cell, \"the box,\" make him a rebel hero to his fellow convicts and a thorn in the side of the prison officers.",
+      "score": 0.7793,
+      "poster_path": "/4ykzTiHKLamh3eZJ8orVICtU2Jp.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 13466,
+        "avg_movielens_rating": 4.09
+      }
+    },
+    {
+      "title": "Touch of Evil",
+      "year": 1958,
+      "tmdb_id": 1480,
+      "rating": 7.7,
+      "genres": [
+        80,
+        53,
+        18
+      ],
+      "overview": "A border-town bombing draws Mexican investigator Miguel Vargas into a corruption-ridden police investigation led by crooked captain Hank Quinlan, setting off a deadly struggle over power, justice, and truth.",
+      "score": 0.7722,
+      "poster_path": "/1pvRgmfBaoMczIJBOi9gCOZ4FMC.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 5718,
+        "avg_movielens_rating": 4.12
+      }
+    },
+    {
+      "title": "Blow-Up (Blowup)",
+      "year": 1966,
+      "tmdb_id": 1052,
+      "rating": 7.309,
+      "genres": [
+        18,
+        9648,
+        53
+      ],
+      "overview": "A successful mod photographer in London whose world is bounded by fashion, pop music, marijuana, and easy sex, feels his life is boring and despairing. But in the course of a single day he unknowingly captures a death on film.",
+      "score": 0.7712,
+      "poster_path": "/jVDVpydUw8Z50naUDAG4NbRCrSa.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 2543,
+        "avg_movielens_rating": 3.84
+      }
+    },
+    {
+      "title": "Amelie (Fabuleux destin d'Amélie Poulain, Le)",
+      "year": 2001,
+      "tmdb_id": 194,
+      "rating": 7.921,
       "genres": [
         35,
         10749
       ],
-      "overview": "Advertising executive Nick Marshall is as cocky as they come, but what happens to a chauvinistic guy when he can suddenly hear what women are thinking? Nick gets passed over for a promotion, but after an accident enables him to hear women's thoughts, he puts his newfound talent to work against Darcy, his new boss, who seems to be infatuated with him.",
-      "score": 0.8485,
-      "poster_path": "/eqkBEMDk1316Yx5wVoabWY07JAi.jpg",
+      "overview": "At a tiny Parisian café, the adorable yet painfully shy Amélie accidentally discovers a gift for helping others. Soon Amelie is spending her days as a matchmaker, guardian angel, and all-around do-gooder. But when she bumps into a handsome stranger, will she find the courage to become the star of her very own love story?",
+      "score": 0.7711,
+      "poster_path": "/nSxDa3M9aMvGVLoItzWTepQ5h5d.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 14132,
-        "avg_movielens_rating": 3.09
+        "num_similar_users": 43459,
+        "avg_movielens_rating": 4.08
       }
     },
     {
-      "title": "Notting Hill",
-      "year": 1999,
-      "tmdb_id": 509,
-      "rating": 7.263,
+      "title": "It's a Wonderful Life",
+      "year": 1946,
+      "tmdb_id": 1585,
+      "rating": 8.3,
       "genres": [
-        10749,
-        35
+        18,
+        10751,
+        14
       ],
-      "overview": "London bookstore owner William Thacker's quiet life turns upside down when a chance encounter with famous actress Anna Scott sparks an unlikely romance challenged by their vastly different worlds.",
-      "score": 0.8437,
-      "poster_path": "/hHRIf2XHeQMbyRb3HUx19SF5Ujw.jpg",
+      "overview": "George Bailey has spent his entire life giving to the people of Bedford Falls.  All that prevents rich skinflint Mr. Potter from taking over the entire town is George's modest building and loan company.  But on Christmas Eve the business's $8,000 is lost and George's troubles begin.",
+      "score": 0.7683,
+      "poster_path": "/bSqt9rhDZx1Q7UZ86dBPKdNomp2.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 17387,
-        "avg_movielens_rating": 3.48
+        "num_similar_users": 18374,
+        "avg_movielens_rating": 4.04
       }
     },
     {
-      "title": "Green Mile, The",
-      "year": 1999,
-      "tmdb_id": 497,
-      "rating": 8.506,
+      "title": "Stand by Me",
+      "year": 1986,
+      "tmdb_id": 235,
+      "rating": 7.833,
       "genres": [
-        14,
+        18,
+        12
+      ],
+      "overview": "After learning that a boy their age has been accidentally killed near their rural homes, four boys decide to go see the body. Gordie, Vern, Chris, and Teddy encounter a mean junk man and a marsh full of leeches, but they also learn more about one another and their very different home lives. Just a lark at first, the boys' adventure evolves into a defining event in their lives.",
+      "score": 0.7681,
+      "poster_path": "/vz0w9BSehcqjDcJOjRaCk7fgJe7.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 27367,
+        "avg_movielens_rating": 3.99
+      }
+    },
+    {
+      "title": "Fistful of Dollars, A (Per un pugno di dollari)",
+      "year": 1964,
+      "tmdb_id": 391,
+      "rating": 7.823,
+      "genres": [
+        37
+      ],
+      "overview": "The Man With No Name enters the Mexican village of San Miguel in the midst of a power struggle among the three Rojo brothers and sheriff John Baxter. When a regiment of Mexican soldiers bearing gold intended to pay for new weapons is waylaid by the Rojo brothers, the stranger inserts himself into the middle of the long-simmering battle, selling false information to both sides for his own benefit.",
+      "score": 0.7609,
+      "poster_path": "/lBwOEpwVeUAmrmglcstnaGcJq3Y.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 9062,
+        "avg_movielens_rating": 3.95
+      }
+    },
+    {
+      "title": "Moneyball",
+      "year": 2011,
+      "tmdb_id": 60308,
+      "rating": 7.3,
+      "genres": [
+        18
+      ],
+      "overview": "The story of Oakland Athletics general manager Billy Beane's successful attempt to put together a baseball team on a budget, by employing computer-generated analysis to draft his players.",
+      "score": 0.7573,
+      "poster_path": "/4yIQq1e6iOcaZ5rLDG3lZBP3j7a.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 11259,
+        "avg_movielens_rating": 3.9
+      }
+    },
+    {
+      "title": "Catch Me If You Can",
+      "year": 2002,
+      "tmdb_id": 640,
+      "rating": 7.978,
+      "genres": [
         18,
         80
       ],
-      "overview": "A supernatural tale set on death row in a Southern prison, where gentle giant John Coffey possesses the mysterious power to heal people's ailments. When the cell block's head guard, Paul Edgecomb, recognizes Coffey's miraculous gift, he tries desperately to help stave off the condemned man's execution.",
-      "score": 0.8397,
-      "poster_path": "/8VG8fDNiy50H4FedGwdSVUPoaJe.jpg",
+      "overview": "A true story about Frank Abagnale Jr. who, before his 19th birthday, successfully conned millions of dollars worth of checks as a Pan Am pilot, doctor, and legal prosecutor. An FBI agent makes it his mission to put him behind bars. But Frank not only eludes capture, he revels in the pursuit.",
+      "score": 0.7567,
+      "poster_path": "/ctjEj2xM32OvBXCq8zAdK3ZrsAj.jpg",
       "source": "collaborative_filtering",
       "belongs_to_collection": false,
       "cf_stats": {
-        "num_similar_users": 38965,
-        "avg_movielens_rating": 4.04
+        "num_similar_users": 38652,
+        "avg_movielens_rating": 3.96
+      }
+    },
+    {
+      "title": "Unforgiven",
+      "year": 1992,
+      "tmdb_id": 33,
+      "rating": 7.913,
+      "genres": [
+        37
+      ],
+      "overview": "William Munny is a retired, once-ruthless killer turned gentle widower and hog farmer. To help support his two motherless children, he accepts one last bounty-hunter mission to find the men who brutalized a prostitute. Joined by his former partner and a cocky greenhorn, he takes on a corrupt sheriff.",
+      "score": 0.7566,
+      "poster_path": "/54roTwbX9fltg85zjsmrooXAs12.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 17593,
+        "avg_movielens_rating": 3.99
+      }
+    },
+    {
+      "title": "Shutter Island",
+      "year": 2010,
+      "tmdb_id": 11324,
+      "rating": 8.197,
+      "genres": [
+        18,
+        53,
+        9648
+      ],
+      "overview": "World War II soldier-turned-U.S. Marshal Teddy Daniels investigates the disappearance of a patient from a hospital for the criminally insane, but his efforts are compromised by troubling visions and a mysterious doctor.",
+      "score": 0.7565,
+      "poster_path": "/nrmXQ0zcZUL8jFLrakWc90IR8z9.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 29096,
+        "avg_movielens_rating": 3.99
+      }
+    },
+    {
+      "title": "Crazy, Stupid, Love.",
+      "year": 2011,
+      "tmdb_id": 50646,
+      "rating": 7.279,
+      "genres": [
+        35,
+        18,
+        10749
+      ],
+      "overview": "Cal Weaver is living the American dream. He has a good job, a beautiful house, great children and a beautiful wife, named Emily. Cal's seemingly perfect life unravels, however, when he learns that Emily has been unfaithful and wants a divorce. Over 40 and suddenly single, Cal is adrift in the fickle world of dating. Enter, Jacob Palmer, a self-styled player who takes Cal under his wing and teaches him how to be a hit with the ladies.",
+      "score": 0.7557,
+      "poster_path": "/p4RafgAPk558muOjnBMHhMArjS2.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 8538,
+        "avg_movielens_rating": 3.75
+      }
+    },
+    {
+      "title": "Modern Times",
+      "year": 1936,
+      "tmdb_id": 3082,
+      "rating": 8.282,
+      "genres": [
+        35,
+        18,
+        10749
+      ],
+      "overview": "A bumbling tramp desires to build a home with a young woman, yet is thwarted time and time again by his lack of experience and habit of being in the wrong place at the wrong time...",
+      "score": 0.7523,
+      "poster_path": "/AthaPakkuCLROdKxtRbKWclkDBK.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 6051,
+        "avg_movielens_rating": 4.08
+      }
+    },
+    {
+      "title": "As Good as It Gets",
+      "year": 1997,
+      "tmdb_id": 2898,
+      "rating": 7.4,
+      "genres": [
+        18,
+        35,
+        10749
+      ],
+      "overview": "A misanthropic author, a single mother and waitress, and a gay artist form an unlikely friendship after the artist is assaulted in a robbery.",
+      "score": 0.7484,
+      "poster_path": "/xXxuJPNUDZ0vjsAXca0O5p3leVB.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 27176,
+        "avg_movielens_rating": 3.77
+      }
+    },
+    {
+      "title": "Terminal, The",
+      "year": 2004,
+      "tmdb_id": 594,
+      "rating": 7.356,
+      "genres": [
+        35,
+        18
+      ],
+      "overview": "An Eastern European tourist unexpectedly finds himself stranded in JFK airport, and must take up temporary residence there.",
+      "score": 0.7387,
+      "poster_path": "/cPB3ZMM4UdsSAhNdS4c7ps5nypY.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 13939,
+        "avg_movielens_rating": 3.62
+      }
+    },
+    {
+      "title": "Black Swan",
+      "year": 2010,
+      "tmdb_id": 44214,
+      "rating": 7.683,
+      "genres": [
+        18,
+        53,
+        27
+      ],
+      "overview": "A committed dancer struggles to maintain her sanity after winning the lead role in a production of Tchaikovsky's \"Swan Lake.\"",
+      "score": 0.7361,
+      "poster_path": "/viWheBd44bouiLCHgNMvahLThqx.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 19149,
+        "avg_movielens_rating": 3.8
       }
     }
   ]
