@@ -1,12 +1,18 @@
 import collections
 import json
 import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+
+sys.path.append(str(Path(__file__).parent))
+from tmdb_client import GENRE_MAP  # noqa: E402
+
+GENRE_ID_TO_NAME = {v: k for k, v in GENRE_MAP.items()}
 
 
 # ============================================================================
@@ -319,10 +325,7 @@ recommendations_path = Path("./data/recommendations/recommendations_latest.json"
 if not recommendations_path.exists():
     st.info("🔄 Generating recommendations for the first time...")
     try:
-        import sys
-
-        sys.path.append(str(Path(__file__).parent))
-        from generate_recommendations import generate_recommendations  # noqa: E402
+        from generate_recommendations import generate_recommendations
 
         with st.spinner("Analyzing your movie preferences..."):
             recommendations_list = generate_recommendations(top_n=30)
@@ -366,7 +369,30 @@ if recommendations_path.exists():
                         f"{rec['rating']:.1f}/10" if rec.get("rating") else "N/A"
                     )
                     st.write(f"⭐ {rating_str}")
+
+                    genre_names = rec.get("genre_names") or [
+                        GENRE_ID_TO_NAME[gid]
+                        for gid in rec.get("genres", [])
+                        if gid in GENRE_ID_TO_NAME
+                    ]
+                    if genre_names:
+                        st.write(f"**Genres:** {', '.join(genre_names)}")
+
+                    countries = rec.get("countries")
+                    if countries:
+                        st.write(f"**Country:** {', '.join(countries)}")
+
+                    if rec.get("director"):
+                        st.write(f"**Director:** {rec['director']}")
+
+                    cast = rec.get("cast")
+                    if cast:
+                        st.write(f"**Cast:** {', '.join(cast)}")
+
                     st.write(rec.get("overview", "No description available."))
+
+                    if rec.get("trailer_url"):
+                        st.link_button("▶️ Watch Trailer", rec["trailer_url"])
 
             # Display recommendations in a horizontally scrolling strip so all
             # of them are reachable without stacking vertically on any screen.
