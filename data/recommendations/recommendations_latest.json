@@ -1,6 +1,111 @@
 {
-  "generated_at": "20260912_080737",
+  "generated_at": "20260913_094107",
   "recommendations": [
+    {
+      "title": "What Women Want",
+      "year": 2000,
+      "tmdb_id": 3981,
+      "rating": 6.451,
+      "genres": [
+        35,
+        10749
+      ],
+      "genre_names": [
+        "Comedy",
+        "Romance"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Nancy Meyers",
+      "cast": [
+        "Mel Gibson",
+        "Helen Hunt",
+        "Marisa Tomei",
+        "Alan Alda",
+        "Ashley Johnson"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=VFwHs7fEUNs",
+      "overview": "Advertising executive Nick Marshall is as cocky as they come, but what happens to a chauvinistic guy when he can suddenly hear what women are thinking? Nick gets passed over for a promotion, but after an accident enables him to hear women's thoughts, he puts his newfound talent to work against Darcy, his new boss, who seems to be infatuated with him.",
+      "score": 0.8626,
+      "poster_path": "/eqkBEMDk1316Yx5wVoabWY07JAi.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 14132,
+        "avg_movielens_rating": 3.09
+      }
+    },
+    {
+      "title": "Requiem for a Dream",
+      "year": 2000,
+      "tmdb_id": 641,
+      "rating": 8.007,
+      "genres": [
+        80,
+        18
+      ],
+      "genre_names": [
+        "Crime",
+        "Drama"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Darren Aronofsky",
+      "cast": [
+        "Ellen Burstyn",
+        "Jared Leto",
+        "Jennifer Connelly",
+        "Marlon Wayans",
+        "Christopher McDonald"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=NEKjZSTo0Uk",
+      "overview": "The drug-induced utopias of four Coney Island residents are shattered when their addictions run deep.",
+      "score": 0.848,
+      "poster_path": "/9BTwsLaMVHOGFlmsSlx5QYCaXb.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 29235,
+        "avg_movielens_rating": 3.98
+      }
+    },
+    {
+      "title": "Third Man, The",
+      "year": 1949,
+      "tmdb_id": 1092,
+      "rating": 7.885,
+      "genres": [
+        53,
+        9648
+      ],
+      "genre_names": [
+        "Thriller",
+        "Mystery"
+      ],
+      "countries": [
+        "United Kingdom"
+      ],
+      "director": "Carol Reed",
+      "cast": [
+        "Joseph Cotten",
+        "Alida Valli",
+        "Trevor Howard",
+        "Orson Welles",
+        "Paul Hörbiger"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=Y7nwySBGqCo",
+      "overview": "In postwar Vienna, Austria, Holly Martins, a writer of pulp Westerns, arrives penniless as a guest of his childhood chum Harry Lime, only to learn he has died. Martins develops a conspiracy theory after learning of a \"third man\" present at the time of Harry's death, running into interference from British officer Major Calloway, and falling head-over-heels for Harry's grief-stricken lover, Anna.",
+      "score": 0.8454,
+      "poster_path": "/vqnFHTx1phgTAsLfxZoejSbMVHA.jpg",
+      "source": "collaborative_filtering",
+      "belongs_to_collection": false,
+      "cf_stats": {
+        "num_similar_users": 8823,
+        "avg_movielens_rating": 4.18
+      }
+    },
     {
       "title": "Being John Malkovich",
       "year": 1999,
@@ -11,6 +116,23 @@
         18,
         14
       ],
+      "genre_names": [
+        "Comedy",
+        "Drama",
+        "Fantasy"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Spike Jonze",
+      "cast": [
+        "John Cusack",
+        "Cameron Diaz",
+        "John Malkovich",
+        "Catherine Keener",
+        "Orson Bean"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=LEtlqumjXLw",
       "overview": "One day at work, unsuccessful puppeteer Craig finds a portal into the head of actor John Malkovich. The portal soon becomes a passion for anybody who enters its mad and controlling world of overtaking another human body.",
       "score": 0.8357,
       "poster_path": "/31FGQu3OnwdmS4COquENe0vMZc0.jpg",
@@ -30,6 +152,22 @@
         18,
         10749
       ],
+      "genre_names": [
+        "Drama",
+        "Romance"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "James Cameron",
+      "cast": [
+        "Leonardo DiCaprio",
+        "Kate Winslet",
+        "Billy Zane",
+        "Kathy Bates",
+        "Frances Fisher"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=wO44qBPBG4c",
       "overview": "101-year-old Rose DeWitt Bukater tells the story of her life aboard the Titanic, 84 years later. A young Rose boards the ship with her mother and fiancé. Meanwhile, Jack Dawson and Fabrizio De Rossi win third-class tickets aboard the ship. Rose tells the whole story from Titanic's departure through to its death—on its first and last voyage—on April 15, 1912.",
       "score": 0.8253,
       "poster_path": "/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg",
@@ -49,6 +187,22 @@
         35,
         80
       ],
+      "genre_names": [
+        "Comedy",
+        "Crime"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Joel Coen",
+      "cast": [
+        "Nicolas Cage",
+        "Holly Hunter",
+        "Trey Wilson",
+        "John Goodman",
+        "William Forsythe"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=OjWu8i6eMZo",
       "overview": "When a childless couple—an ex-con and an ex-cop—take one of a wealthy family’s quintuplets to raise as their own, their lives grow more complicated than anticipated.",
       "score": 0.8243,
       "poster_path": "/niKyjOqiB4XVl0BqgKTHIlHOCeF.jpg",
@@ -69,6 +223,23 @@
         878,
         9648
       ],
+      "genre_names": [
+        "Drama",
+        "Science Fiction",
+        "Mystery"
+      ],
+      "countries": [
+        "Soviet Union"
+      ],
+      "director": "Andrei Tarkovsky",
+      "cast": [
+        "Natalya Bondarchuk",
+        "Donatas Banionis",
+        "Jüri Järvet",
+        "Vladislav Dvorzhetsky",
+        "Mykola Hrynko"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=BBYJH6UAAfw",
       "overview": "A psychologist is sent to a space station orbiting a planet called Solaris to investigate the death of a doctor and the mental problems of cosmonauts on the station. He soon discovers that the water on the planet is a type of brain which brings out repressed memories and obsessions.",
       "score": 0.8234,
       "poster_path": "/pgqj7QoBPWFLLKtLEpPmFYFRMgB.jpg",
@@ -89,6 +260,23 @@
         878,
         9648
       ],
+      "genre_names": [
+        "Drama",
+        "Science Fiction",
+        "Mystery"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Denis Villeneuve",
+      "cast": [
+        "Amy Adams",
+        "Jeremy Renner",
+        "Forest Whitaker",
+        "Michael Stuhlbarg",
+        "Mark O'Brien"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=7W1m5ER3I1Y",
       "overview": "Taking place after alien crafts land around the world, an expert linguist is recruited by the military to determine whether they come in peace or are a threat.",
       "score": 0.8174,
       "poster_path": "/pEzNVQfdzYDzVK0XqxERIw2x2se.jpg",
@@ -103,12 +291,31 @@
       "title": "O Brother, Where Art Thou?",
       "year": 2000,
       "tmdb_id": 134,
-      "rating": 7.325,
+      "rating": 7.326,
       "genres": [
         12,
         35,
         80
       ],
+      "genre_names": [
+        "Adventure",
+        "Comedy",
+        "Crime"
+      ],
+      "countries": [
+        "France",
+        "United Kingdom",
+        "United States of America"
+      ],
+      "director": "Joel Coen",
+      "cast": [
+        "George Clooney",
+        "John Turturro",
+        "Tim Blake Nelson",
+        "John Goodman",
+        "Holly Hunter"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=pi-KDvtUaGQ",
       "overview": "In the deep south during the 1930s, three escaped convicts search for hidden treasure while a relentless lawman pursues them.",
       "score": 0.8161,
       "poster_path": "/2YztYilviFCYcEtDAnrOstUWGie.jpg",
@@ -129,6 +336,23 @@
         36,
         10402
       ],
+      "genre_names": [
+        "Drama",
+        "History",
+        "Music"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Miloš Forman",
+      "cast": [
+        "F. Murray Abraham",
+        "Tom Hulce",
+        "Elizabeth Berridge",
+        "Simon Callow",
+        "Roy Dotrice"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=pNnugovJdzM",
       "overview": "Disciplined Italian composer Antonio Salieri becomes consumed by jealousy and resentment towards the hedonistic and remarkably talented young Salzburger composer Wolfgang Amadeus Mozart.",
       "score": 0.8153,
       "poster_path": "/gQRfiyfGvr1az0quaYyMram3Aqt.jpg",
@@ -143,10 +367,25 @@
       "title": "Erin Brockovich",
       "year": 2000,
       "tmdb_id": 462,
-      "rating": 7.426,
+      "rating": 7.427,
       "genres": [
         18
       ],
+      "genre_names": [
+        "Drama"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Steven Soderbergh",
+      "cast": [
+        "Julia Roberts",
+        "Albert Finney",
+        "Aaron Eckhart",
+        "Marg Helgenberger",
+        "Cherry Jones"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=jjqUUxIy_yk",
       "overview": "A twice-divorced mother of three who sees an injustice, takes on the bad guy and wins -- with a little help from her push-up bra. Erin goes to work for an attorney and comes across medical records describing illnesses clustered in one nearby town. She starts investigating and soon exposes a monumental cover-up.",
       "score": 0.8152,
       "poster_path": "/eMs20iUQyZVs05Ck7Q0LNnRsstr.jpg",
@@ -167,6 +406,24 @@
         18,
         80
       ],
+      "genre_names": [
+        "Comedy",
+        "Drama",
+        "Crime"
+      ],
+      "countries": [
+        "United Kingdom",
+        "United States of America"
+      ],
+      "director": "Martin McDonagh",
+      "cast": [
+        "Colin Farrell",
+        "Brendan Gleeson",
+        "Ralph Fiennes",
+        "Clémence Poésy",
+        "Thekla Reuten"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=bc4lG_BbIEw",
       "overview": "Ray and Ken, two hit men, are in Bruges, Belgium, waiting for their next mission. While they are there they have time to think and discuss their previous assignment. When the mission is revealed to Ken, it is not what he expected.",
       "score": 0.8048,
       "poster_path": "/vz3Vd6nfq9YZrVvyYx5RHFaYKV3.jpg",
@@ -185,6 +442,22 @@
       "genres": [
         18
       ],
+      "genre_names": [
+        "Drama"
+      ],
+      "countries": [
+        "United States of America",
+        "United Kingdom"
+      ],
+      "director": "Tim Robbins",
+      "cast": [
+        "Susan Sarandon",
+        "Sean Penn",
+        "Robert Prosky",
+        "Raymond J. Barry",
+        "R. Lee Ermey"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=CB89rktO_Ws",
       "overview": "A death row inmate turns for spiritual guidance to a local nun in the days leading up to his scheduled execution for the murders of a young couple.",
       "score": 0.7989,
       "poster_path": "/eShxyjhWoFl3BwsuEmVsr4nLaMZ.jpg",
@@ -204,6 +477,22 @@
         80,
         53
       ],
+      "genre_names": [
+        "Crime",
+        "Thriller"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Billy Wilder",
+      "cast": [
+        "Fred MacMurray",
+        "Barbara Stanwyck",
+        "Edward G. Robinson",
+        "Porter Hall",
+        "Jean Heather"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=9oxVkwB05rU",
       "overview": "An insurance representative is seduced by a dissatisfied housewife into a scheme of insurance fraud and murder that arouses the suspicion of his colleague, a claims investigator.",
       "score": 0.7986,
       "poster_path": "/rVNYZZgfhwqVMMWlBmxOfWqnwCj.jpg",
@@ -225,6 +514,25 @@
         10749,
         10402
       ],
+      "genre_names": [
+        "Drama",
+        "Comedy",
+        "Romance",
+        "Music"
+      ],
+      "countries": [
+        "United Kingdom",
+        "United States of America"
+      ],
+      "director": "Stephen Frears",
+      "cast": [
+        "John Cusack",
+        "Iben Hjejle",
+        "Todd Louiso",
+        "Jack Black",
+        "Lisa Bonet"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=6P4dXJ_Tvns",
       "overview": "After his long-time girlfriend dumps him, a thirty-year-old record store owner seeks to understand why he is unlucky in love while recounting his \"top five breakups of all time\".",
       "score": 0.7969,
       "poster_path": "/e2LZGB62GMhv3Fo8tDZjY87I81a.jpg",
@@ -245,6 +553,23 @@
         18,
         53
       ],
+      "genre_names": [
+        "Crime",
+        "Drama",
+        "Thriller"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Dan Gilroy",
+      "cast": [
+        "Jake Gyllenhaal",
+        "Rene Russo",
+        "Riz Ahmed",
+        "Bill Paxton",
+        "Kevin Rahm"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=7uaYhPpV7G4",
       "overview": "When Lou Bloom, desperate for work, muscles into the world of L.A. crime journalism, he blurs the line between observer and participant to become the star of his own story. Aiding him in his effort is Nina, a TV-news veteran.",
       "score": 0.7876,
       "poster_path": "/j9HrX8f7GbZQm1BrBiR40uFQZSb.jpg",
@@ -259,11 +584,27 @@
       "title": "Cool Hand Luke",
       "year": 1967,
       "tmdb_id": 903,
-      "rating": 7.733,
+      "rating": 7.732,
       "genres": [
         18,
         80
       ],
+      "genre_names": [
+        "Drama",
+        "Crime"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Stuart Rosenberg",
+      "cast": [
+        "Paul Newman",
+        "George Kennedy",
+        "Luke Askew",
+        "Morgan Woodward",
+        "Harry Dean Stanton"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=cxKUupk0kbY",
       "overview": "When petty criminal Luke Jackson is sentenced to two years in a Florida prison farm, he doesn't play by the rules of either the sadistic warden or the yard's resident heavy, Dragline, who ends up admiring the new guy's unbreakable will. Luke's bravado, even in the face of repeated stints in the prison's dreaded solitary confinement cell, \"the box,\" make him a rebel hero to his fellow convicts and a thorn in the side of the prison officers.",
       "score": 0.7793,
       "poster_path": "/4ykzTiHKLamh3eZJ8orVICtU2Jp.jpg",
@@ -278,12 +619,29 @@
       "title": "Touch of Evil",
       "year": 1958,
       "tmdb_id": 1480,
-      "rating": 7.7,
+      "rating": 7.741,
       "genres": [
         80,
         53,
         18
       ],
+      "genre_names": [
+        "Crime",
+        "Thriller",
+        "Drama"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Orson Welles",
+      "cast": [
+        "Charlton Heston",
+        "Janet Leigh",
+        "Orson Welles",
+        "Joseph Calleia",
+        "Akim Tamiroff"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=wuSCUVqaDZw",
       "overview": "A border-town bombing draws Mexican investigator Miguel Vargas into a corruption-ridden police investigation led by crooked captain Hank Quinlan, setting off a deadly struggle over power, justice, and truth.",
       "score": 0.7722,
       "poster_path": "/1pvRgmfBaoMczIJBOi9gCOZ4FMC.jpg",
@@ -298,12 +656,31 @@
       "title": "Blow-Up (Blowup)",
       "year": 1966,
       "tmdb_id": 1052,
-      "rating": 7.309,
+      "rating": 7.31,
       "genres": [
         18,
         9648,
         53
       ],
+      "genre_names": [
+        "Drama",
+        "Mystery",
+        "Thriller"
+      ],
+      "countries": [
+        "United Kingdom",
+        "United States of America",
+        "Italy"
+      ],
+      "director": "Michelangelo Antonioni",
+      "cast": [
+        "David Hemmings",
+        "Vanessa Redgrave",
+        "Sarah Miles",
+        "John Castle",
+        "Veruschka von Lehndorff"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=PRENEOHlcbw",
       "overview": "A successful mod photographer in London whose world is bounded by fashion, pop music, marijuana, and easy sex, feels his life is boring and despairing. But in the course of a single day he unknowingly captures a death on film.",
       "score": 0.7712,
       "poster_path": "/jVDVpydUw8Z50naUDAG4NbRCrSa.jpg",
@@ -323,6 +700,23 @@
         35,
         10749
       ],
+      "genre_names": [
+        "Comedy",
+        "Romance"
+      ],
+      "countries": [
+        "France",
+        "Germany"
+      ],
+      "director": "Jean-Pierre Jeunet",
+      "cast": [
+        "Audrey Tautou",
+        "Mathieu Kassovitz",
+        "Rufus",
+        "Serge Merlin",
+        "Jamel Debbouze"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=555A7T_kmIc",
       "overview": "At a tiny Parisian café, the adorable yet painfully shy Amélie accidentally discovers a gift for helping others. Soon Amelie is spending her days as a matchmaker, guardian angel, and all-around do-gooder. But when she bumps into a handsome stranger, will she find the courage to become the star of her very own love story?",
       "score": 0.7711,
       "poster_path": "/nSxDa3M9aMvGVLoItzWTepQ5h5d.jpg",
@@ -343,6 +737,23 @@
         10751,
         14
       ],
+      "genre_names": [
+        "Drama",
+        "Family",
+        "Fantasy"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Frank Capra",
+      "cast": [
+        "James Stewart",
+        "Donna Reed",
+        "Lionel Barrymore",
+        "Thomas Mitchell",
+        "Henry Travers"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=iLR3gZrU2Xo",
       "overview": "George Bailey has spent his entire life giving to the people of Bedford Falls.  All that prevents rich skinflint Mr. Potter from taking over the entire town is George's modest building and loan company.  But on Christmas Eve the business's $8,000 is lost and George's troubles begin.",
       "score": 0.7683,
       "poster_path": "/bSqt9rhDZx1Q7UZ86dBPKdNomp2.jpg",
@@ -357,11 +768,27 @@
       "title": "Stand by Me",
       "year": 1986,
       "tmdb_id": 235,
-      "rating": 7.833,
+      "rating": 7.834,
       "genres": [
         18,
         12
       ],
+      "genre_names": [
+        "Drama",
+        "Adventure"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Rob Reiner",
+      "cast": [
+        "Wil Wheaton",
+        "River Phoenix",
+        "Corey Feldman",
+        "Jerry O'Connell",
+        "Kiefer Sutherland"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=2rBenGsz23E",
       "overview": "After learning that a boy their age has been accidentally killed near their rural homes, four boys decide to go see the body. Gordie, Vern, Chris, and Teddy encounter a mean junk man and a marsh full of leeches, but they also learn more about one another and their very different home lives. Just a lark at first, the boys' adventure evolves into a defining event in their lives.",
       "score": 0.7681,
       "poster_path": "/vz0w9BSehcqjDcJOjRaCk7fgJe7.jpg",
@@ -380,6 +807,23 @@
       "genres": [
         37
       ],
+      "genre_names": [
+        "Western"
+      ],
+      "countries": [
+        "Germany",
+        "Italy",
+        "Spain"
+      ],
+      "director": "Sergio Leone",
+      "cast": [
+        "Clint Eastwood",
+        "Marianne Koch",
+        "Gian Maria Volonté",
+        "Wolfgang Lukschy",
+        "Sieghardt Rupp"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=f_oZUWAdEe8",
       "overview": "The Man With No Name enters the Mexican village of San Miguel in the midst of a power struggle among the three Rojo brothers and sheriff John Baxter. When a regiment of Mexican soldiers bearing gold intended to pay for new weapons is waylaid by the Rojo brothers, the stranger inserts himself into the middle of the long-simmering battle, selling false information to both sides for his own benefit.",
       "score": 0.7609,
       "poster_path": "/lBwOEpwVeUAmrmglcstnaGcJq3Y.jpg",
@@ -398,6 +842,21 @@
       "genres": [
         18
       ],
+      "genre_names": [
+        "Drama"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Bennett Miller",
+      "cast": [
+        "Brad Pitt",
+        "Jonah Hill",
+        "Philip Seymour Hoffman",
+        "Robin Wright",
+        "Chris Pratt"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=RAG74hfW4pM",
       "overview": "The story of Oakland Athletics general manager Billy Beane's successful attempt to put together a baseball team on a budget, by employing computer-generated analysis to draft his players.",
       "score": 0.7573,
       "poster_path": "/4yIQq1e6iOcaZ5rLDG3lZBP3j7a.jpg",
@@ -417,6 +876,22 @@
         18,
         80
       ],
+      "genre_names": [
+        "Drama",
+        "Crime"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Steven Spielberg",
+      "cast": [
+        "Leonardo DiCaprio",
+        "Tom Hanks",
+        "Christopher Walken",
+        "Martin Sheen",
+        "Nathalie Baye"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=71rDQ7z4eFg",
       "overview": "A true story about Frank Abagnale Jr. who, before his 19th birthday, successfully conned millions of dollars worth of checks as a Pan Am pilot, doctor, and legal prosecutor. An FBI agent makes it his mission to put him behind bars. But Frank not only eludes capture, he revels in the pursuit.",
       "score": 0.7567,
       "poster_path": "/ctjEj2xM32OvBXCq8zAdK3ZrsAj.jpg",
@@ -435,6 +910,21 @@
       "genres": [
         37
       ],
+      "genre_names": [
+        "Western"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Clint Eastwood",
+      "cast": [
+        "Clint Eastwood",
+        "Gene Hackman",
+        "Morgan Freeman",
+        "Jaimz Woolvett",
+        "Richard Harris"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=amE57OniG9Y",
       "overview": "William Munny is a retired, once-ruthless killer turned gentle widower and hog farmer. To help support his two motherless children, he accepts one last bounty-hunter mission to find the men who brutalized a prostitute. Joined by his former partner and a cocky greenhorn, he takes on a corrupt sheriff.",
       "score": 0.7566,
       "poster_path": "/54roTwbX9fltg85zjsmrooXAs12.jpg",
@@ -455,6 +945,23 @@
         53,
         9648
       ],
+      "genre_names": [
+        "Drama",
+        "Thriller",
+        "Mystery"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Martin Scorsese",
+      "cast": [
+        "Leonardo DiCaprio",
+        "Mark Ruffalo",
+        "Ben Kingsley",
+        "Max von Sydow",
+        "Michelle Williams"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=qdPw9x9h5CY",
       "overview": "World War II soldier-turned-U.S. Marshal Teddy Daniels investigates the disappearance of a patient from a hospital for the criminally insane, but his efforts are compromised by troubling visions and a mysterious doctor.",
       "score": 0.7565,
       "poster_path": "/nrmXQ0zcZUL8jFLrakWc90IR8z9.jpg",
@@ -475,6 +982,23 @@
         18,
         10749
       ],
+      "genre_names": [
+        "Comedy",
+        "Drama",
+        "Romance"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Glenn Ficarra, John Requa",
+      "cast": [
+        "Steve Carell",
+        "Ryan Gosling",
+        "Julianne Moore",
+        "Emma Stone",
+        "Lio Tipton"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=W7U03cW7k-Y",
       "overview": "Cal Weaver is living the American dream. He has a good job, a beautiful house, great children and a beautiful wife, named Emily. Cal's seemingly perfect life unravels, however, when he learns that Emily has been unfaithful and wants a divorce. Over 40 and suddenly single, Cal is adrift in the fickle world of dating. Enter, Jacob Palmer, a self-styled player who takes Cal under his wing and teaches him how to be a hit with the ladies.",
       "score": 0.7557,
       "poster_path": "/p4RafgAPk558muOjnBMHhMArjS2.jpg",
@@ -489,12 +1013,29 @@
       "title": "Modern Times",
       "year": 1936,
       "tmdb_id": 3082,
-      "rating": 8.282,
+      "rating": 8.281,
       "genres": [
         35,
         18,
         10749
       ],
+      "genre_names": [
+        "Comedy",
+        "Drama",
+        "Romance"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "Charlie Chaplin",
+      "cast": [
+        "Charlie Chaplin",
+        "Paulette Goddard",
+        "Henry Bergman",
+        "Tiny Sandford",
+        "Chester Conklin"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=NNznUyDmSFc",
       "overview": "A bumbling tramp desires to build a home with a young woman, yet is thwarted time and time again by his lack of experience and habit of being in the wrong place at the wrong time...",
       "score": 0.7523,
       "poster_path": "/AthaPakkuCLROdKxtRbKWclkDBK.jpg",
@@ -515,6 +1056,23 @@
         35,
         10749
       ],
+      "genre_names": [
+        "Drama",
+        "Comedy",
+        "Romance"
+      ],
+      "countries": [
+        "United States of America"
+      ],
+      "director": "James L. Brooks",
+      "cast": [
+        "Jack Nicholson",
+        "Helen Hunt",
+        "Greg Kinnear",
+        "Cuba Gooding Jr.",
+        "Shirley Knight"
+      ],
+      "trailer_url": "https://www.youtube.com/watch?v=t2d89afgtqg",
       "overview": "A misanthropic author, a single mother and waitress, and a gay artist form an unlikely friendship after the artist is assaulted in a robbery.",
       "score": 0.7484,
       "poster_path": "/xXxuJPNUDZ0vjsAXca0O5p3leVB.jpg",
@@ -523,45 +1081,6 @@
       "cf_stats": {
         "num_similar_users": 27176,
         "avg_movielens_rating": 3.77
-      }
-    },
-    {
-      "title": "Terminal, The",
-      "year": 2004,
-      "tmdb_id": 594,
-      "rating": 7.356,
-      "genres": [
-        35,
-        18
-      ],
-      "overview": "An Eastern European tourist unexpectedly finds himself stranded in JFK airport, and must take up temporary residence there.",
-      "score": 0.7387,
-      "poster_path": "/cPB3ZMM4UdsSAhNdS4c7ps5nypY.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 13939,
-        "avg_movielens_rating": 3.62
-      }
-    },
-    {
-      "title": "Black Swan",
-      "year": 2010,
-      "tmdb_id": 44214,
-      "rating": 7.683,
-      "genres": [
-        18,
-        53,
-        27
-      ],
-      "overview": "A committed dancer struggles to maintain her sanity after winning the lead role in a production of Tchaikovsky's \"Swan Lake.\"",
-      "score": 0.7361,
-      "poster_path": "/viWheBd44bouiLCHgNMvahLThqx.jpg",
-      "source": "collaborative_filtering",
-      "belongs_to_collection": false,
-      "cf_stats": {
-        "num_similar_users": 19149,
-        "avg_movielens_rating": 3.8
       }
     }
   ]

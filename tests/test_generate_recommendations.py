@@ -120,6 +120,14 @@ def test_generate_recommendations_movielens_not_found():
 def test_enrich_cf_recommendations_with_tmdb_success(mock_cf_recommendations):
     """Test enriching CF recommendations with TMDB data successfully."""
     mock_tmdb_client = Mock()
+    mock_tmdb_client.get_movie_credits_and_details.return_value = {
+        "belongs_to_collection": False,
+        "genre_names": ["Action", "Drama"],
+        "countries": ["United States of America"],
+        "director": "Test Director",
+        "cast": ["Actor One", "Actor Two"],
+        "trailer_url": "https://www.youtube.com/watch?v=test123",
+    }
     mock_tmdb_client.get_movie_by_title.side_effect = [
         {
             'tmdb_id': 789,
@@ -192,6 +200,14 @@ def test_enrich_cf_recommendations_tmdb_exception(mock_cf_recommendations):
 def test_enrich_cf_recommendations_partial_tmdb_data(mock_cf_recommendations):
     """Test handling partial TMDB data (some movies found, some not) - only includes movies with posters."""
     mock_tmdb_client = Mock()
+    mock_tmdb_client.get_movie_credits_and_details.return_value = {
+        "belongs_to_collection": False,
+        "genre_names": ["Action", "Drama"],
+        "countries": ["United States of America"],
+        "director": "Test Director",
+        "cast": ["Actor One", "Actor Two"],
+        "trailer_url": "https://www.youtube.com/watch?v=test123",
+    }
     mock_tmdb_client.get_movie_by_title.side_effect = [
         {
             'tmdb_id': 789,
@@ -215,6 +231,14 @@ def test_enrich_cf_recommendations_partial_tmdb_data(mock_cf_recommendations):
 def test_enrich_cf_recommendations_preserves_cf_stats(mock_cf_recommendations):
     """Test that CF stats are preserved in enriched recommendations."""
     mock_tmdb_client = Mock()
+    mock_tmdb_client.get_movie_credits_and_details.return_value = {
+        "belongs_to_collection": False,
+        "genre_names": ["Action"],
+        "countries": ["United States of America"],
+        "director": "Test Director",
+        "cast": ["Actor One"],
+        "trailer_url": "https://www.youtube.com/watch?v=test123",
+    }
     mock_tmdb_client.get_movie_by_title.return_value = {
         'tmdb_id': 789,
         'rating': 8.4,
@@ -259,6 +283,14 @@ def test_enrich_cf_recommendations_missing_poster(mock_cf_recommendations):
 def test_enrich_cf_recommendations_with_all_optional_fields(mock_cf_recommendations):
     """Test handling TMDB response with all fields including optional ones."""
     mock_tmdb_client = Mock()
+    mock_tmdb_client.get_movie_credits_and_details.return_value = {
+        "belongs_to_collection": False,
+        "genre_names": ["Action", "Drama"],
+        "countries": ["United States of America"],
+        "director": "Test Director",
+        "cast": ["Actor One", "Actor Two"],
+        "trailer_url": "https://www.youtube.com/watch?v=test123",
+    }
     mock_tmdb_client.get_movie_by_title.return_value = {
         'tmdb_id': 789,
         'rating': 8.4,
