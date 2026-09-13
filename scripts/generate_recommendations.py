@@ -39,6 +39,7 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
 
         # Only add recommendations that have TMDB data with poster
         if tmdb_movie and tmdb_movie.get("tmdb_id") and tmdb_movie.get("poster_path"):
+            extra = tmdb_client.get_movie_credits_and_details(tmdb_movie["tmdb_id"])
             enriched.append(
                 {
                     "title": str(rec["title"]),
@@ -50,13 +51,16 @@ def enrich_cf_recommendations_with_tmdb(cf_recs: list, tmdb_client: TMDBClient) 
                         else None
                     ),
                     "genres": list(tmdb_movie.get("genre_ids", [])),
+                    "genre_names": extra["genre_names"],
+                    "countries": extra["countries"],
+                    "director": extra["director"],
+                    "cast": extra["cast"],
+                    "trailer_url": extra["trailer_url"],
                     "overview": str(tmdb_movie.get("overview", "")),
                     "score": float(rec["cf_score"]),
                     "poster_path": str(tmdb_movie["poster_path"]),
                     "source": "collaborative_filtering",
-                    "belongs_to_collection": tmdb_client.is_part_of_collection(
-                        tmdb_movie["tmdb_id"]
-                    ),
+                    "belongs_to_collection": extra["belongs_to_collection"],
                     "cf_stats": {
                         "num_similar_users": int(rec["num_similar_users"]),
                         "avg_movielens_rating": float(rec["avg_rating"]),
