@@ -349,34 +349,67 @@ if recommendations_path.exists():
             except Exception:
                 time_str = generated_at
 
+            @st.dialog("Movie Details", width="large")
+            def show_recommendation_dialog(rec):
+                detail_cols = st.columns([1, 2])
+                with detail_cols[0]:
+                    if rec.get("poster_path"):
+                        poster_url = (
+                            f"https://image.tmdb.org/t/p/w500{rec['poster_path']}"
+                        )
+                        st.image(poster_url, width="stretch")
+                    else:
+                        st.info("No poster available")
+                with detail_cols[1]:
+                    st.subheader(f"{rec['title']} ({rec['year']})")
+                    rating_str = (
+                        f"{rec['rating']:.1f}/10" if rec.get("rating") else "N/A"
+                    )
+                    st.write(f"⭐ {rating_str}")
+                    st.write(rec.get("overview", "No description available."))
+
             # Display recommendations in a horizontally scrolling strip so all
             # of them are reachable without stacking vertically on any screen.
-            # NOTE: every line below must start at column 0 — st.markdown
-            # treats 4-space-indented lines as a code block, not HTML.
-            cards_html = []
-            for rec in recommendations:
-                if rec.get("poster_path"):
-                    poster_url = f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
-                    poster_html = f'<img src="{poster_url}" style="width:100%;border-radius:8px;display:block;" />'
-                else:
-                    poster_html = (
-                        '<div style="width:100%;aspect-ratio:2/3;border-radius:8px;'
-                        "background:rgba(128,128,128,0.2);display:flex;align-items:center;"
-                        'justify-content:center;text-align:center;padding:8px;">No poster</div>'
-                    )
-                cards_html.append(
-                    f'<div style="flex:0 0 auto;width:150px;">{poster_html}'
-                    f'<div style="margin-top:6px;font-size:0.85rem;text-align:center;">'
-                    f"{rec['title']}, {rec['year']}</div></div>"
-                )
-
-            st.markdown(
-                '<div style="display:flex;flex-direction:row;gap:16px;'
-                'overflow-x:auto;padding-bottom:12px;">'
-                + "".join(cards_html)
-                + "</div>",
-                unsafe_allow_html=True,
+            # Force the container to scroll instead of wrapping to new rows,
+            # and stretch each card's button invisibly over the whole card
+            # (poster + caption) so clicking the poster opens the dialog too.
+            # NOTE: st.markdown(unsafe_allow_html=True) silently strips <style>
+            # tags — st.html() is required for injected CSS to actually apply.
+            # The button's own stElementContainer (matched via its key class)
+            # is the nearest positioned ancestor once .stButton is targeted, so
+            # the override has to land on that element, not on .stButton itself.
+            st.html(
+                "<style>"
+                ".st-key-rec_scroll{flex-wrap:nowrap !important;"
+                "overflow-x:auto !important;}"
+                'div[class*="st-key-rec_card_"]{position:relative;}'
+                'div[class*="st-key-rec_btn_"]{position:absolute !important;'
+                "inset:0 !important;width:100% !important;height:100% !important;"
+                "margin:0 !important;z-index:2;}"
+                'div[class*="st-key-rec_btn_"] .stButton{width:100%;height:100%;}'
+                'div[class*="st-key-rec_btn_"] button{'
+                "width:100%;height:100%;opacity:0;cursor:pointer;"
+                "padding:0;border:0;background:transparent;}"
+                "</style>"
             )
+            with st.container(key="rec_scroll", horizontal=True, gap="medium"):
+                for i, rec in enumerate(recommendations):
+                    with st.container(width=150, key=f"rec_card_{i}"):
+                        if rec.get("poster_path"):
+                            poster_url = (
+                                f"https://image.tmdb.org/t/p/w300{rec['poster_path']}"
+                            )
+                            st.image(poster_url, width="stretch")
+                        else:
+                            st.info("No poster available")
+
+                        st.caption(f"{rec['title']}, {rec['year']}")
+
+                        if st.button(
+                            f"Open details for {rec['title']}",
+                            key=f"rec_btn_{i}",
+                        ):
+                            show_recommendation_dialog(rec)
 
         else:
             st.info("No recommendations available yet. Run the recommendation system!")
