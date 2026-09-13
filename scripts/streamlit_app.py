@@ -378,16 +378,6 @@ if recommendations_path.exists():
                 unsafe_allow_html=True,
             )
 
-            # Single expander with all descriptions below the posters
-            with st.expander("Descriptions", expanded=False):
-                for rec in recommendations:
-                    rating_str = (
-                        f"{rec['rating']:.1f}/10" if rec.get("rating") else "N/A"
-                    )
-                    st.write(f"**{rec['title']}, {rec['year']}** — ⭐ {rating_str}")
-                    st.write(rec.get("overview", ""))
-                    # st.divider()
-
         else:
             st.info("No recommendations available yet. Run the recommendation system!")
             with st.expander("🚀 How to generate recommendations"):
