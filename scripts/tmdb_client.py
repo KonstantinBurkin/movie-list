@@ -47,6 +47,43 @@ class TMDBClient:
         details = self.movie.details(tmdb_id)
         return bool(getattr(details, "belongs_to_collection", None))
 
+    def get_movie_credits_and_details(self, tmdb_id: int) -> Dict:
+        """Fetch a movie's full details (genres, countries, director, top
+        cast, collection membership) in a single TMDB request."""
+        details = self.movie.details(tmdb_id)
+        crew = getattr(details, "casts", None)
+        crew_list = list(crew.crew) if crew and hasattr(crew, "crew") else []
+        cast_list = list(crew.cast) if crew and hasattr(crew, "cast") else []
+
+        directors = [p["name"] for p in crew_list if p.get("job") == "Director"]
+
+        videos = getattr(details, "videos", None)
+        video_results = list(videos.results) if videos and hasattr(videos, "results") else []
+        trailers = [
+            v
+            for v in video_results
+            if v.get("site") == "YouTube" and v.get("type") == "Trailer"
+        ]
+        trailers.sort(key=lambda v: v.get("official", False), reverse=True)
+        trailer_url = (
+            f"https://www.youtube.com/watch?v={trailers[0]['key']}"
+            if trailers
+            else None
+        )
+
+        return {
+            "belongs_to_collection": bool(
+                getattr(details, "belongs_to_collection", None)
+            ),
+            "genre_names": [g["name"] for g in getattr(details, "genres", [])],
+            "countries": [
+                c["name"] for c in getattr(details, "production_countries", [])
+            ],
+            "director": ", ".join(directors) if directors else None,
+            "cast": [p["name"] for p in cast_list[:5]],
+            "trailer_url": trailer_url,
+        }
+
     def get_similar_movies(self, tmdb_id: int, limit: int = 20) -> List[Dict]:
         """Get similar movies based on TMDB's recommendation algorithm."""
         similar = self.movie.similar(tmdb_id)
